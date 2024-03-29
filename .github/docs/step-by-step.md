@@ -85,6 +85,6 @@ add `script`:
 
 ```
 git add .
-git commit -M "next app"
+git commit -m "next app"
 git push origin main
 ```
