@@ -288,3 +288,158 @@ De qualquer forma, o destaque da aula é um atalho para fazer novos commit, um a
 ### Git Push De Novo (mas agora com ainda mais "força")
 
 Nesta Pista Lenta será ensinado um dos recursos mais perigosos do Git, que é fazer o push, porém usando a opção force. Fora isso, é uma ótima aula para revisar outros comandos como o amend e os efeitos colaterais que ele causa no commit anterior, na linha do tempo da sua branch local e a relação disto tudo com a mesma branch lá no origin.
+
+## Dia 7
+
+### 🚗 Pista Rápida
+
+O Dia 7 começa a separar quem está na área de tecnologia para ser um profissional valorizado e que quer se sentir uma pessoa importante... de quem que tá só de brincadeira.
+
+### Client e Server
+
+Existe uma relação extremamente importante em qualquer camada da tecnologia, que é a relação entre cliente e servidor (ou client e server). Algumas pessoas começam a se confundir sobre quem é o client e quem é o server, pois eles não são papeis fixos e dependem do que exatamente estes componentes estão fazendo. Ter a modelagem correta na mente sobre isso é algo valioso, pois ela destrava novas percepções sobre a arquitetura de todos os softwares envolvidos em um sistema.
+
+### Hospedagem e Deploy
+
+Chegou a hora de hospedar o nosso site e começar a realizar deploys! Então para você ter uma base sólida neste tópico, nós vamos rapidamente passar pela evolução de como as pessoas faziam deploy e serviam sites na internet. Depois, vamos realizar o nosso próprio deploy, tudo isso com a ajuda de um novo integrante da equipe 😍
+
+### Fazendo novos Deploys
+
+Deploy é uma parte crucial de um profissional que trabalha com programação e que quer ver suas implementações e ideias saindo do papel e encostando na realidade. Então nesta aula vamos entender melhor a dinâmica do Continuous Deployment da Vercel, incluindo a funcionalidade das suas URLs permanentes e como tudo isso contribui para você ver os códigos que você programa disponíveis publicamente na internet
+
+Preciso da sua ajuda com o Epilif 🤝
+Se você tiver um tempinho extra, por favor, eu peço que você entre na aula não listada abaixo, pois estou precisando de uma ajuda:
+
+- [Resolvendo um problema com Epilif](https://curso.dev/web/epilif-ajustando-frase)
+
+### Resolvendo um problema com Epilif
+
+Que bom que você acessou essa aula não listada, porque eu preciso da sua ajuda pra resolver um problema muito sério com o Epilif, que é dele ter colocado minha frase pra Renata no ar mas no site dele! 😡
+
+### Encerramento do Desafio (Resultados de todo mundo) 🎉
+
+Você chegou no encerramento do Primeiro Desafio 🎉 🎉 🎉
+
+Eu sinceramente estou muito feliz por isso! É algo que vai ser muito importante pra você, pra mim e também pra todos os outros alunos que passarem pela mesma experiência, porque que agora todos nós temos garantidamente algo em comum 🤝
+
+Boas práticas para compartilhar o desafio nos comentários
+Ao compartilhar o seu desafio nos comentários desta aula, sugiro seguir os 3 passos abaixo para entendermos melhor o que aconteceu no seu desafio:
+
+1. Escreva um rápido contexto, por exemplo: Quem era a pessoa que você enviou a URL?
+2. Dado que a Vercel gera uma URL única do commit no momento de um Deploy, compartilhe conosco este link que é permanente. Por exemplo, o link do meu commit com a frase é este: https://clone-tabnews-6o0vcvooy-filipedeschamps.vercel.app/
+3. E por último: Qual foi a reação da pessoa? 😍
+
+**Atenção** 🛑
+
+A Vercel implementou um novo sistema de segurança nos deploys chamado de Deployment Protection. Isto é um ótimo recurso, mas caso você queira rapidamente passar a URL de algum deploy específico para alguém, uma alternativa é temporariamente desabilitar esta opção para que o servidor se comporte como antigamente. Para isto, siga [estas instruções](https://vercel.com/docs/security/deployment-protection#understanding-deployment-protection-by-environment) e desabilite o recurso 🤝
+
+---
+
+```
+domingo, 31 de março de 2024
+```
+
+## Pitstop 🏁
+
+### Se você puder ajudar, eu agradeço muito 🤝
+Muito obrigado por fazer este Pitstop 🤝 🤝 🤝 Este é um momento extremamente importante para o curso.dev, para mim e para minha família 🙏
+
+Sugestões
+Caso você queira dar um depoimento, mas não sabe o que abordar, segue abaixo algumas sugestões:
+
+1. Valeu a pena até o momento ter se matriculado?
+2. Se você é iniciante, está valendo a pena?
+3. Ou se você não é mais iniciante, também está valendo a pena?
+4. Se você veio de outra área, está sendo possível dar “conta do recado” e aprender de verdade?
+5. O que você está achando da didática? Está dando para aprender mesmo?
+6. O que você achou da mecânica da Pista Rápida e Pista Lenta?
+7. A plataforma ajuda a ter vontade de fazer as aulas? É algo prazeroso? Faz você se sentir mais próximo do professor?
+8. O professor gosta do que faz? Isso se reflete no material e no carinho com os alunos?
+9. Você está aprendendo aqui coisas diferentes (ou de formas diferentes) do que em outros cursos?
+10. Mesmo que neste estágio do curso, você amadureceu, sente mais coragem ou competência?
+
+**Atenção** 🛑
+
+Tudo que você escrever abaixo ficará público na Home (https://curso.dev/), junto como o seu username. E como está sendo utilizado o exato mesmo sistema de comentários das outras aulas, você poderá interagir com outros depoimentos, seja adicionando novos comentários ou qualificando. Esta é uma área controlada pelos alunos 💪
+
+Eu só irei interferir caso algum depoimento ou comentário venha ferir os Termos de Uso da plataforma, combinado? 🤝
+
+## Dia 8
+
+### 🚗 Pista Rápida
+
+Nos Dias anteriores a gente afiou alguns conhecimentos pra pular algumas barreiras técnicas e também alguns conhecimentos pra pular algumas barreiras iniciais de negócio... e agora chegou a hora da gente afiar diretamente a ferramenta mais importante de todas... o seu cérebro 💪
+
+### Programação "Orgânica" versus "Impressora 3D"
+
+Se segura na cadeira, porque daqui pra frente a gente vai aprender sobre MUITA coisa técnica, muita mesmo, e que vai ser coberto aqui dentro do curso.dev de um jeito que só dá para fazer por aqui 🤝
+
+### Por que meus projetos sempre dão certo?
+
+Falar que "os meus projetos sempre dão certo" é uma afirmação muito forte e eu concordo, mas teve um evento que aconteceu comigo lá no passado (quando eu mexia com Bolsa de Valores) que mudou a minha vida pra sempre.
+
+É um evento que vai se conectar com um módulo Node.js meu ficando na primeira página do site Hacker News e quem conhece esse site sabe o quão difícil é conseguir isso, e que se conecta também com eu receber uma mensagem privada no Twitter de uma pessoa que eu sou muito fã.
+
+## Dia 9
+
+### 🚗 Pista Rápida
+
+Se você quer se divertir programando projetos tanto quanto você se diverte, por exemplo, jogando video games... o Dia 9 existe pra atingir justamente isso 💪
+
+### Qual o “segredo” para organização de tarefas?
+
+Fazer muito com pouco e não pouco com muito... esse é um dos segredos que eu percebi quando o assunto é organização de tarefas.
+
+Vamos mapear como está o mercado?
+Se você estiver envolvido em algum projeto (mesmo que pessoal), por favor, utilize a seção de comentários para compartilhar:
+
+1. Quantas pessoas aproximadamente estão envolvidas nesse projeto?
+2. Quais softwares estão sendo usados?
+3. Quais metodologias estão sendo aplicadas?
+
+> devrodrigo
+
+tenho como exemplo o meu resumo da aula de hoje no notion:
+
+- Fazer muito com pouco e não pouco com muito.
+- Quando se planeja muito, em excesso, normalmente, se executa pouco. Quando se planeja pouco, se executa muito, mas com efeitos colaterais como arquitetura ou modelagem ruim.
+- É preciso calcular o saldo das coisas que são feitas para determinar se vale a pena ou não continuar dessa forma.
+- Dar um passo para trás para dar dois saltos para frente é algo com o saldo positivo.
+- Algo fundamental para qualquer controle de tarefas é a possibilidade de se registrar o progresso da tarefa, por meio de checkboxes.
+- Nível 1: Ser lembrado individualmente. (Lembrar o que eu preciso fazer)
+  - Menor custo de produção (custo de energia para que eu consiga registrar o que precisa ser feito) e menor tempo de aquecimento (Quanto tempo que demora para conseguir ver e conferir o que precisa ser feito).
+  - Como, por exemplo, anotações em um papel e sem detalhes, somente com o nome das tarefas, de forma que fique fácil de acessar, ler e lembrar.
+- Nível 2: Ser lembrado em grupo. (Lembrar um grupo de pessoas sobre suas tarefas)
+  - Quadros de Kanban são ótimos para conseguir criar novas tarefas e relembrar um grupo de pessoas do que precisa ser feito sem levar tempo de aquecimento algum.
+- Nível 3: Expandir conhecimento.
+  - Conversar e desenvolver de uma forma detalhada o que e como algo deve ser feito.
+  - Médio custo de produção e médio tempo de aquecimento.
+- Nível 4: Gerar métricas.
+  - Conseguir mensurar a produtividade das pessoas que estão trabalhando nas métricas.
+  - Alto custo de produção e alto tempo de aquecimento.
+  - Pode ser visto como mais cansativo do que a própria tarefa em si, mas é essencial para a gestão do projeto.
+  - Muito perigoso quando se olha mais para as barreiras de tecnologia avançadas do que para as barreiras de negócios avançadas.
+- JIRA - Visão geral de quantas tarefas são necessárias para finalizar o projeto em relação com quantas foram executadas semanalmente. Permite mostrar que está sendo executado mais tarefas mas que também o número de tarefas necessárias está aumentando de uma forma muito simples.
+  - Por exemplo:
+
+  |             | Semana 1 | Semana 2 | Semana 3 |
+  |-------------|----------|----------|----------|
+  | Total       |   100    |    140   |    150   |
+  | Executadas  |   70     |    90    |    115   |
+  | Conclusão   |   70%    |    64%   |    77%   |
+
+### Como peitar projetos de qualquer tamanho?
+
+Você gosta de comer pedra? Não responde ainda! 😂 Deixa eu falar algo antes 🤝
+
+Deixa eu te preparar pra que, se você se pegar numa situação em que o seu cérebro está tentando negociar com você um "tudo ou nada", por exemplo: "ou programa o sistema inteiro que você quer fazer nesse final de semana ou não faz nada" é porque ele quer que você faça nada... sabe por que? A resposta está na aula 😍
+
+### Criando a primeira Milestone e Issues do Projeto
+
+Nesta Pista Lenta iremos criar tanto a Milestone 0: Em construção, quanto as 3 Issues abaixo:
+
+- Colocar o site num domínio .com.br
+- Definir estilização do código e configurar editor
+- Programar página de "Em construção"
+
+Fora conversar sobre a mecânica do neurotransmissor mais importante quando o assunto é se sentir motivado a iniciar, continuar e concluir tarefas.
