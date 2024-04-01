@@ -112,18 +112,15 @@ Site da empresa por trás: https://vercel.com/
 
 #### Let's code
 
-```
-yarn init -y
-git init
-```
+Crie o projeto `clone-tabnews` no `GitHub` e marque a opção para criar o `README`, depois faça o clone do projeto
 
-crie o arquivo `.nvmrc`:
+Entre na pasta `clone-tabnews` e crie o arquivo `.nvmrc`:
 
 ```
 lts/hydrogen
 ```
 
-e execute os comandos: 
+execute os comandos:
 
 ```
 nvm install
@@ -154,12 +151,10 @@ Além disso, eu mostro um recurso interessante no Codespaces sobre como deixar a
 
 #### Let's code
 
-crie o arquivo `src/pages/index.js`:
+Crie o arquivo `src/pages/index.js`:
 
 ```jsx
-export default () => (
-  <h1>Home</h1>
-)
+export default () => <h1>Home</h1>
 ```
 
 adicione o `script` no arquivo `package.json`:
@@ -170,7 +165,7 @@ adicione o `script` no arquivo `package.json`:
 }
 ```
 
-execute o comando de inicialização: 
+execute o comando de inicialização:
 
 ```
 yarn dev
@@ -190,7 +185,7 @@ A Vercel implementou um novo sistema de segurança nos deploys chamado de Deploy
 
 #### Let's code
 
-crie o arquivo `.gitignore`:
+Crie o arquivo `.gitignore`:
 
 ```
 node_modules
@@ -226,11 +221,7 @@ O Dia 5 é um dia mais longo que os outros dias e as Pistas Lentas desse dia sã
 
 Lista de comandos abordados
 
--`git log` - listar os commits do repositório.
--`git add` - sobe alterações para a staging area.
--`git commit` - realiza novos commits.
--`git commit --amend` - substitui o commit anterior por um novo, mas aproveita as alterações dele.
--`git diff` - calcula a diferença entre as versões/alterações dos arquivos.
+-`git log` - listar os commits do repositório. -`git add` - sobe alterações para a staging area. -`git commit` - realiza novos commits. -`git commit --amend` - substitui o commit anterior por um novo, mas aproveita as alterações dele. -`git diff` - calcula a diferença entre as versões/alterações dos arquivos.
 
 Todos estes comandos funcionam de forma offline no Git e podem ser usados sem a necessidade de uma conexão com a internet, pois nenhum deles transmite informações para fora do seu computador.
 
@@ -342,6 +333,7 @@ domingo, 31 de março de 2024
 ## Pitstop 🏁
 
 ### Se você puder ajudar, eu agradeço muito 🤝
+
 Muito obrigado por fazer este Pitstop 🤝 🤝 🤝 Este é um momento extremamente importante para o curso.dev, para mim e para minha família 🙏
 
 Sugestões
@@ -420,13 +412,14 @@ tenho como exemplo o meu resumo da aula de hoje no notion:
   - Pode ser visto como mais cansativo do que a própria tarefa em si, mas é essencial para a gestão do projeto.
   - Muito perigoso quando se olha mais para as barreiras de tecnologia avançadas do que para as barreiras de negócios avançadas.
 - JIRA - Visão geral de quantas tarefas são necessárias para finalizar o projeto em relação com quantas foram executadas semanalmente. Permite mostrar que está sendo executado mais tarefas mas que também o número de tarefas necessárias está aumentando de uma forma muito simples.
+
   - Por exemplo:
 
-  |             | Semana 1 | Semana 2 | Semana 3 |
-  |-------------|----------|----------|----------|
-  | Total       |   100    |    140   |    150   |
-  | Executadas  |   70     |    90    |    115   |
-  | Conclusão   |   70%    |    64%   |    77%   |
+  |            | Semana 1 | Semana 2 | Semana 3 |
+  | ---------- | -------- | -------- | -------- |
+  | Total      | 100      | 140      | 150      |
+  | Executadas | 70       | 90       | 115      |
+  | Conclusão  | 70%      | 64%      | 77%      |
 
 ### Como peitar projetos de qualquer tamanho?
 
@@ -443,3 +436,133 @@ Nesta Pista Lenta iremos criar tanto a Milestone 0: Em construção, quanto as 3
 - Programar página de "Em construção"
 
 Fora conversar sobre a mecânica do neurotransmissor mais importante quando o assunto é se sentir motivado a iniciar, continuar e concluir tarefas.
+
+---
+
+```
+segunda-feira, 1 de abril de 2024
+```
+
+## Dia 10
+
+### 🚗 Pista Rápida
+
+Não sei se você notou, mas a gente está passando um pente fino em tudo e no Dia 10 não vai ser diferente. Eu digo isso porque eu já conversei com muitos desenvolvedores seniores que eram “seniores ocos”... e eu não estou querendo machucar ninguém falando isso. Primeiro porque é algo muito comum, muito mais comum do que muita gente que ainda não é sênior possa imaginar que seja assim, e segundo e mais importante, nas conversas que eu tive, a própria pessoa revelava isso (de ter essa insegurança) e isso foi um dos grandes motivos de eu colocar na mensagem principal do curso.dev…que "se sentir competente em programação começa aqui".
+
+Então pra isso acontecer, pra de verdade se sentir completamente competente, não tem pra onde escapar... é preciso trabalhar o lado pessoal/profissional e o lado técnico e o Dia 10 junta essas duas coisas 💪
+
+### Uma história macabra sobre "Estilização de Código"
+
+No compromisso de fazer o download do meu cérebro, eu não posso apenas ensinar a parte técnica de algo que eu acredito ser importante. Eu preciso compartilhar com você eventos da "vida real" que aconteceram e que, aí sim, concretizam a importância da parte técnica. Isso é o que irá fazer grudar na sua mente o conhecimento 💪
+
+Então nesta aula vou contar uma história que eu vivenciei no início do Pagar.me, onde eu espero convencer você que, estilização de código, no longo prazo, é algo muito importante 🤝
+
+**Curiosidade**
+
+[Neste comentário](https://curso.dev/alunos/czaghi/e5632290-0281-41ae-b7f0-a762bdc9ff09) o aluno czaghi diz que encontrou o PR que eu citei na aula 😂
+
+### Sincronização das configurações do Editor
+
+Esta é uma aula mais específica ao Codespaces ou até VS Code e que serve como referência para outros editores sobre uma feature para sincronização na nuvem de configurações.
+
+Mas independente disto, a parte mais importante é que nesta aula iremos aprender a dividir uma Issue em Tarefas e concluir a primeira Tarefa da Milestone 🎉
+
+### Configurar o EditorConfig
+
+O EditorConfig é um Configurador de Editor e por ele a gente vai definir regras fundamentais de como o seu Editor deve se comportar como, por exemplo, qual a largura da indentação do código, se será uma indentação mais curta ou mais comprida e se nela deve usar o caractere de espaço ou tab. Mas importante destacar que essas regras irão acontecer antes de você salvar um arquivo... guarde esta informação para a próxima aula 🤝
+
+#### Let's code
+
+Crie o arquivo `.editorconfig` e instale [sua extensão](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)
+
+```yml
+root = true
+
+[*]
+indent_style = space
+indent_size = 2
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+```
+
+O arquivo `.editorconfig` é utilizado para padronizar as configurações de formatação do código-fonte em diferentes editores e IDEs. Vamos analisar cada comando:
+
+- `root = true`: Indica que o arquivo `.editorconfig` é o arquivo raiz, aplicando-se a todo o projeto.
+- `[*]`: Padrão global que se aplica a todos os arquivos.
+- `indent_style = space`: Define o estilo de recuo como espaços.
+- `indent_size = 2`: Tamanho da indentação (2 espaços).
+- `end_of_line = lf`: Caractere de fim de linha (LF - Line Feed).
+- `charset = utf-8`: Conjunto de caracteres UTF-8.
+- `trim_trailing_whitespace = true`: Remove espaços em branco no final das linhas.
+- `insert_final_newline = true`: Adiciona uma nova linha vazia ao final do arquivo, se ainda não existir.
+
+O uso do `.editorconfig` ajuda a manter a consistência na formatação do código, mesmo quando diferentes desenvolvedores utilizam editores diferentes. 😊
+
+### Configurar o Prettier
+
+Nesta aula iremos passar um pente fino no assunto Prettier que é um dos formatadores de código mais famosos do mundo 💪
+
+A princípio, o assunto Prettier é simples, e de fato é, mas esta simplicidade abre espaço para brechas numa estratégia mais madura sobre a garantia da estilização do código. Então como aqui no curso.dev minha missão é não deixar buracos no seu conhecimento, chegou a hora de estudar este assunto de forma séria, incluindo, preparar o projeto para que ele também seja um projeto sério 🤝
+
+#### Let's code
+
+Instale o [módulo](https://www.npmjs.com/package/prettier) e a [extensão](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) do [prettier](https://prettier.io/)
+
+```
+yarn add -D prettier
+```
+
+defina o `prettier` como o formatador padrão do `VSCode` em `Default Formatter` e habilite a opção `Format On Save`. Para garantir a melhor praticidade quando estiver escrevendo testes automatizados, desabilite a opção `Auto Save`
+
+Você também pode definir essas configurações criando o arquivo `.vscode/settings.json`:
+
+```json
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "files.autoSave": "off",
+  "git.autofetch": true
+}
+```
+
+E definir algumas configurações no arquivo `.prettierrc.json`:
+
+```json
+{
+  "trailingComma": "none",
+  "semi": false,
+  "singleQuote": true
+}
+```
+
+- **"trailingComma": "none"**: Indica que o Prettier não adicionará vírgulas finais. Exemplo sem essa opção: `[1, 2, 3,]`. Com essa opção: `[1, 2, 3]`.
+
+- **"semi": false**: Desativa a inserção automática de ponto e vírgula. Exemplo sem essa opção: `const name = 'Copilot';`. Com essa opção: `const name = 'Copilot'`.
+
+- **"singleQuote": true**: Faz com que o Prettier use aspas simples. Exemplo sem essa opção: `const greeting = "olá"`. Com essa opção: `const greeting = 'olá'`.
+
+Finalmente, adicione os `scripts`:
+
+```json
+"scripts": {
+  "dev": "next dev",
+  "lint:check": "prettier --check .",
+  "lint:fix": "prettier --write ."
+}
+```
+
+### 🎁 Extra: Configurar o Prettier Ignore
+
+Algo aconteceu no meu ambiente de desenvolvimento que foi diferente do que aconteceu no ambiente de alguns outros alunos quando executaram o script npm run lint:check ou npm run lint:fix. Nesta aula vamos investigar o que aconteceu e o que fazer para deixar tudo sincronizado 💪
+
+🛑 **Breaking Change**
+
+O prettier a partir da versão 3.0.0 mudou o seu comportamento e por padrão está utilizando o conteúdo dentro .gitignore para também ignorar o linting de estilização 🎉 Isto foi anunciado neste comunicado.
+
+Caso você queira simular o comportamento da aula, basta instalar o módulo na versão 2.8.8 da seguinte forma:
+
+```
+npm install prettier@2.8.8
+```
