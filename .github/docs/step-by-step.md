@@ -221,7 +221,11 @@ O Dia 5 é um dia mais longo que os outros dias e as Pistas Lentas desse dia sã
 
 Lista de comandos abordados
 
--`git log` - listar os commits do repositório. -`git add` - sobe alterações para a staging area. -`git commit` - realiza novos commits. -`git commit --amend` - substitui o commit anterior por um novo, mas aproveita as alterações dele. -`git diff` - calcula a diferença entre as versões/alterações dos arquivos.
+- `git log`: listar os commits do repositório.
+- `git add`: sobe alterações para a staging area.
+- `git commit`: realiza novos commits.
+- `git commit --amend`: substitui o commit anterior por um novo, mas aproveita as alterações dele.
+- `git diff`: calcula a diferença entre as versões/alterações dos arquivos.
 
 Todos estes comandos funcionam de forma offline no Git e podem ser usados sem a necessidade de uma conexão com a internet, pois nenhum deles transmite informações para fora do seu computador.
 
@@ -259,7 +263,7 @@ Se você achou o Dia anterior, o Dia 5, massa... o Dia 6 vai ser ainda mais mass
 
 Lista de comandos abordados
 
-- `git commit -m "mensagem"` - atalho para fazer novos commits.
+- `git commit -m "mensagem"`: atalho para fazer novos commits.
 - `git push` - empurrar alterações locais para o origin.
 - `git push --force` - empurrar de forma forçada alterações locais para o origin.
 - `git push -f` - a forma comprimida do comando anterior.
@@ -566,3 +570,39 @@ Caso você queira simular o comportamento da aula, basta instalar o módulo na v
 ```
 npm install prettier@2.8.8
 ```
+
+## Dia 11
+
+### 🚗 Pista Rápida
+
+O Dia 11 ficou reservado para falar sobre DNS e a maravilha que é esse negócio que inventaram e nesta Pista Rápida nós iremos revisar tudo o que aconteceu nas Pistas Lentas, com um adicional sobre ataques DDoS que tentaram derrubar a resolução global de DNS 💪
+
+### Resolução de DNS (Desafio Nível 1)
+
+No momento que você entender de verdade o que é DNS, você vai domar a principal porta de entrada pro seu site ou serviço, você vai reagir com frieza quando precisar mover a instalação da sua aplicação de um servidor para o outro ou pra quando quando precisar colocar um Cloudflare na frente para aguentar ataques de negação (DoS e DDoS) que estão tentando derrubar o seu sistema.
+
+Fora que você vai conseguir adicionar certas informações dentro do seu domínio que vão certificar que você é dono dele e que vão até aumentar a taxa de entrega dos emails que a sua aplicação envia, por exemplo, emails de ativação de cadastro ou recuperação de senha, onde se você errar nisso, alguns provedores vão recusar por completo os emails enviados pela sua aplicação... então o assunto é sério.
+
+E para ensinar DNS de um jeito diferente, optei por dividir o conhecimento em um Desafio de 2 Níveis, onde este é o primeiro nível 💪
+
+> ViniciusPimenta
+
+- `Root Server (Servidor Raiz)`: Os servidores raiz são um conjunto de servidores DNS essenciais que estão localizados no topo da hierarquia do sistema de nomes de domínio. Eles são responsáveis por responder às consultas DNS de alto nível, como "onde está o servidor para o domínio .com?" ou "onde está o servidor para o domínio .br?". Embora haja várias instâncias de servidores raiz físicos, eles são representados por um pequeno número de endereços IP, conhecidos como os "endereços IP dos servidores raiz". Esses servidores raiz não resolvem consultas DNS completas, mas encaminham as consultas para os próximos níveis da hierarquia.
+
+- `TLD (Top-Level Domain - Domínio de Primeiro Nível)`: Os TLDs são os segmentos finais dos nomes de domínio, como .com, .org, .net, .br, .edu, etc. Cada TLD é administrado por uma organização ou entidade específica, conhecida como Registro de TLD. Os servidores de nomes autoritativos para um TLD são responsáveis por manter as informações sobre os domínios registrados sob esse TLD. Por exemplo, os servidores de nomes autoritativos para o TLD .com sabem onde encontrar informações sobre os domínios como exemplo.com, empresa.com, etc.
+
+- `Authoritative Server (Servidor Autoritativo)`: Esses servidores contêm informações específicas sobre os domínios. Eles respondem a consultas DNS com informações precisas e atualizadas para os domínios que gerenciam. Por exemplo, se alguém faz uma consulta sobre um nome de domínio específico (por exemplo, www.exemplo.com), o servidor autoritativo para o domínio exemplo.com fornecerá a resposta correta, como o endereço IP associado a esse domínio.
+
+- `Recursive Resolver (Resolvedor Recursivo - Provedor de Internet)`: Esses são os servidores DNS operados por provedores de internet (ISPs) ou outros provedores de serviços. Quando você faz uma consulta DNS, como digitar um nome de domínio no seu navegador, o resolvedor recursivo é responsável por encontrar a resposta correta. Ele começa perguntando aos servidores raiz sobre a localização dos servidores de nomes autoritativos para o TLD correspondente. Em seguida, consulta os servidores de nomes autoritativos para obter as informações específicas do domínio. Uma vez obtida a resposta, o resolvedor recursivo a armazena em cache para consultas futuras, reduzindo a latência.
+
+Em resumo, os servidores raiz são o ponto de partida para consultas DNS, os TLDs representam as diferentes categorias de domínios, os servidores autoritativos têm informações específicas de domínio e os resolvedores recursivos são responsáveis por encontrar e armazenar em cache as informações de domínio para os usuários.
+
+### Você conseguiu encontrar o link secreto!
+
+[Abra o Baú Para o Próximo Desafio!](https://curso.dev/web/resolucao-dns-nivel-3)
+
+### Resolução de DNS (Desafio Nível 2)
+
+Nesta aula iremos passar por toda cadeia de resolução de um DNS e entender de fato como que através de um domínio é possível descobrir o IP do servidor 💪
+
+> augustoresende: Pra quem quiser aprofundar no assunto recomendo esse vídeo do Ayub onde mostra que a noção de "propagação de DNS" na realidade não existe e que tudo é TTL, e como ele funciona a fundo: https://www.youtube.com/watch?v=mJg47WRfrBw
