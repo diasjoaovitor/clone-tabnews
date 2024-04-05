@@ -245,9 +245,15 @@ Agora que a gente já sabe usar o git para ver os commits (as fotos) que o nosso
 
 Eu gostaria de começar a aula de hoje falando sobre um poder que você tem, que é de viajar no tempo. Sim, você tem em mãos uma máquina do tempo, que não é tão massa quanto um Delorean, mas que é o git e com ele você consegue sim viajar no tempo e mudar as coisas que aconteceram... pelo menos dentro do seu repositório. Então para isto, nós iremos aprender a usar o comando `git commit --amend`.
 
-> **YuriHassle**: Caso você deseje emendar um commit sem alterar a mensagem, é possível passar a flag --no-edit. Com isso, a mensagem anterior será preservada e a tela de edição não será aberta. Ex: git commit --amend --no-edit
+> **YuriHassle**
 
-> **zamorano**: Para aqueles que precisarem de uma consulta rápida dos comandos mais utilizados do GIT (GIT Cheat Sheet): https://education.github.com/git-cheat-sheet-education.pdf
+Caso você deseje emendar um commit sem alterar a mensagem, é possível passar a flag --no-edit. Com isso, a mensagem anterior será preservada e a tela de edição não será aberta. Ex: git commit --amend --no-edit
+
+---
+
+> **zamorano**
+
+Para aqueles que precisarem de uma consulta rápida dos comandos mais utilizados do GIT (GIT Cheat Sheet): https://education.github.com/git-cheat-sheet-education.pdf
 
 ---
 
@@ -393,7 +399,7 @@ Se você estiver envolvido em algum projeto (mesmo que pessoal), por favor, util
 2. Quais softwares estão sendo usados?
 3. Quais metodologias estão sendo aplicadas?
 
-> devrodrigo
+> **devrodrigo**
 
 tenho como exemplo o meu resumo da aula de hoje no notion:
 
@@ -424,6 +430,8 @@ tenho como exemplo o meu resumo da aula de hoje no notion:
   | Total      | 100      | 140      | 150      |
   | Executadas | 70       | 90       | 115      |
   | Conclusão  | 70%      | 64%      | 77%      |
+
+---
 
 ### Como peitar projetos de qualquer tamanho?
 
@@ -585,7 +593,7 @@ Fora que você vai conseguir adicionar certas informações dentro do seu domín
 
 E para ensinar DNS de um jeito diferente, optei por dividir o conhecimento em um Desafio de 2 Níveis, onde este é o primeiro nível 💪
 
-> ViniciusPimenta
+> **ViniciusPimenta**
 
 - `Root Server (Servidor Raiz)`: Os servidores raiz são um conjunto de servidores DNS essenciais que estão localizados no topo da hierarquia do sistema de nomes de domínio. Eles são responsáveis por responder às consultas DNS de alto nível, como "onde está o servidor para o domínio .com?" ou "onde está o servidor para o domínio .br?". Embora haja várias instâncias de servidores raiz físicos, eles são representados por um pequeno número de endereços IP, conhecidos como os "endereços IP dos servidores raiz". Esses servidores raiz não resolvem consultas DNS completas, mas encaminham as consultas para os próximos níveis da hierarquia.
 
@@ -597,6 +605,8 @@ E para ensinar DNS de um jeito diferente, optei por dividir o conhecimento em um
 
 Em resumo, os servidores raiz são o ponto de partida para consultas DNS, os TLDs representam as diferentes categorias de domínios, os servidores autoritativos têm informações específicas de domínio e os resolvedores recursivos são responsáveis por encontrar e armazenar em cache as informações de domínio para os usuários.
 
+---
+
 ### Você conseguiu encontrar o link secreto!
 
 [Abra o Baú Para o Próximo Desafio!](https://curso.dev/web/resolucao-dns-nivel-3)
@@ -605,4 +615,216 @@ Em resumo, os servidores raiz são o ponto de partida para consultas DNS, os TLD
 
 Nesta aula iremos passar por toda cadeia de resolução de um DNS e entender de fato como que através de um domínio é possível descobrir o IP do servidor 💪
 
-> augustoresende: Pra quem quiser aprofundar no assunto recomendo esse vídeo do Ayub onde mostra que a noção de "propagação de DNS" na realidade não existe e que tudo é TTL, e como ele funciona a fundo: https://www.youtube.com/watch?v=mJg47WRfrBw
+> **augustoresende**
+
+Pra quem quiser aprofundar no assunto recomendo esse vídeo do Ayub onde mostra que a noção de "propagação de DNS" na realidade não existe e que tudo é TTL, e como ele funciona a fundo: https://www.youtube.com/watch?v=mJg47WRfrBw
+
+---
+
+## Dia 12
+
+### 🚗 Pista Rápida
+
+Se o Dia 11 ficou reservado para falar da parte teórica do DNS, o Dia 12 ficou reservado para a parte prática e dentro deste vídeo vamos revisar tudo o que aconteceu e, ao final, eu falo sobre uma característica que os melhores profissionais com que eu já trabalhei compartilhavam 💪
+
+### Registrar um Domínio Próprio
+
+Quando você faz um registro de um domínio .com.br (ou o registro de qualquer domínio na verdade), você está modificando a internet e é isto que iremos fazer nesta aula 💪
+
+🛑 **Atenção**
+
+Caso ao registrar o domínio você receba uma mensagem de erro informando algo como "outro serviço está como responsável pela administração", peço que leia as instruções colocadas neste [comentário do niege](https://curso.dev/alunos/niege/2cfc6796-1d2a-4895-8b3f-ca829f41563b) e que dá os passos sobre como desbloquear o atual Registrador 🤝
+
+### Configurar o Servidor de DNS
+
+Nesta Pista Lenta iremos configurar nosso próprio Servidor Autoritativo (Servidor de DNS), para que ele aponte lá para o Servidor da Vercel, que é onde ta o nosso site 💪
+
+**Chorinho sobre Servidor de DNS**
+
+[Clique aqui](https://curso.dev/web/configurar-servidor-dns-chorinho) para acessar a aula 🤝
+
+Registro.br possui um "Modo Avançado"
+Eu não sabia, mas o Rodrigo Kulb colocou [nesta resposta](https://curso.dev/alunos/niege/2cfc6796-1d2a-4895-8b3f-ca829f41563b) que o Registro.br possui um Modo Avançado onde ele fornece para você um Servidor Autoritativo completo 😍
+
+### "Chorinho" sobre Servidor de DNS 💪
+
+Que massa que você decidiu assistir o chorinho de conteúdo sobre o Servidor de DNS porque com ele há uma alta probabilidade de isso te colocar na frente daquele seniorzão do trabalho ou estar melhor preparado pra uma discussão na internet quando o assunto é DNS 💪
+
+E não perde a oportunidade de ficar até ao final para o desafio de Capture The Flag 🤝
+
+#### Let's code
+
+Instale ferramentas de `DNS`
+
+```
+sudo apt install dnsutils
+```
+
+Exemplo:
+
+```
+dig fintab.com.br
+
+;; ANSWER SECTION:
+fintab.com.br.          0       IN      A       76.76.21.142
+fintab.com.br.          0       IN      A       76.76.21.9
+```
+
+```
+dig fintab.com.br TXT
+
+;; ANSWER SECTION:
+fintab.com.br.          0       IN      TXT     "Sou apaixonado pelos alunos do curso.dev"
+```
+
+```
+dig fintab.com.br TXT +trace
+
+; <<>> DiG 9.16.1-Ubuntu <<>> fintab.com.br TXT +trace
+;; global options: +cmd
+.                       0       IN      NS      a.root-servers.net.
+.                       0       IN      NS      b.root-servers.net.
+.                       0       IN      NS      c.root-servers.net.
+.                       0       IN      NS      d.root-servers.net.
+.                       0       IN      NS      e.root-servers.net.
+.                       0       IN      NS      f.root-servers.net.
+.                       0       IN      NS      g.root-servers.net.
+.                       0       IN      NS      h.root-servers.net.
+.                       0       IN      NS      i.root-servers.net.
+.                       0       IN      NS      j.root-servers.net.
+.                       0       IN      NS      k.root-servers.net.
+.                       0       IN      NS      l.root-servers.net.
+.                       0       IN      NS      m.root-servers.net.
+;; Received 432 bytes from 172.29.240.1#53(172.29.240.1) in 0 ms
+
+br.                     172800  IN      NS      a.dns.br.
+br.                     172800  IN      NS      b.dns.br.
+br.                     172800  IN      NS      c.dns.br.
+br.                     172800  IN      NS      d.dns.br.
+br.                     172800  IN      NS      e.dns.br.
+br.                     172800  IN      NS      f.dns.br.
+br.                     86400   IN      DS      38298 13 2 9F2D4993F47B0F2751DE0007D70A2754EE532FE373761154D9EA7A8C B9D8EA18
+br.                     86400   IN      RRSIG   DS 8 1 86400 20240417190000 20240404180000 5613 . HMQfRu1BxWDQUtw2/ZTFKrOEbDTuH/JyUNHBavJ1syea2Vz6VJiz8iwX Bhbsw+uyXgTfkDjFpgYXqysDmXCbRmDsaij90TUsTGlyQ+zTh3EEV8+z rNhW+aCE1HR3iWHBMSwVZxVNRKUAwP7JDNyh1WZBw/UlUjFtJg8wrYuE ht0BkNE9HCSVRnZLEZI9SK9+FvKCgcH7y6y58SJ7FJNegEZSYM8zZ1O8 fREa7Pe8SFPODmfscl/7GlWKxDKnK2ZiZKk2KRaXjkYlWKNXaMTm900k yyelPJFRZjCZbnPBy2sI/w3uXSIuTH/sbFbvxeIrX6O9jRHABO4j1Vow y4H6bw==
+;; Received 741 bytes from 199.7.91.13#53(d.root-servers.net) in 149 ms
+
+fintab.com.br.          3600    IN      NS      ns1.vercel-dns.com.
+fintab.com.br.          3600    IN      NS      ns2.vercel-dns.com.
+ve8nh0hp4ithvld6q1usbiuo0f09ia67.com.br. 900 IN NSEC3 1 1 0 ECDCFACEFB1D98A53E0B VE8NNBTS3UKVO5V9J4VAF6NF8Q2S8IT4 NS SOA RRSIG DNSKEY NSEC3PARAM
+ve8nh0hp4ithvld6q1usbiuo0f09ia67.com.br. 900 IN RRSIG NSEC3 13 3 900 20240419003508 20240404233508 57034 com.br. JODKAXt8fekFVTNScU1B09APnn1PGQ929rba58u6UmXuFtzY8NYXcAEU FaSWieGysoTIhjqZl6SAPWIVv2zysQ==
+3at2plohqp8paoe4umtmbk3bu10t4d15.com.br. 900 IN NSEC3 1 1 0 ECDCFACEFB1D98A53E0B 3AT55RB38OM7ELJ4LKPLAJ6OB9QM43D2 NS DS RRSIG
+3at2plohqp8paoe4umtmbk3bu10t4d15.com.br. 900 IN RRSIG NSEC3 13 3 900 20240416205608 20240402195608 57034 com.br. e4y+xbhaR2OmzreZHj3WkOqLudAjHyjSEUv/F5Hqkp8BABbqnYTByndW MLC6TIeR+MmwCCRRAZHIWginU68oLw==
+;; Received 503 bytes from 200.189.41.10#53(b.dns.br) in 69 ms
+
+fintab.com.br.          60      IN      TXT     "Sou apaixonado pelos alunos do curso.dev"
+;; Received 95 bytes from 198.51.44.13#53(ns1.vercel-dns.com) in 39 ms
+```
+
+#### Desafio
+
+```
+dig curso.dev TXT
+
+;; ANSWER SECTION:
+curso.dev.              0       IN      TXT     "HA! Voce me encontrou, mas o desafio ainda nao terminou, a bandeira esta aqui: aHR0cHM6Ly9jdXJzby5kZXYvd2ViL2Rucy1oNGNrM3I="
+curso.dev.              0       IN      TXT     "v=spf1 include:_spf.google.com ~all"
+```
+
+**Eu**:
+
+pode converter o subdomínio em base64 "aHR0cHM6Ly9jdXJzby5kZXYvd2ViL2Rucy1oNGNrM3I="
+
+**Copilot**:
+
+Claro! O texto em base64 que você forneceu é: "aHR0cHM6Ly9jdXJzby5kZXYvd2ViL2Rucy1oNGNrM3I=".
+Vamos decodificá-lo para obter o URL original. Utilizando uma ferramenta de decodificação de base64, obtemos:
+
+- Acesse [esta ferramenta de decodificação de base64](https://www.base64encode.org/).
+- Cole o texto base64 na caixa de entrada.
+- Clique no botão "Decode".
+  O resultado é o seguinte URL: https://curso.dev/web/dns-h4ck3r
+
+### 🏳️ Capture The Flag: DNS
+
+Você conseguiu encontrar a bandeira de DNS! 🎉 🎉 🎉 Parabéns por ter concluído o primeiro Capture The Flag do curso.dev! 💪 😍 🤝
+
+## Dia 13
+
+### 🚗 Pista Rápida
+
+Diferente da Pista Rápida do Dia 12 que foi bem longa, esta Pista Rápida aqui vai ser bem curta e rápida mesmo, não porque não tem conhecimentos importantes nas duas Pistas Lentas do dia, porque tem sim, mas é aquele tipo de conhecimento especial que revive acontecimentos da vida real de quem trabalha com tecnologia e que só vai fazer sentido acompanhar pela Pista Lenta mesmo... mas vou resumir o que aconteceu 🤝
+
+### Página "Em Construção" e Encerramento da Milestone 0
+
+Chegamos no ponto de começar a expandir o nosso alcance e começar a encontrar mais pessoas para criar um impacto e ter uma reação delas. Como se a gente fosse um radar e começasse a aumentar a potência dele, aumentar a potência do que você acredita que deva ser melhorado no mundo, aqueles 0.0000000000001% e aí você vai ver que mais pontinhos vão começar a aparecer no radar 💪
+
+Em paralelo a isto, eu apresento a Ideia McDonalds e mostro como eu usei ela para destravar o desenvolvimento de times em situações da vida real e também para conseguir destravar as minhas próprias ideias 🤝
+
+**Museu TabNews**
+
+- Página do Museu: https://www.tabnews.com.br/museu
+- Página "Em Construção": https://www.tabnews.com.br/museu/construction-01.html
+
+### Não confie em nenhum serviço 🛑
+
+Quando eu falo para não confiar nos serviços eu não estou falando no sentido moral em que eles "querem o seu mal" ou "querem fraudar você" de alguma forma. Até porque, todos os serviços que eu uso (seja em projetos pessoais ou projetos profissionais) eu confio bastante neste ponto... e é o mínimo na verdade.
+
+Agora, uma coisa que você não pode confiar e que não existe, é 100% de Uptime, ou seja, um serviço consiga dentro de um ano ficar online 100% do tempo nos mais de 31 milhões de segundos que um ano tem.
+
+**Status Pages**
+
+- Vercel: https://www.vercel-status.com/
+- AWS: https://health.aws.amazon.com/health/status
+- GitHub: https://www.githubstatus.com/
+
+---
+
+```
+sexta-feira, 05 de abril de 2024
+```
+
+## Dia 14
+
+### 🚗 Pista Rápida
+
+O Dia 14 veio para inaugurar a Milestone 1: Fundação que é um grande marco para o projeto e que vai fazer você entender como subir um projeto que pára em pé, de forma organizada e, mais importante, sem endoidar e sem desistir no meio do caminho 💪
+
+**Aula não listada extra**:
+
+🎁 Bônus: [PoC e MVP ajudam mesmo?](https://curso.dev/web/poc-e-mvp)
+
+### 🎁 Bônus: PoC e MVP ajudam mesmo?
+
+Que massa que você acessou a aula bônus e nela vamos conversar sobre uma confusão relacionada aos termos PoC e MVP 🤝
+
+### Inauguração Milestone 1: Fundação
+
+Se você ficou feliz com os conhecimentos adquiridos até a conclusão da Milestone 0, você vai gostar muito mais dos conhecimentos que vai adquirir agora na Milestone 1: Fundação.
+
+O nível de segurança e liberdade que você vai sentir ao concluir ela é de um valor impagável! Chega de ter ideias que ficam paradas na gaveta, pois você vai ver uma oportunidade no mundo e vai ter capacidade de capturar ela 💪
+
+### Uma história macabra sobre "Overengineering"
+
+Esta é mais uma aula que vai trazer experiência da vida real e que eu tento passar um pouco da minha "imunidade tecnológica" para você no que trata de algo que pode matar o seu projeto, o temido e confuso Overengineering.
+
+Proposta de Arquitetura e Pastas
+Chegou a hora de defirmos duas coisas importantes para o projeto:
+
+### Arquitetura de Software
+
+Organização de Pastas e Arquivos
+Então neste vídeo eu conto como foi o processo de decidir isso e outras coisas quando o TabNews nem existia ainda 🤝
+
+**Link da issue original**
+
+Este é o link da issue lá do repositório do TabNews:
+https://github.com/filipedeschamps/tabnews.com.br/issues/12
+
+> **eukaio**
+
+Quem quiser inserir os emojis de pastas 📂 e arquivos 📃 no texto da Issue basta ir em https://emojipedia.org/ e copiar.
+
+Já os caminhos das pastas foram desenhados com caracteres especiais para desenho de linha ┣ ┃ ┗. Você encontra uma lista aqui https://en.wikipedia.org/wiki/Box-drawing_character
+
+Edit: Para usuários de Windows existe o atalho tecla windows + tecla ponto (win + .) que abre uma lista de emojis.
+
+---
