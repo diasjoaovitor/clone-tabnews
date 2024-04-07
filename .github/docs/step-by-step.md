@@ -80,12 +80,6 @@ Então na lista abaixo você irá encontrar aulas não listadas sobre como confi
 
 O Codespaces é um ambiente de desenvolvimento completo fornecido de forma gratuita pelo GitHub onde é disponibilizado para você tanto um editor de código, que nesse caso é o super popular VSCode, quanto um terminal que por padrão roda Linux... é tudo o que a gente precisa!
 
----
-
-```
-sexta-feira, 29 de março de 2024
-```
-
 ## Dia 3
 
 ### 🚗 Pista Rápida
@@ -160,8 +154,10 @@ export default () => <h1>Home</h1>
 adicione o `script` no arquivo `package.json`:
 
 ```json
-"scripts": {
-  "dev": "next dev"
+{
+  "scripts": {
+    "dev": "next dev"
+  }
 }
 ```
 
@@ -195,9 +191,10 @@ node_modules
 e adicione mais um `script` no arquivo `package.json`:
 
 ```json
-"scripts": {
-  [...],
-  "start": "next start"
+{
+  "scripts": {
+    "start": "next start"
+  }
 }
 ```
 
@@ -254,12 +251,6 @@ Caso você deseje emendar um commit sem alterar a mensagem, é possível passar 
 > **zamorano**
 
 Para aqueles que precisarem de uma consulta rápida dos comandos mais utilizados do GIT (GIT Cheat Sheet): https://education.github.com/git-cheat-sheet-education.pdf
-
----
-
-```
-sábado, 30 de março de 2024
-```
 
 ## Dia 6
 
@@ -333,12 +324,6 @@ Ao compartilhar o seu desafio nos comentários desta aula, sugiro seguir os 3 pa
 **Atenção** 🛑
 
 A Vercel implementou um novo sistema de segurança nos deploys chamado de Deployment Protection. Isto é um ótimo recurso, mas caso você queira rapidamente passar a URL de algum deploy específico para alguém, uma alternativa é temporariamente desabilitar esta opção para que o servidor se comporte como antigamente. Para isto, siga [estas instruções](https://vercel.com/docs/security/deployment-protection#understanding-deployment-protection-by-environment) e desabilite o recurso 🤝
-
----
-
-```
-domingo, 31 de março de 2024
-```
 
 ## Pitstop 🏁
 
@@ -449,12 +434,6 @@ Nesta Pista Lenta iremos criar tanto a Milestone 0: Em construção, quanto as 3
 
 Fora conversar sobre a mecânica do neurotransmissor mais importante quando o assunto é se sentir motivado a iniciar, continuar e concluir tarefas.
 
----
-
-```
-segunda-feira, 1 de abril de 2024
-```
-
 ## Dia 10
 
 ### 🚗 Pista Rápida
@@ -558,10 +537,12 @@ E definir algumas configurações no arquivo `.prettierrc.json`:
 Finalmente, adicione os `scripts`:
 
 ```json
-"scripts": {
-  "dev": "next dev",
-  "lint:check": "prettier --check .",
-  "lint:fix": "prettier --write ."
+{
+  "scripts": {
+    "dev": "next dev",
+    "lint:check": "prettier --check .",
+    "lint:fix": "prettier --write ."
+  }
 }
 ```
 
@@ -776,12 +757,6 @@ Agora, uma coisa que você não pode confiar e que não existe, é 100% de Uptim
 - AWS: https://health.aws.amazon.com/health/status
 - GitHub: https://www.githubstatus.com/
 
----
-
-```
-sexta-feira, 05 de abril de 2024
-```
-
 ## Dia 14
 
 ### 🚗 Pista Rápida
@@ -828,3 +803,51 @@ Já os caminhos das pastas foram desenhados com caracteres especiais para desenh
 Edit: Para usuários de Windows existe o atalho tecla windows + tecla ponto (win + .) que abre uma lista de emojis.
 
 ---
+
+## Dia 15
+
+### 🚗 Pista Rápida
+
+Eu não to brincando quando eu falo que o Dia 15 pode mudar de verdade a sua vida na programação, isso porque ela ficou reservada para falar sobre Testes Automatizados e que é um tema que, se você engata, se você entende os benefícios e usa pra programar de uma forma melhor e mais despreocupada, muda completamente o seu fluxo de trabalho e é um caminho sem volta... sem volta mesmo!
+
+### Testes Automatizados: um caminho sem volta
+
+Trabalhar com Testes Automatizados para acelerar e melhorar como você programa é um caminho sem volta. O problema é como passar um conteúdo infinito como este num estilo "curso.dev" e neste vídeo eu faço uma proposta 🤝
+
+### Instalar um Test Runner
+
+Se você ainda não passou pela jornada dos Testes Automatizados, com o que eu vou te mostrar daqui para frente, provavelmente você vai pensar "nossa... testes automatizados é só isso!?!" ... aí naturalmente você vai enfiando cada vez mais o pé na lama, talvez num ponto de começar a colocar o assunto Testes Automatizados num pedestal. Aí depois quando dá aquele click de novo sobre o que realmente está acontecendo... você vai voltar a pensar: "nossa… testes automatizados… é só isso?!??!?"
+
+É uma jornada muito legal e reveladora de vários aspectos sobre a "arte de programar", e tudo começa com a instalação de um Test Runner 💪
+
+#### Let's code
+
+Instale o _test runner_ `jest`:
+
+```
+yarn add -D jest@29.6.2
+```
+
+adicione os scripts de teste:
+
+```json
+{
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch"
+  }
+}
+```
+
+### Criar um "Teste de Teste"
+
+Eu e você temos uma missão importante dentro dessa aula que é completar a tarefa de Criar um Teste de Teste, fora começar a aprender sobre o fluxo de trabalho que eu uso, que é usar o Test Runner para que ele nos diga se estamos nos aproximando ou afastando de um certo objetivo. E se você estiver se perguntando: "mas tá... qual objetivo?" Ótimo, porque é exatamente aqui que você precisa ativar o seu Modo Arqueiro e todo arqueiro precisa de um alvo (de um objetivo) para atirar a sua flecha 🏹
+
+Introdução ao JavaScript
+Meu objetivo é construir um material para pessoas que estão iniciando realmente do zero, mas enquanto este material não existe, gostaria de recomendar a playlist abaixo:
+
+🎥 [Curso Grátis de JavaScript e ECMAScript para Iniciantes](https://www.youtube.com/playlist?list=PLHz_AreHm4dlsK3Nr9GVvXCbpQyHQl1o1)
+
+### Criar um "Teste de Verdade"
+
+Agora a coisa começa a ficar séria porque a gente vai criar um Teste de Verdade e encerrar a issue Testes Automatizados pra valer 💪 Fora isso, nós vamos treinar duas abordagens completamente opostas quando se escreve testes (onde uma é só para profissionais) 🤝
