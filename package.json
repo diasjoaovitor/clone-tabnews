@@ -7,19 +7,35 @@
   "license": "MIT",
   "scripts": {
     "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
     "lint:check": "prettier --check .",
     "lint:fix": "prettier --write .",
     "test": "jest",
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "next": "13.1.6",
-    "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "next": "^14.1.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
+<<<<<<< HEAD
     "git-commit-msg-linter": "^5.0.7",
     "jest": "29.6.2",
     "prettier": "^3.2.5"
+=======
+    "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/react": "^14.3.0",
+    "@testing-library/user-event": "^14.5.2",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.12.6",
+    "@types/react": "^18.2.75",
+    "@types/react-dom": "^18.2.24",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.4"
+>>>>>>> 4b5dcf4f0660a3fa1fa5c038f21ac01af7e9dec3
   }
 }
