@@ -851,3 +851,236 @@ Meu objetivo é construir um material para pessoas que estão iniciando realment
 ### Criar um "Teste de Verdade"
 
 Agora a coisa começa a ficar séria porque a gente vai criar um Teste de Verdade e encerrar a issue Testes Automatizados pra valer 💪 Fora isso, nós vamos treinar duas abordagens completamente opostas quando se escreve testes (onde uma é só para profissionais) 🤝
+
+## Dia 16
+
+### 🚗 Pista Rápida
+
+O Dia 16 é mais um daqueles dias especiais aqui no curso.dev porque mistura parte teórica, parte prática e também como ser um profissional melhor. E eu diria que esta última parte de ser um profissional melhor é o que faz grudar na sua mente a parte teórica e prática, tanto que no final dessa Pista Rápida aqui eu adicionei uma mensagem extra que eu não coloquei em nenhuma Pista Lenta 💪
+
+### A maior briga no universo dos Testes Automatizados
+
+Testes Automatizados é um assunto tão importante quanto ele é passível de gerar briga na internet e nessa aula eu vou mostrar o motivo. É muito importante você estar preparado para esse tipo de discussão, principalmente sobre a diferença entre testes unitários, integração e e2e 💪
+
+**Pergunta**
+
+Qual a sua definição sobre os tipos de teste que existem?
+
+### Encostando a mão no Protocolo HTTP 🔥
+
+Essa aula vai ser muito massa, porque eu e você vamos encostar a mão no protocolo HTTP e isso não somente vai esclarecer na sua mente muita coisa sobre tudo o que existe na internet, como também vai ser a base para conseguir entender de fato (ou revisitar) muita coisa importante como: cookies, cabeçalhos, status codes, mas tirando toda a magia de onde esses dados vem, e tudo isso vai colocar você um passo mais próximo da senioridade, ou pelo menos, vai fazer você conseguir ter conversas sérias, muito mais avançadas e certeiras quando o contexto pedir por uma pessoa que tenha maturidade e experiência nesse assunto.
+
+### Não é magia! (é Protocolo)
+
+Eu sugiro você ter um único objetivo com estas aulas mais recentes, que é acreditar que, na area de tecnologia ou na programação num geral, não existe magia... não existe mesmo! Toda informação está em algum lugar e você pode não conhecer esse lugar e naturalmente assumir que é um local mágico, mas não é.
+
+Então nesta aula nós iremos cavucar um pouco mais o Protocolo HTTP na procura de informações que muitas pessoas encaram como "mágicas" 💪
+
+### Versionamento de API e Endpoint "/status"
+
+A aula de hoje tem muito mais conteúdos sobre API e HTTP, mas ela um objetivo muito claro e que já está super encaminhado, que é completar a tarefa Criar endpoint /status, e em cima disto iremos aprender sobre Versionamento de API e Breaking Changes 🤝
+
+#### Let's code
+
+| Observação
+|:------------|
+O curso não utiliza `TypeScript`, dessa forma, vou mostrar algumas configurações que utilizo nos meus projetos pessoais
+
+Devido a compatibilidade entre as bibliotecas, atualize todas as dependências do projeto que foram instaladas numa versão específica:
+
+```
+yarn add next react react-dom
+```
+
+Instale o `git-commit-msg-linter`:
+
+```
+yarn add -D git-commit-msg-linter
+```
+
+Instale e configure o suporte ao `TypeScript`:
+
+```
+yarn add -D typescript @types/node @types/react @types/react-dom
+```
+
+crie o arquivos:
+
+`tsconfig.json`
+
+```json
+{
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}
+```
+
+`next-env.d.ts`
+
+```ts
+/// <reference types="next" />
+/// <reference types="next/image-types/global" />
+
+// NOTE: This file should not be edited
+// see https://nextjs.org/docs/basic-features/typescript for more information.
+```
+
+`next.config.mjs`
+
+```js
+/** @type {import('next').NextConfig} */
+const nextConfig = {}
+
+export default nextConfig
+```
+
+Também foi alterado a estrutura de páginas para utilizar o [App Router](https://nextjs.org/docs/app/building-your-application/routing/pages-and-layouts), para isso renomeie a pasta `pages` para `app` e o arquivo `index.js` para `page.tsx`:
+
+```tsx
+const Home = () => <h1>Home</h1>
+
+export default Home
+```
+
+criei o arquivo `layout.tsx`:
+
+```tsx
+import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
+
+const inter = Inter({ subsets: ['latin'] })
+
+export const metadata: Metadata = {
+  title: 'Clone TabNews',
+  description:
+    'Implementação do https://www.tabnews.com.br para o https://curso.dev'
+}
+
+export default function RootLayout({
+  children
+}: Readonly<{
+  children: React.ReactNode
+}>) {
+  return (
+    <html lang="pt-br">
+      <body className={inter.className}>{children}</body>
+    </html>
+  )
+}
+```
+
+Instale bibliotecas de testes:
+
+```
+yarn add -D jest @types/jest jest-environment-jsdom @testing-library/react @testing-library/jest-dom @testing-library/user-event cross-fetch
+```
+
+crie o arquivo `jest.setup.ts`:
+
+```ts
+import '@testing-library/jest-dom'
+import 'cross-fetch/polyfill'
+```
+
+crie o arquivo `jest.config.js`
+
+```js
+module.exports = {
+  clearMocks: true,
+  testEnvironment: 'jsdom',
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+  modulePaths: ['<rootDir>/src/'],
+  transform: {
+    '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: ['next/babel'] }]
+  },
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1'
+  }
+}
+```
+
+crie a primeira rota da `api` em `src/app/api/v1/status/route.ts`:
+
+```ts
+import { NextResponse } from 'next/server'
+
+export const GET = async () => {
+  return NextResponse.json(
+    { message: 'Esta é uma mensagem de resposta' },
+    {
+      status: 200
+    }
+  )
+}
+```
+
+Faça uma requisição a `api`com o `curl` passando o parâmetro `-v` para obter as informações do protocolo `HTTP`:
+
+```
+curl http://localhost:3000/api/status -v
+```
+
+crie os testes automatizados:
+
+`src/tests/integration/api/v1/status/get.test.ts`
+
+```ts
+describe('GET to /api/v1/status', () => {
+  test('should return 200', async () => {
+    const response = await fetch('http://localhost:3000/api/v1/status')
+    expect(response.status).toBe(200)
+  })
+})
+```
+
+`src/tests/interface/app/home.test.tsx`:
+
+```tsx
+import { render, screen } from '@testing-library/react'
+import Home from '@/app/page'
+
+describe('<Home />', () => {
+  test('should render the heading', () => {
+    render(<Home />)
+    expect(screen.getByRole('heading', { name: 'Home', level: 1 }))
+  })
+})
+```
+
+após essas configurações, resultou nos seguintes `scripts`:
+
+```json
+{
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint:check": "prettier --check .",
+    "lint:fix": "prettier --write .",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  }
+}
+```
