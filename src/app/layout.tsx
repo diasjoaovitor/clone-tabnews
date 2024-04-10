@@ -9,14 +9,16 @@ export const metadata: Metadata = {
     'Implementação do https://www.tabnews.com.br para o https://curso.dev'
 }
 
-export default function RootLayout({
+const RootLayout = ({
   children
 }: Readonly<{
   children: React.ReactNode
-}>) {
+}>) => {
   return (
     <html lang="pt-br">
       <body className={inter.className}>{children}</body>
     </html>
   )
 }
+
+export default RootLayout
