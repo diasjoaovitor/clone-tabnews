@@ -1084,3 +1084,245 @@ após essas configurações, resultou nos seguintes `scripts`:
   }
 }
 ```
+
+## Dia 17
+
+### 🚗 Pista Rápida
+
+Além de conversarmos sobre tudo que foi feito no Dia 17, como as 3 partes que eu considero na escolha de um Banco de Dados, entender o motivo do Docker ter "dominado" o mundo das virtualizações, depois como subir e se conectar a uma instância de Postgres de forma local utilizando o Docker Compose, além de tudo isso, eu passo mais um pouco da minha visão sobre o que faz um sênior ser um sênior na nossa área 💪
+
+### Qual Banco de Dados escolher?
+
+Eu vou começar essa aula de um jeito estranho mas... e se eu te falar que talvez eu fiz a pior escolha de qual banco de dados usar para o TabNews e eu não me arrependo nenhum pouco? 🔥
+
+**Link para issue**
+
+Segue abaixo o link para a issue que eu comentei no vídeo:
+
+https://github.com/filipedeschamps/tabnews.com.br/issues/61
+
+### Por que o Docker dominou o mundo?
+
+Eu vim de uma época que me dói lembrar como que era configurar os serviços num ambiente de desenvolvimento local, porque toda hora algo mágico acontecia 😅 E nesta Pista Lenta vamos conferir a evolução deste assunto, até entrarmos na época dos containers.
+
+### Subir Banco de Dados (Local)
+
+A aula de hoje vai ser bastante prática, pois iremos usar o docker compose para subir um Banco de Dados na sua versão Local 🎉
+
+### Se conectando no Banco de Dados (Local)
+
+Eu deixei você na cara do gol na aula anterior, com o container rodando e servindo o Postgres, mas não sendo possível se conectar nele. E olha só que engraçado, a aula de hoje vai começar tentando se conectar nele mesmo assim para entender de verdade porque não é possível, e por fim, se conectar nele com sucesso 🎉
+
+## Dia 18
+
+### 🚗 Pista Rápida: Dia 18
+
+Como sempre, vamos passar rapidamente pelas principais coisas que aconteceram no Dia 18 (e aconteceram muitas coisas), mas tem algo em especial que eu não deixei claro em nenhuma Pista Lenta que eu quero falar aqui nessa Pista Rápida e que aconteceu 25 vezes 😍
+
+### Criar módulo "database.js"
+
+Nesta aula iremos criar o módulo database.js que é uma abstração da nossa infraestrutura e que vai ser responsável por abrir conexão com o Banco de Dados e enviar queries pra ele. Para isto, vamos instalar o módulo pg na versão 8.11.3 🤝
+
+**Comentário destaque** ⭐️
+
+Depois de ver a aula, sugiro ler [este comentário](https://curso.dev/alunos/filipedeschamps/ca07843d-c389-4722-83f7-55d8de12481b) que fiz sobre a dúvida de outro aluno, pois pode ajudar a clarear alguns pontos importantes sobre a utilidade do database.js 💪
+
+### A importância das Variáveis de Ambiente
+
+Quando eu realmente entendi o poder e a simplicidade das Variáveis de Ambiente, o meu cérebro deu alguns cliques muito importantes. Um deles foi de sempre que possível deixar a camada da aplicação stateless (sem estado) e isso se conecta perfeitamente com várias formas profissionais de se construir e escalar uma aplicação 💪
+
+### Variáveis de Ambiente no Código
+
+Qual a relação entre Variáveis de Ambiente, process, env e o que entra dentro do seu código? Vamos ver tudo isso dentro dessa aula e deixar sua aplicação 100% stateless 💪
+
+### Variáveis de Ambiente no Docker Compose
+
+Como fazer para evitar de ter Variáveis de Ambiente duplicadas no arquivo compose.yaml, no arquivo databse.js e fazer tudo puxar do .env? É isso o que iremos ver nesta aula, fora se deparar com um mistério... vamos ver se você sabe a resposta 🤝
+
+**Mistério: Por quê o Banco de Dados rodou?**
+
+Por que no minuto 02:22 da aula, ao trocar a Variável de Ambiente de POSTGRES_DATABASE para POSTGRES_DB no arquivo .env, a conexão com o Banco de Dados continuou funcionando, se o database.js estava pedindo ainda pela antiga Variável de Ambiente POSTGRES_DATABASE? Você vai precisar investigar para encontrar esta resposta 💪
+
+**Comentário em destaque**
+
+Caso queira saber qual a resposta, sugiro ler [esse comentário](https://curso.dev/alunos/HenriqueNas/b907f191-6823-495b-84b3-bb9494c525c4) que está bastante completo 🤝
+
+#### Let's code
+
+Instale o [node-postgres](https://www.npmjs.com/package/pg)
+
+```
+yarn add pg
+yarn add -D @types/pg
+```
+
+crie o arquivo `.env.development`:
+
+```
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_USER=local_user
+POSTGRES_DB=local_db
+POSTGRES_PASSWORD=local_password
+```
+
+configure o arquivo `jest.config.js`:
+
+```js
+const nextJest = require('next/jest')
+const dotenv = require('dotenv')
+
+dotenv.config({
+  path: '.env.development'
+})
+
+const createJestConfig = nextJest({
+  dir: '.'
+})
+
+const jestConfig = createJestConfig({
+  moduleDirectories: ['node_modules', '<rootDir>'],
+  clearMocks: true,
+  testEnvironment: 'jsdom',
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+  modulePaths: ['<rootDir>/src/'],
+  transform: {
+    '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: ['next/babel'] }]
+  },
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1'
+  }
+})
+
+module.exports = jestConfig
+```
+
+adicione a configuração do `Text Encoder` no arquivo `jest.setup.ts`:
+
+```ts
+import '@testing-library/jest-dom'
+import 'cross-fetch/polyfill'
+import { TextEncoder } from 'util'
+
+global.TextEncoder = TextEncoder
+```
+
+crie a pasta `src/infra` e adicione os arquivos:
+
+`compose.yml`
+
+```yml
+services:
+  database:
+    image: 'postgres:16.0-alpine3.18'
+    env_file:
+      - ../../.env.development
+    ports:
+      - '5432:5432'
+```
+
+`database.ts`
+
+```ts
+import { Client } from 'pg'
+
+const getNewClient = async () => {
+  const client = new Client({
+    host: process.env.POSTGRES_HOST,
+    port: process.env.POSTGRES_PORT as number | undefined,
+    user: process.env.POSTGRES_USER,
+    database: process.env.POSTGRES_DB,
+    password: process.env.POSTGRES_PASSWORD
+  })
+  await client.connect()
+  return client
+}
+
+const query = async (query: string, args?: string[]) => {
+  let client
+  try {
+    client = await getNewClient()
+    const result = await client.query(query, args)
+    return result
+  } catch (error) {
+    console.error(error)
+    throw error
+  } finally {
+    await client?.end()
+  }
+}
+
+export const database = {
+  query
+}
+```
+
+altere o retorno da rota `/status`:
+
+```ts
+import { NextResponse } from 'next/server'
+import { database } from '@/infra/database'
+
+export const GET = async () => {
+  const result = await database.query('SELECT 1 + 1;')
+  return NextResponse.json(
+    { message: result },
+    {
+      status: 200
+    }
+  )
+}
+```
+
+e configure o teste:
+
+```ts
+import { database } from '@/infra/database'
+
+describe('GET to /api/v1/status', () => {
+  test('should return 200', async () => {
+    const result = await database.query('SELECT 1 + 1;')
+    const response = await fetch('http://localhost:3000/api/v1/status')
+    expect(result).toBeDefined()
+    expect(response.status).toBe(200)
+  })
+})
+```
+
+adicione os `scripts`:
+
+```json
+{
+  "scripts": {
+    "services:up": "docker compose -f src/infra/compose.yml up -d",
+    "services:stop": "docker compose -f src/infra/compose.yml stop",
+    "services:down": "docker compose -f src/infra/compose.yml down"
+  }
+}
+```
+
+execução:
+
+```
+yarn services:up
+yarn dev
+yarn test:watch integration
+```
+
+caso deseje, instale o _client_ do `postgres` no sistema operacional:
+
+```
+sudo apt update
+sudo apt install postgresql-client
+```
+
+execute o _client_:
+
+```
+psql --host=localhost --username=local_user --db=local_db --port=5432
+```
+
+| Observação
+|:------------|
+| Após alterar o arquivo `compose.yml` é necessário recriar a imagem, o que poder ser feito de duas formas: `docker compose down && docker compose up -d` ou `docker compose up -d --force-recreate`
+| Para sair da conexão do `psql` basta digitar o comando `\q`
