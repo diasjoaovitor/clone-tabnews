@@ -6,7 +6,7 @@
   "author": "João Vitor <jvitordiass@outlook.com.br>",
   "license": "MIT",
   "scripts": {
-    "dev": "next dev",
+    "dev": "./init-dev.sh",
     "build": "next build",
     "start": "next start",
     "services:up": "docker compose -f src/infra/compose.yml up -d",
