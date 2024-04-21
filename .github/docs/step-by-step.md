@@ -1326,3 +1326,342 @@ psql --host=localhost --username=local_user --db=local_db --port=5432
 |:------------|
 | Após alterar o arquivo `compose.yml` é necessário recriar a imagem, o que poder ser feito de duas formas: `docker compose down && docker compose up -d` ou `docker compose up -d --force-recreate`
 | Para sair da conexão do `psql` basta digitar o comando `\q`
+
+## Dia 19
+
+### 🚗 Pista Rápida
+
+Além de revisar tudo o que aconteceu no Dia 19, eu bato de novo na tecla do que é algo ser semântico. Esta é uma palavra que quero usar mais vezes, pois fazer coisas não semânticas inevitavelmente levam a muita confusão na evolução de um sistema, principalmente quando o código é passado de uma pessoa para outra 🤝
+
+### Foi certo fazer o commit do .env?
+
+Como eu antecipei na última Pista Lenta do Dia 18, algumas lapidações importantes precisam ser feitas, incluindo em conhecimento, e eu acho melhor a gente não deixar isso para depois e fazer agora. Então eu gostaria de começar tocando no ponto de que se foi certo ou não fazer o commit do arquivo .env 🤝
+
+**Artigo sobre remover dados sensíveis**
+
+Este é o artigo que eu comentei sobre remover dados sensíveis do histórico do seu repositório: [Remover dados confidenciais de um repositório](https://docs.github.com/pt/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+
+**Comentário em destaque**
+
+Sugiro ler [esse comentário]() do aluno maion explicando como ele usou o BFG para remover dados sensíveis de dois arquivos do seu repositório 💪
+
+### Uma história macabra sobre "Choque Elétrico" e "TDD"
+
+Tem algo que me torra a paciência desde a criação do Node.js que é ele não vir por padrão com um Root Path (Caminho Raiz ou Diretório Raiz) do projeto, que é saber por padrão onde está localizada a raiz dele para trabalhar com Absolute Imports e não somente com Relative Imports. Existe uma forma bastante moderna de solucionar isso e para fazer esta implementação no estilo curso.dev, eu preciso primeiro contar uma história sobre o Guga ter levado um choque por não ter aplicado TDD 🤝
+
+### Configurar o "baseUrl" para "Absolute Imports"
+
+Sem tempo a perder (e sem levar choque), nosso objetivo com essa aula é matar o `../../../../` interminável para acessar o database.js e conseguir referenciar ele apenas como `infra/database.j`s em qualquer que seja o script que queira importá-lo 💪
+
+**Comentário em destaque**
+
+Depois de ver a aula, sugiro ler [este comentário](https://curso.dev/alunos/marini/46f83768-86d5-4d80-b584-4ad9e780de14) sobre um comporamento muito interessante a respeito de iniciar o caminho com / 🤝
+
+### Configurar scripts dos serviços
+
+Essa aqui vai ser mais uma aula com lapidações, mas uma super importante, porque a gente vai deixar o projeto alinhado para quando a gente for trabalhar na issue de Continuous Integration 💪 Fora isso, a aula é repleta com dicas extras 😍
+
+#### Let's code
+
+Baseado no comentário do [brunocmessias](https://curso.dev/web/configurar-scripts-servicos#:~:text=3-,brunocmessias,-28%20dias%20atr%C3%A1s), criei o script `init-dev.sh`:
+
+```sh
+#!/bin/bash
+
+function cleanup {
+  yarn services:down
+  PID=$(lsof -t -i:3000)
+  if [ -n "$PID" ]; then
+    kill $PID
+  fi
+  exit 0
+}
+
+trap cleanup INT
+
+yarn services:up && next dev
+```
+
+scripts no `package.json`:
+
+```json
+{
+  "scripts": {
+    "dev": "./init-dev.sh",
+    "services:up": "docker compose -f src/infra/compose.yml up -d",
+    "services:stop": "docker compose -f src/infra/compose.yml stop",
+    "services:down": "docker compose -f src/infra/compose.yml down"
+  }
+}
+```
+
+## Dia 20
+
+### 🚗 Pista Rápida
+
+Eu já trabalhei com muita gente boa, mas até essas pessoas (uma parte delas pelo menos), deixavam escapar algo extremamente importante... deixavam de pensar sobre algo importante na hora de programar um backend, mas você não vai falhar nisso e é por esse e outros motivos que o Dia 20 existe 💪
+
+### Endpoint "/status": ISO 8601 + Fuso + MVC + lowerCamelCase
+
+Esta é uma descrição difícil de se fazer, pois esta é mais uma daquelas aulas onde eu avanço o projeto e utilizo qualquer oportunidade que consigo para fazer o download de mais conhecimentos. Por isso que além de avançar com o endpoint /status, eu aproveito para falar sobre ISO 8601, Fuso, MVC e lowerCamelCase 💪
+
+### Database "Version" (+ Red, Green e Refactor do TDD)
+
+Chegou a hora de usar 100% de TDD para implementar o retorno do dependencies.database.version. Fora isso, vamos revisitar os 3 Estágios do TDD que são Red, Green e Refactor 💪
+
+🛑 **Atenção**
+
+Para você entender o começo dessa aula, você precisa ficar até o último segundo da aula anterior: [Endpoint "/status": ISO 8601 + Fuso + MVC + lowerCamelCase](https://curso.dev/web/endpoint-status-updated-at) 🤝
+
+### Database "Max Connections"
+
+Já que estamos retornando a Versão do Postgres no endpoint /status, o próximo agora passo é retornar as Conexões máximas e, tecnicamente falando, isso é uma implementação simples, mas vai ser a oportunidade perfeita pra que, no meio da implementação, eu faça uma pergunta muito importante.. uma que evitaria eu ter cometido um erro no TabNews. Vamos ver qual vai ser a sua resposta 😍
+
+### Database "Opened Connections"
+
+Essa Pista Lenta aqui vai ser muito massa, porque ela vai abrir margem pra eu ensinar conceitos muito importantes sobre Banco de Dados, tráfego de dados, fora que a última coisa que falta é injetar no retorno do endpoint /status a quantidade de Conexões usadas pelo nosso backend, na verdade... quantas conexões ao banco estão abertas naquele momento, independente se foi nosso backend ou outro client que está se conectando ao banco 🤝
+
+### SQL Injection e Queries Parametrizadas
+
+O Dia 20 tá bem massa e vai ficar ainda mais, porque nesta Pista Lenta vamos aprender sobre SQL Injection, Queries Parametrizadas, identificar e consertar o problema de Vazamento de Conexões, marcar como concluída a tarefa Finalizar retorno do endpoint /status e concluir a issue Banco de Dados (Local) com muito orgulho 💪
+
+#### Let's code
+
+Pra quem deseja utlizar `TypeScript` no projeto, escrevi um [tutorial no TabNews](https://www.tabnews.com.br/diasjoaovitor/tutorial-como-criar-um-boilerplate-para-projetos-com-next-js) sobre como configurar um boilerplate para projetos `Next`.
+
+Eu fiz algumas alterações no projeto que estamos fazendo no curso e ele está estruturado da seguinte forma:
+
+```
+tree -a -I 'node_modules|.next|.swc|.git|assets|docs|_'
+```
+
+```
+├── .editorconfig
+├── .env.development
+├── .eslintrc.json
+├── .github
+│   └── workflows
+│       └── ci.yml
+├── .gitignore
+├── .husky
+│   └── pre-commit
+├── .lintstagedrc.js
+├── .nvmrc
+├── .prettierignore
+├── .prettierrc.json
+├── .vscode
+│   └── settings.json
+├── README.md
+├── generators
+│   ├── plopfile.js
+│   └── templates
+│       └── index.tsx.hbs
+├── init-dev.sh
+├── jest.config.js
+├── jest.setup.ts
+├── next-env.d.ts
+├── next.config.mjs
+├── package.json
+├── src
+│   ├── app
+│   │   ├── api
+│   │   │   └── v1
+│   │   │       └── status
+│   │   │           └── route.ts
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   ├── infra
+│   │   ├── compose.yml
+│   │   └── database.ts
+│   └── tests
+│       ├── integration
+│       │   └── api
+│       │       └── v1
+│       │           └── status
+│       │               └── get.test.ts
+│       └── interface
+│           └── app
+│               └── home.test.tsx
+├── tsconfig.json
+└── yarn.lock
+```
+
+Estou usando `App Router` ao invés de `Pages Router`, então a estrutura varia um pouco.
+
+O arquivo `route.ts` ficou da seguinte forma:
+
+```ts
+import { NextResponse } from 'next/server'
+import { QueryResult, QueryResultRow } from 'pg'
+import { database } from '@/infra/database'
+
+export type TStatusBody = {
+  updated_at: string
+  dependencies: {
+    database: {
+      version: string
+      max_connections: string
+      opened_connections: number
+    }
+  }
+}
+
+export const GET = async () => {
+  const updatedAt = new Date().toISOString()
+
+  const {
+    rows: [{ server_version }]
+  } = (await database.query(
+    'show server_version;'
+  )) as QueryResult<QueryResultRow>
+
+  const {
+    rows: [{ max_connections }]
+  } = (await database.query(
+    'show max_connections;'
+  )) as QueryResult<QueryResultRow>
+
+  const databaseName = process.env.POSTGRES_DB as string
+  const {
+    rows: [{ count }]
+  } = (await database.query({
+    text: 'select count(*)::int from pg_stat_activity where datname = $1;',
+    values: [databaseName]
+  })) as QueryResult<QueryResultRow>
+
+  const body: TStatusBody = {
+    updated_at: updatedAt,
+    dependencies: {
+      database: {
+        version: server_version,
+        max_connections,
+        opened_connections: count
+      }
+    }
+  }
+  return NextResponse.json(body, {
+    status: 200
+  })
+}
+```
+
+Arquivo `layout.tsx`:
+
+```tsx
+import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
+
+const inter = Inter({ subsets: ['latin'] })
+
+export const metadata: Metadata = {
+  title: 'Clone TabNews',
+  description:
+    'Implementação do https://www.tabnews.com.br para o https://curso.dev'
+}
+
+const RootLayout = ({
+  children
+}: Readonly<{
+  children: React.ReactNode
+}>) => {
+  return (
+    <html lang="pt-br">
+      <body className={inter.className}>{children}</body>
+    </html>
+  )
+}
+
+export default RootLayout
+```
+
+Arquivo `page.tsx`:
+
+```tsx
+const Home = () => <h1>Home</h1>
+
+export default Home
+```
+
+Arquivo `database.ts`:
+
+```ts
+import { Client } from 'pg'
+
+const getNewClient = async () => {
+  const client = new Client({
+    host: process.env.POSTGRES_HOST,
+    port: process.env.POSTGRES_PORT as number | undefined,
+    user: process.env.POSTGRES_USER,
+    database: process.env.POSTGRES_DB,
+    password: process.env.POSTGRES_PASSWORD
+  })
+  await client.connect()
+  return client
+}
+
+const query = async (
+  query: string | { text: string; values: (number | string)[] },
+  args?: string[]
+) => {
+  let client
+  try {
+    client = await getNewClient()
+    const result = await client.query(query, args)
+    return result
+  } catch (error) {
+    console.error(error)
+    throw error
+  } finally {
+    await client?.end()
+  }
+}
+
+export const database = {
+  query
+}
+```
+
+Arquivo `get.test.ts`:
+
+```ts
+import { TStatusBody } from '@/app/api/v1/status/route'
+
+describe('GET to /api/v1/status', () => {
+  test('should return 200', async () => {
+    const response = await fetch('http://localhost:3000/api/v1/status')
+    expect(response.status).toBe(200)
+
+    const data: TStatusBody = await response.json()
+    const { updated_at } = data
+
+    const parsedUpdatedAt = new Date(updated_at).toISOString()
+    expect(updated_at).toBe(parsedUpdatedAt)
+
+    const expectedData: TStatusBody = {
+      updated_at,
+      dependencies: {
+        database: {
+          version: '16.0',
+          max_connections: '100',
+          opened_connections: 1
+        }
+      }
+    }
+    expect(data).toEqual(expectedData)
+  })
+})
+```
+
+Arquivo `home.test.tsx`:
+
+```ts
+import { render, screen } from '@testing-library/react'
+import Home from '@/app/page'
+
+describe('<Home />', () => {
+  test('should render the heading', () => {
+    render(<Home />)
+    expect(screen.getByRole('heading', { name: 'Home', level: 1 }))
+  })
+})
+```
