@@ -12,7 +12,10 @@ const getNewClient = async () => {
   return client
 }
 
-const query = async (query: string, args?: string[]) => {
+const query = async (
+  query: string | { text: string; values: (number | string)[] },
+  args?: string[]
+) => {
   let client
   try {
     client = await getNewClient()
