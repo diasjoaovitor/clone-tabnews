@@ -122,7 +122,7 @@ nvm alias default lts/hydrogen
 ```
 
 ```
-yarn add next@13.1.6 react@18.2.0 react-dom@18.2.0
+npm i next@13.1.6 react@18.2.0 react-dom@18.2.0
 ```
 
 ## Dia 4
@@ -164,7 +164,7 @@ adicione o `script` no arquivo `package.json`:
 execute o comando de inicialização:
 
 ```
-yarn dev
+npm run dev
 ```
 
 ### Um desafio importante
@@ -502,7 +502,7 @@ A princípio, o assunto Prettier é simples, e de fato é, mas esta simplicidade
 Instale o [módulo](https://www.npmjs.com/package/prettier) e a [extensão](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) do [prettier](https://prettier.io/)
 
 ```
-yarn add -D prettier
+npm i -D prettier
 ```
 
 defina o `prettier` como o formatador padrão do `VSCode` em `Default Formatter` e habilite a opção `Format On Save`. Para garantir a melhor praticidade quando estiver escrevendo testes automatizados, desabilite a opção `Auto Save`
@@ -825,7 +825,7 @@ Se você ainda não passou pela jornada dos Testes Automatizados, com o que eu v
 Instale o _test runner_ `jest`:
 
 ```
-yarn add -D jest@29.6.2
+npm i -D jest@29.6.2
 ```
 
 adicione os scripts de teste:
@@ -889,19 +889,19 @@ O curso não utiliza `TypeScript`, dessa forma, vou mostrar algumas configuraç�
 Devido a compatibilidade entre as bibliotecas, atualize todas as dependências do projeto que foram instaladas numa versão específica:
 
 ```
-yarn add next react react-dom
+npm i next react react-dom
 ```
 
 Instale o `git-commit-msg-linter`:
 
 ```
-yarn add -D git-commit-msg-linter
+npm i -D git-commit-msg-linter
 ```
 
 Instale e configure o suporte ao `TypeScript`:
 
 ```
-yarn add -D typescript @types/node @types/react @types/react-dom
+npm i -D typescript @types/node @types/react @types/react-dom
 ```
 
 crie o arquivos:
@@ -994,7 +994,7 @@ export default function RootLayout({
 Instale bibliotecas de testes:
 
 ```
-yarn add -D jest @types/jest jest-environment-jsdom @testing-library/react @testing-library/jest-dom @testing-library/user-event cross-fetch
+npm i -D jest @types/jest jest-environment-jsdom @testing-library/react @testing-library/jest-dom @testing-library/user-event cross-fetch
 ```
 
 crie o arquivo `jest.setup.ts`:
@@ -1152,8 +1152,8 @@ Caso queira saber qual a resposta, sugiro ler [esse comentário](https://curso.d
 Instale o [node-postgres](https://www.npmjs.com/package/pg)
 
 ```
-yarn add pg
-yarn add -D @types/pg
+npm i pg
+npm i -D @types/pg
 ```
 
 crie o arquivo `.env.development`:
@@ -1304,9 +1304,9 @@ adicione os `scripts`:
 execução:
 
 ```
-yarn services:up
-yarn dev
-yarn test:watch integration
+npm run services:up
+npm run dev
+npm run test:watch integration
 ```
 
 caso deseje, instale o _client_ do `postgres` no sistema operacional:
@@ -1369,7 +1369,7 @@ Baseado no comentário do [brunocmessias](https://curso.dev/web/configurar-scrip
 #!/bin/bash
 
 function cleanup {
-  yarn services:down
+  npm run services:down
   PID=$(lsof -t -i:3000)
   if [ -n "$PID" ]; then
     kill $PID
@@ -1379,7 +1379,7 @@ function cleanup {
 
 trap cleanup INT
 
-yarn services:up && next dev
+npm run services:up && next dev
 ```
 
 scripts no `package.json`:
@@ -1483,7 +1483,7 @@ tree -a -I 'node_modules|.next|.swc|.git|assets|docs|_'
 │           └── app
 │               └── home.test.tsx
 ├── tsconfig.json
-└── yarn.lock
+└── package-lock.json
 ```
 
 Estou usando `App Router` ao invés de `Pages Router`, então a estrutura varia um pouco.

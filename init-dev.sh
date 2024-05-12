@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function cleanup {
-  yarn services:down
+  npm run services:down
   PID=$(lsof -t -i:3000)
   if [ -n "$PID" ]; then
     kill $PID
@@ -11,4 +11,4 @@ function cleanup {
 
 trap cleanup INT
 
-yarn services:up && next dev
+npm run services:up && next dev
