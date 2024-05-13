@@ -1166,7 +1166,11 @@ POSTGRES_DB=local_db
 POSTGRES_PASSWORD=local_password
 ```
 
-configure o arquivo `jest.config.js`:
+instale o `dotenv` e configure o arquivo `jest.config.js`:
+
+```
+npm i -D dotenv
+```
 
 ```js
 const nextJest = require('next/jest')
@@ -1664,4 +1668,90 @@ describe('<Home />', () => {
     expect(screen.getByRole('heading', { name: 'Home', level: 1 }))
   })
 })
+```
+
+## Dia 21
+
+### 🚗 Pista Rápida
+
+O Dia 21 é extremamente denso e pode ser um daqueles Dias em que você sai diferente do outro lado, ainda mais numa parte extremamente importante para maioria das aplicações que é o Banco de Dados.
+
+**Cena final**
+
+Os alunos que aparecem na cena final foram os que mais assistiram aulas até o momento em que este vídeo foi produzido (incluindo aulas de Desafio, Capture The Flag e Easter Egg) 🤝
+
+### Investigando logs da Vercel em Produção
+
+Não tem coisa que me assusta mais em desenvolvimento de software do que ficar muito tempo sem fazer deploy em produção. E como o endpoint `/api/v1/status` está retornando erro 500, vamos aproveitar para investigar e provar o que está acontecendo 💪
+
+### Banco de Produção no ElephantSQL (gratuito)
+
+Temos uma missão muito importante que é, nessa aula, criar uma conta no ElephantSQL, criar um banco Postgres lá dentro, pegar as credenciais desse banco, configurar elas nas variáveis de ambiente lá da Vercel e com isso fazer o endpoint /api/v1/status em produção voltar a vida 💪
+
+[Link da issue que comentei](https://github.com/filipedeschamps/tabnews.com.br/issues/120)
+
+**Migrations não estão mais sendo rodadas
+Atenção** 🛑
+
+De uma forma assustadora, alguns dias depois desta aula ter sido publicada, a ElephantSQL publicou em [seu blog](https://www.elephantsql.com/blog/end-of-life-announcement.html) que não irá mais aceitar novas contas a partir do dia 01/05/2024 e irá encerrar suas atividades dia 27/01/2025.
+
+Independente disto, a parte educacional da aula mantém 100% de validade 🎉
+
+### Banco de Produção no Neon (gratuito)
+
+A gente não precisa inventar ou se preocupar com mais nada nesse momento a não ser fazer tudo o que a gente fez com o ElephantSQL, mas agora com o Neon, que como falei na aula anterior, é um serviço mais novo e com recursos mais sofisticados 💪
+
+#### Let's code
+
+Adicione o valor abaixo no objeto de configuração da função `getNewClient`:
+
+```js
+ssl: process.env.NODE_ENV === 'production'
+```
+
+### Banco de Produção no DigitalOcean (pago)
+
+A nossa próxima tarefa é criar uma conta na [DigitalOcean](https://www.digitalocean.com/) e levantar uma instância lá de Postgres 💪 Será que vai ser fácil ou vai ter mais um conhecimento super importante "barrando" o nosso caminho? Spoiler: vai ter e vai ser MUITO massa 😉
+
+#### Observação
+
+Essa aula explica como configurar um serviço que necessita de certificado para funcionar e apresenta a criação da função [getSSLValues](https://github.com/filipedeschamps/clone-tabnews/blob/c5cc52442f9343e940a733a7542214b290e92a90/infra/database.js#L36), na qual não é necessária para o banco de dados `Neon`
+
+## Dia 22
+
+### 🚗 Pista Rápida
+
+Não existe profissional na nossa área, que se considera um profissional completo pelo menos, e que não sabe mexer com migrations. Então, se esta é uma lacuna no seu conhecimento, fica tranquilo, que o Dia 22 veio para resolver isso de uma vez por todas 💪
+
+### Por que as Migrations existem?
+
+Como a gente acabou de encostar no assunto Banco de Dados, o que você acha da gente matar o assunto Migrations que está super relacionado? E é até importante tratar disso agora, no início, porque um projeto que não usa Migrations para o seu Banco de Dados seria mais ou menos análogo a um projeto que não usa versionamento, Git, para o código do seu projeto para manter a integridade e rastreamento das alterações.
+
+### Migrations por Linha de Comando
+
+Nesta Pista Lenta iremos dar passos concretos para se trabalhar com Migrations, onde através da CLI (Command Line Interface) do node-pg-migrate, iremos tanto criar arquivos de migração quanto executar eles para valer 💪
+
+#### Let's code
+
+Instale o `node-pg-migrate` e o `dotenv-expand`:
+
+```
+npm i -D node-pg-migrate dotenv-expand
+```
+
+Adicione a variável de ambiente `DATABASE_URL` no arquivo `.env.development`:
+
+```
+DATABASE_URL=postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB
+```
+
+Adicione os `scripts`:
+
+```json
+{
+  "scripts": {
+    "migration:create": "node-pg-migrate -m src/infra/migrations create",
+    "migration:up": "node-pg-migrate -m src/infra/migrations --envPath .env.development up"
+  }
+}
 ```
