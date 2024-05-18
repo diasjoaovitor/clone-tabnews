@@ -1755,3 +1755,322 @@ Adicione os `scripts`:
   }
 }
 ```
+
+## Dia 23
+
+### 🚗 Pista Rápida
+
+Se o Dia 22 abriu um pouco a sua mente sobre o assunto Migrations, o Dia 23 vai consolidar muita coisa, fora abrir margem pra gente conversar assuntos extremamente importantes e que vão influenciar todo o restante do desenvolvimento 🤝
+
+### Migrations pelo endpoint “/migrations” (Dry Run)
+
+Dessa vez vamos atacar a tarefona "Executar Migrations pelo endpoint /migrations" e continuando nesse ritmo, vai ser inevitável você se tornar um profissional nesse assunto 🤝
+
+### Por que evitar a direção "down"?
+
+Do jeito que o código do /migrations está hoje, tanto se você rodar ele no modo Dry Run, quanto no Live Run, ambos vão executar as Migrations somente na mesma direção, a up, que é ler e executar elas na ordem crescente. Isto não vai mudar e nesta aula irei ter uma conversa muito importante com você dos motivos desta escolha 🤝
+
+**Artigos citados na aula**
+
+- [Pitfalls with SQL rollbacks and automated database deployments](https://octopus.com/blog/database-rollbacks-pitfalls)
+- [Stack Overflow: How We Do Deployment - 2016 Edition](https://nickcraver.com/blog/2016/05/03/stack-overflow-how-we-do-deployment-2016-edition/)
+
+### Migrations pelo endpoint "/migrations" (Live Run - Início)
+
+Chegou a hora de implementarmos uma versão do código onde, ao realizar um POST contra o endpoint /api/v1/migrations, as Migrations do sistema são rodadas para valer no modo Live Run, e tudo isso coberto por Testes Automatizados, onde inclusive vamos ver como filtrar os testes de uma forma mais refinada para conseguir isolar apenas a bateria de testes que queremos rodar e isto é fundamental para quando a quantidade de testes for maior 💪
+
+Mas o mais importante desta aula é revelar uma condição na arquitetura dos testes que eu estipulei no começo do TabNews 🤝
+
+**Artigos citados na aula**
+
+- [The argument against clearing the database between tests](https://calpaterson.com/against-database-teardown.html)
+- [Thread no Hacker News](https://news.ycombinator.com/item?id=29764792)
+
+## Dia 24
+
+### 🚗 Pista Rápida
+
+O Dia 24 faz parte de uma série de desafios que eu gostaria que você passasse para que uma grande lição faça sentido... algo que na minha visão vai deixar você à prova de balas, ou até melhor, à prova de futuro 💪
+
+### Fazendo o Jest "transpilar" arquivos em ESM
+
+É a partir dessa Pista Lenta que você vai entender o afastamento que dá para ter da Muralha de Negócio que é, no final das contas, ter o endpoint /migrations usável por quem quer consultar ou rodar as Migrations do sistema por essa interface programática. Eu digo isso, porque a gente vai passar por algumas coisas da Muralha Técnica que não são tão semânticas, nem divertidas, pelo menos quando comparado a onde a gente quer chegar. Uma destas coisas é fazer o Jest conseguir ler e utilizar módulos ESM, que é o que iremos resolver dentro desta aula 🤝
+
+**Desafios para próxima aula**
+
+Ao final eu proponho dois desafios:
+
+- Desafio Nível 1: provar através do código que o processo do Jest de fato está rodando no ambiente test e também provar que as credenciais do Banco de Dados não estão sendo injetadas no process.env.
+- Desafio Nível 2: fazer o .env.development ser carregado dentro do processo do Jest.
+
+**Como publicar as respostas sem dar spoiler?**
+
+Dentro do corpo da sua resposta, você pode pode utilizar a tag especial `<details>`, por exemplo:
+
+````html
+<details>
+  <summary>Spoiler</summary>
+
+  Esta parte estará escondida por padrão até que você clique em `Spoiler`. E
+  aqui dentro você poderá colocar o que quiser, até outro código, por exemplo:
+  ``` js console.log('funcionou!'); ```
+</details>
+````
+
+O resultado do código acima é isto aqui:
+
+<details>
+  <summary>Spoiler</summary>
+
+Esta parte estará escondida por padrão até que você clique em `Spoiler`.
+
+E aqui dentro você poderá colocar o que quiser, até outro código, por exemplo:
+
+```js
+console.log('funcionou!')
+```
+
+</details>
+
+### Limpando o Banco de Dados
+
+Vamos matar nessa aula o Desafio de Nível 1 e Desafio de Nível 2 para você tanto comparar como eu vou fazer por aqui, quanto pra treinar fazer esse tipo de investigação e como abordar um problema como esse, porque essas habilidades vão valer por muito tempo 💪 E como resultado final, iremos limpar o state do Banco de Dados a cada bateria de teste 🤝
+
+### Expandindo testes e refatorando implementação
+
+Pelo fato de na aula anterior a gente ter conseguido estabilizar os testes - deixar eles reproduzíveis independente de modificarem o state do banco ou não - significa que agora é possível expandir eles, deixar eles mais sofisticados.
+
+Dado a isso eu vou expandir o teste do POST para provar que o endpoint /migrations está fazendo o que ele deveria estar fazendo e também gostaria de aproveitar para fazer algumas refatorações, incluindo introduzir comportamentos novos na implementação concreta do endpoint 🤝
+
+## Dia 25
+
+### 🚗 Pista Rápida
+
+O Dia 25 é um dia muito legal, muito gostoso de se assistir, tanto porque a gente avança a Milestone quanto porque ele contém uma grande lição e até um puxão de orelha. Fora isso, nesta Pista Rápida aqui, você irá ver trechos de uma Live que eu fiz com os Membros do meu canal no YouTube em 2021, quando publicamos pela primeira vez o endpoint /api/v1/migrations em Produção 🤝
+
+### Fazendo Deploy e rodando as Migrations em Produção 🎉
+
+Nesta Pista Lenta iremos concluir a tarefa Executar Migrations pelo endpoint /migrations, fechar a Issue de Migrations e avançar a Milestone 😍 Tudo isso, pois iremos fazer o deploy em produção do que implementamos nos últimos Dias 💪
+
+### Grande lição + Puxão de orelha 💪
+
+Vamos conversar de uma forma mais séria hoje e numa das aulas do Dia 23 eu comentei que, na nossa área é possível seguir por dois caminhos, o caminho que outras pessoas estão seguindo e o caminho que você acabou de seguir... e agora eu gostaria de esclarecer mais o que são esses dois caminhos 💪
+
+#### Let's code
+
+`jest.config.js`
+
+```js
+const nextJest = require('next/jest')
+const dotenv = require('dotenv')
+
+dotenv.config({
+  path: '.env.development'
+})
+
+const createJestConfig = nextJest({
+  dir: '.'
+})
+
+const jestConfig = createJestConfig({
+  testEnvironment: 'jsdom',
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts']
+})
+
+module.exports = jestConfig
+```
+
+---
+
+`package.json`
+
+```json
+{
+  {
+    "scripts": {
+      // ...,
+      "test": "jest --runInBand",
+      "test:watch": "jest --runInBand --watchAll"
+    }
+  }
+ }
+```
+
+---
+
+`migrations/route.ts`
+
+```ts
+import { NextResponse } from 'next/server'
+import { ClientBase } from 'pg'
+import migrationRunner, { RunnerOption } from 'node-pg-migrate'
+import { join } from 'path'
+import { database } from '@/infra/database'
+
+const getDefaultMigrationOptions = ({
+  dbClient,
+  dryRun
+}: {
+  dbClient: ClientBase
+  dryRun: boolean
+}) => {
+  const options: RunnerOption = {
+    dir: join('src', 'infra', 'migrations'),
+    direction: 'up',
+    verbose: true,
+    migrationsTable: 'pgmigrations',
+    dbClient,
+    dryRun
+  }
+  return options
+}
+
+export const GET = async () => {
+  let dbClient
+  try {
+    dbClient = await database.getNewClient()
+    const defaultMigrationOptions = getDefaultMigrationOptions({
+      dbClient,
+      dryRun: true
+    })
+    const pendingMigrations = await migrationRunner(defaultMigrationOptions)
+    return NextResponse.json(pendingMigrations, {
+      status: 200
+    })
+  } catch (error) {
+    console.error(error)
+    throw error
+  } finally {
+    await dbClient?.end()
+  }
+}
+
+export const POST = async () => {
+  let dbClient
+  try {
+    dbClient = await database.getNewClient()
+    const defaultMigrationOptions = getDefaultMigrationOptions({
+      dbClient,
+      dryRun: false
+    })
+    const migratedMigrations = await migrationRunner(defaultMigrationOptions)
+    const status = migratedMigrations.length > 0 ? 201 : 200
+    return NextResponse.json(migratedMigrations, { status })
+  } catch (error) {
+    console.error(error)
+    throw error
+  } finally {
+    await dbClient?.end()
+  }
+}
+```
+
+---
+
+`database.ts`
+
+```ts
+import { Client } from 'pg'
+
+const getNewClient = async () => {
+  const client = new Client({
+    host: process.env.POSTGRES_HOST,
+    port: process.env.POSTGRES_PORT as number | undefined,
+    user: process.env.POSTGRES_USER,
+    database: process.env.POSTGRES_DB,
+    password: process.env.POSTGRES_PASSWORD,
+    ssl: process.env.NODE_ENV === 'production'
+  })
+  await client.connect()
+  return client
+}
+
+const query = async (
+  query: string | { text: string; values: (number | string)[] },
+  args?: string[]
+) => {
+  let client
+  try {
+    client = await getNewClient()
+    const result = await client.query(query, args)
+    return result
+  } catch (error) {
+    console.error(error)
+    throw error
+  } finally {
+    await client?.end()
+  }
+}
+
+export const database = {
+  query,
+  getNewClient
+}
+```
+
+---
+
+`tests/orchestrator.ts`
+
+```ts
+import { database } from '@/infra/database'
+
+export const cleanDatabase = async () => {
+  await database.query('drop schema public cascade; create schema public;')
+}
+```
+
+---
+
+`get.test.ts`
+
+```ts
+import { cleanDatabase } from '@/tests/orchestrator'
+
+describe('GET to /api/v1/migrations', () => {
+  beforeAll(cleanDatabase)
+
+  test('should return 200', async () => {
+    const response = await fetch('http://localhost:3000/api/v1/migrations')
+    expect(response.status).toBe(200)
+
+    const responseBody = await response.json()
+
+    expect(Array.isArray(responseBody)).toBe(true)
+    expect(responseBody.length).toBeGreaterThan(0)
+  })
+})
+```
+
+---
+
+`post.test.ts`
+
+```ts
+import { cleanDatabase } from '@/tests/orchestrator'
+
+describe('POST to /api/v1/migrations', () => {
+  beforeAll(cleanDatabase)
+
+  test('should return 200', async () => {
+    const response1 = await fetch('http://localhost:3000/api/v1/migrations', {
+      method: 'POST'
+    })
+    expect(response1.status).toBe(201)
+
+    const response1Body = await response1.json()
+    expect(Array.isArray(response1Body)).toBe(true)
+    expect(response1Body.length).toBeGreaterThan(0)
+
+    const response2 = await fetch('http://localhost:3000/api/v1/migrations', {
+      method: 'POST'
+    })
+    expect(response2.status).toBe(200)
+
+    const response2Body = await response2.json()
+
+    expect(Array.isArray(response2Body)).toBe(true)
+    expect(response2Body.length).toBe(0)
+  })
+})
+```
