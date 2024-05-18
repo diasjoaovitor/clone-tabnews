@@ -31,5 +31,6 @@ const query = async (
 }
 
 export const database = {
-  query
+  query,
+  getNewClient
 }
