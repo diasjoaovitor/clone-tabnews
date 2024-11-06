@@ -12,7 +12,7 @@ const getDefaultMigrationOptions = ({
   dryRun: boolean
 }) => {
   const options: RunnerOption = {
-    dir: join('src', 'infra', 'migrations'),
+    dir: join(process.cwd(), 'src', 'infra', 'migrations'),
     direction: 'up',
     verbose: true,
     migrationsTable: 'pgmigrations',
