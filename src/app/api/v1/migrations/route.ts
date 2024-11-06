@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { ClientBase } from 'pg'
 import migrationRunner, { RunnerOption } from 'node-pg-migrate'
 import { join } from 'path'
@@ -60,3 +60,15 @@ export const POST = async () => {
     await dbClient?.end()
   }
 }
+
+const handler = (request: NextRequest) =>
+  NextResponse.json(
+    { error: `Method ${request.method} not allowed` },
+    { status: 405 }
+  )
+
+export const PUT = handler
+export const DELETE = handler
+export const PATCH = handler
+export const HEAD = handler
+export const OPTIONS = handler
