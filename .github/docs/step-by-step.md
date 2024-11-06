@@ -2074,3 +2074,33 @@ describe('POST to /api/v1/migrations', () => {
   })
 })
 ```
+
+## Dia 26
+
+### 🚗 Pista Rápida
+
+No Dia 26 você vai ver duas coisas muito importantes acontecendo na sua frente: o ambiente de Homologação tomando forma e servindo pra debugar um problema real e o "Espírito Open Source" brotando por dentro dos comentários aqui na plataforma do curso.dev 😍
+
+### Git Branch (3 níveis de compreensão)
+
+Nesta aula você irá aprender sobre um dos recursos mais importantes do Git na minha opinião que se chama branches! E entender de branches pode ser a coisa mais simples do mundo ou mais complicada do mundo dependendo do modelo mental que você usar pra entender o que está acontecendo. Por conta disso eu gostaria de fazer 3 explicações para você, que são na verdade 3 níveis de compreensão sobre a feature de branches 🤝
+
+**Link para o comentário**:
+
+Este é o link do comentário do leandl que virou uma thread sensacional com espírito open source:
+
+https://curso.dev/alunos/leandl/3988bdf7-3545-4163-a954-400595538126
+
+### Fazendo deploy em Homologação (Staging)
+
+Pelo fato da gente não somente saber criar branches, mas entender como elas realmente funcionam por baixo dos panos, isso possibilita agora a gente criar ambientes de Homologação que em inglês a turma lá se refere como Staging e que a Vercel escolheu dar o nome de Preview, que não deixa de ser uma pré-visualização do que está para acontecer.
+
+#### Let's code
+
+```sh
+curl -s https://clone-tabnews-diasjoaovitor.vercel.app/api/v1/status | python3 -m json.tool
+
+curl -s -X GET http://localhost:3000/api/v1/migrations | python3 -m json.tool
+
+curl -s -X GET https://clone-tabnews-diasjoaovitor.vercel.app/api/v1/migrations | python3 -m json.tool
+```
