@@ -1,10 +1,10 @@
-import { cleanDatabase } from '@/tests/orchestrator'
+import orchestrator from '@/tests/orchestrator'
 
 const url = 'http://localhost:3000/api/v1/migrations'
 
-describe('Not allowed methods to /api/v1/migrations', () => {
-  beforeAll(cleanDatabase)
+beforeAll(orchestrator.waitForAllServices)
 
+describe('Not allowed methods to /api/v1/migrations', () => {
   test('should return 405 and the response error', async () => {
     const response1 = await fetch(url, {
       method: 'PUT'

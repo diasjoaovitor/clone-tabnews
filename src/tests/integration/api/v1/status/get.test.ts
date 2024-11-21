@@ -1,4 +1,7 @@
+import orchestrator from '@/tests/orchestrator'
 import { TStatusBody } from '@/app/api/v1/status/route'
+
+beforeAll(orchestrator.waitForAllServices)
 
 describe('GET to /api/v1/status', () => {
   test('should return 200', async () => {

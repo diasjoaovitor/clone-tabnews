@@ -11,6 +11,7 @@ const createJestConfig = nextJest({
 
 const jestConfig = createJestConfig({
   testEnvironment: 'jsdom',
+  testTimeout: 60000,
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts']
 })
 
