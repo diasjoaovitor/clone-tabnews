@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { ClientBase } from 'pg'
 import migrationRunner, { RunnerOption } from 'node-pg-migrate'
 import { join } from 'path'
-import { database } from '@/infra/database'
+import database from '@/infra'
+import { RunMigration } from 'node-pg-migrate/dist/migration'
 
 const getDefaultMigrationOptions = ({
   dbClient,
@@ -22,10 +23,23 @@ const getDefaultMigrationOptions = ({
   return options
 }
 
-export const GET = async () => {
+const handler = async (
+  fn: (dbClient: ClientBase) => Promise<NextResponse<RunMigration[]>>
+) => {
   let dbClient
   try {
     dbClient = await database.getNewClient()
+    return await fn(dbClient)
+  } catch (error) {
+    console.error(error)
+    throw error
+  } finally {
+    await dbClient?.end()
+  }
+}
+
+export const GET = async () =>
+  await handler(async (dbClient) => {
     const defaultMigrationOptions = getDefaultMigrationOptions({
       dbClient,
       dryRun: true
@@ -34,18 +48,10 @@ export const GET = async () => {
     return NextResponse.json(pendingMigrations, {
       status: 200
     })
-  } catch (error) {
-    console.error(error)
-    throw error
-  } finally {
-    await dbClient?.end()
-  }
-}
+  })
 
-export const POST = async () => {
-  let dbClient
-  try {
-    dbClient = await database.getNewClient()
+export const POST = async () =>
+  await handler(async (dbClient) => {
     const defaultMigrationOptions = getDefaultMigrationOptions({
       dbClient,
       dryRun: false
@@ -53,22 +59,16 @@ export const POST = async () => {
     const migratedMigrations = await migrationRunner(defaultMigrationOptions)
     const status = migratedMigrations.length > 0 ? 201 : 200
     return NextResponse.json(migratedMigrations, { status })
-  } catch (error) {
-    console.error(error)
-    throw error
-  } finally {
-    await dbClient?.end()
-  }
-}
+  })
 
-const handler = (request: NextRequest) =>
+const notAllowedHandler = (request: NextRequest) =>
   NextResponse.json(
     { error: `Method ${request.method} not allowed` },
     { status: 405 }
   )
 
-export const PUT = handler
-export const DELETE = handler
-export const PATCH = handler
-export const HEAD = handler
-export const OPTIONS = handler
+export const PUT = notAllowedHandler
+export const DELETE = notAllowedHandler
+export const PATCH = notAllowedHandler
+export const HEAD = notAllowedHandler
+export const OPTIONS = notAllowedHandler
