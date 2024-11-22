@@ -8,7 +8,7 @@ const waitForAllServices = async () => {
       throw new Error('Service not ready')
     }
   }),
-    { retries: 60, maxTimeout: 1000 }
+    { retries: 60, maxTimeout: 1000, minTimeout: 100 }
 }
 
 const clearDatabase = async () => {
