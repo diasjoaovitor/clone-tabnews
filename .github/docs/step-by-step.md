@@ -2104,3 +2104,187 @@ curl -s -X GET http://localhost:3000/api/v1/migrations | python3 -m json.tool
 
 curl -s -X GET https://clone-tabnews-diasjoaovitor.vercel.app/api/v1/migrations | python3 -m json.tool
 ```
+
+## Dia 27
+
+### 🚗 Pista Rápida:
+
+Apesar do Dia 27 ser um dia relativamente curto, ele pode salvar a sua vida (ou a vida de um colega seu) 🤝 💪
+
+### Como nunca mais perder código com Git? (Desafio Prova de Fogo 🔥)
+
+Na aula anterior eu falei que a gente iria fazer o merge do que está dentro da branch fix-migrations-endpoint para dentro da branch main e saber fazer isso de verdade (sabendo o que está acontecendo por baixo dos panos) é algo muito poderoso 💪
+
+Só que com grandes poderes vêm grandes responsabilidades e, o fato de saber criar branches e fazer o merge delas, expõe você a perder parte do seu trabalho. Então esta é uma aula extremamente especial que ensina como utilizar o git reflog para nunca mais perder o que você programou!
+
+### Git Merge (Fast Forward)
+
+Agora sim, chegou o momento que a maioria das pessoas tem medo... o Merge! Isso assusta muita gente porque, se você não conhece os fragmentos, os objetos por baixo dos panos do Git, como a gente tá conhecendo aqui pelo curso.dev, tudo é muito nebuloso, confuso, mas não é... no fundo no fundo é simples.
+
+#### Let's code
+
+```sh
+sudo apt install jq
+watch -n 1 'curl https://clone-tabnews-diasjoaovitor.vercel.app/api/v1/status | jq'
+curl -s -X GET  https://clone-tabnews-diasjoaovitor.vercel.app/api/v1/migrations | jq
+```
+
+## Dia 28
+
+### 🚗 Pista Rápida
+
+O Dia 28 é um dia baga, e por isso entenda que é um dia denso, que vai fazer você ficar pensando por muito tempo em certas dinâmicas perigosas da nossa área, porque o objetivo é entender sobre Continuous Integration, Continuous Delivery e Continuous Deployment, mas não só entender o que são essas coisas, isso é fácil, o objetivo principal é entender por que a gente criou essas coisas 🤝
+
+**Link da apresentação**
+
+[Agile is Dead • Pragmatic Dave Thomas • GOTO 2015](https://www.youtube.com/watch?v=a-BOSpxYJ9M)
+
+### Nascimento e "Morte" do Movimento Ágil
+
+Esta é uma aula importante para entender "de onde viemos e para onde estamos indo" na nossa área, começando pela metodologia Waterfall e como que isto impulsionou o Movimento Ágil iniciado em 2001. E como nem tudo são flores, eu destaco também desafios que tive ao longo da minha gestão no Pagar.me e como que o "abuso do Movimento Ágil" levou a uma queda na produtividade e satisfação das equipes.
+
+De qualquer forma, a parte ágil do movimento está longe de morrer e daqui para frente iremos ver o impacto que isso teve na forma que trabalhamos e iremos trabalhar por muito tempo 💪
+
+### Continuous Integration, Delivery e Deployment
+
+Na aula passada nós aprendemos sobre o fluxo de trabalho Waterfall que inevitavelmente acaba sendo um processo muito demorado. Dado a isso, o Movimento Ágil definiu que um dos seus objetivos era reduzir o Ciclo de Feedback e aumentar a velocidade de entrega para 15 dias, 7 dias, 1 dia ou, no limite, colocar na mão do cliente algo que foi programado no mesmo dia. Então nesta aula vamos ver como isso é possível 💪
+
+### Trunk-Based Development, Feature Branch e Git Flow
+
+Uma das decisões mais geniais feitas no Git, no design do core dele, foi de que não existem branches especiais e isso deu aos desenvolvedores uma flexibilidade enorme para criar qualquer tipo de fluxo de trabalho. Dado a isso, nesta Pista Lenta irei revisitar os 3 principais fluxos, sendo que, a parte mais importante, é entender o motivo real de tanta preocupação sobre o assunto e tudo pode ser resumido em uma única palavra: entropia 🤝
+
+> lupesi
+
+```json
+"Estratégias de branch":[
+    {
+      "Trunk-Based Development": [
+        "Nessa estratégia todos os commits realizados são continuamente integrados com a branch trunk, ou melhor tronco, no nosso caso a main. Isso de inicio parece perigoso, pois diversos programadores integrando diferentes features direto na branch de produção, parece que vai explodir, por isso são adotadas algumas medidas para impedir isso",
+        "FEATURE FLAG - Nessa medida, as features tem flags, marcadores, que sinalizam ao sistema o que ele deve exibir para cada usuário, um exemplo simples seria, features com flags de 'beta tester' serão exibidas para quem é 'beta tester' e não para o restante",
+        "Além disso é muito importante sempre estar integrando constantemente o trunk, para diminuir a entropia entre os desenvolvedores, fazendo até mesmo commits parciais",
+        "BRANCH BY ABSTRACTION -  Nessa medida são utilizadas abstrações para realizar grandes mudanças no sistema, por exemplo, os desenvolvedores utilizam um modulo A que irá ser mudado, então é adicionado uma abstração que liga ao módulo, e cada feature irá se ligar a essa abstração e quando todos estiverem integrados com a ela, a mesma poderá trocar o modulo na qual ela se liga, fazendo com que essa alteração não cause tanto prejuizo"
+      ],
+      "Feture Branch": [
+        "Na branch main, serão commitados somente alterações prontas para o deploy, enquanto as features são desenvolvidas em outras branchs que posteriormente são integradas a main. Enquanto cada feature está sendo desenvolvida, o projeto estará também avançando, sendo então, importantissimo a correção de conflitos ao integrar a main",
+        "O github envolve essa estratégia com ferramentas exelentes de visualização e revisão de código, sendo até chamada de github flow"
+      ],
+      "Git Flow": [
+        "Essa estratégia é focada para sistemas que mantém multiplas versões do mesmo software. Sendo bem complexa",
+        "Na main serão commitadas apenas as verções, a programação é desenvolvida na branch develop que também se ramifica para outras branchs features. Importante destacar que caso seja encontrada um bug critico em produção é criada a partir da main uma branch chamada de hotfix que conserta o bug e posteriormente é integrada na main e na branch develop.",
+        "Quando uma feature é completada ela é revisada e integrada a branch develop, quando tudo nessa branch for completado, é passado para uma branch chamada de release, onde as modificações são revisadas minuciosamente, onde se for encontrado um bug é concertado direto na mesma branch e quando tudo estiver completo, integramos com a branch main, criando uma nova versão do software",
+        "Sempre importante manter as branchs develop e feature no mesmo 'nivel' da main"
+      ]
+    }
+]
+```
+
+## Dia 29
+
+### 🚗 Pista Rápida
+
+Eu gosto de todos os conteúdos aqui do curso.dev de todos os Dias, mas tem alguns que olha... tem alguns que abrem oportunidades que são simplesmente sensacionais e o Dia 29 tem uma dessas oportunidades que é um Experimento Social com os alunos 💪
+
+### Estabilizar "npm run dev"
+
+Eu gostaria de inaugurar o Dia 29 dizendo que o meu sonho era criar um sistema em que eu subisse ele inteiro com um único comando. Eu digo isso porque, em todas as empresas que eu trabalhei, era sempre um inferninho configurar o ambiente local pra rodar um Site ou uma API.
+
+Então quando eu estava fazendo o TabNews (tirando instalar dependências básicas ou rodar o npm install pra instalar as dependências específicas do projeto) eu queria conseguir rodar o npm run dev e tudo acontecesse: Banco de Dados levantasse, Migrations rodassem, Servidor Web, Servidor de Emails, tudo abstraído dentro de um único comando... assim foi feito e agora chegou a hora de começar a fazer isso também aqui no FinTab 💪
+
+**Link comentado no vídeo**
+
+https://github.com/filipedeschamps/tabnews.com.br/pull/329
+
+**Link para o commit feito na aula**
+
+- [adds wait-for-postgres.js script](https://github.com/filipedeschamps/clone-tabnews/commit/78fcf9bbeb3d01aa6117dbd26c2383aa7fc23cbb)
+
+#### Let's code
+
+> lupesi
+
+```json
+{
+  "Estabilizar npm run dev": [
+    "Queremos que todas as dependencias do nosso sistema sejam diretamente acionadas apenas ao executar um comando, e por enquanto isso não ocorre, pois o sistema de migrations deve ser rodado separadamente. Colocando ele no mesmo comando do run dev, é visto um problema, depois de executar o up dos serviçoes postgres, que estam rodando no -d, passam direto para o comando das migrations, causando um problema de race condition, onde as migrations são executadas antes mesmo que o postgres consiga fazer conexões",
+    "Então criamos o script 'wait-for-postgres' que verifica o estado do postgres até que ele retorne estar pronto.",
+    "Nesse script importamos o exec do node:child_process, uma função que cria um novo processo de shell e executa um comando nele, que usaremos para executar um comando no qual o docker retornará a condição do postgres, docker exec postgres-dev pg_isready --host localhost, quando executado ele chama uma função de callback que procura na resposta do comando 'accepting connections', caso não exista ele executa novamente a verificação até que retorne a resposta esperada, siginificando assim, que o postgres está pronto para conexões"
+  ]
+}
+```
+
+**Link do commit**:
+
+- [chore: adds `wait-for-postgres.js`](https://github.com/diasjoaovitor/clone-tabnews/commit/d3bae9255d601b88e5fdb70febcfddb1a434c576)
+
+Os comentários de `LeoAnders` e `devjuan` apresentam uma alternativa para exibir os logs com o módulo [ora](https://www.npmjs.com/package/ora)
+
+**Link do comentário**:
+
+- https://curso.dev/alunos/LeoAnders/d447aad5-d06b-4f84-aeb6-ceb898a352e2
+
+### Estabilizar "npm test" (Paralelismo)
+
+Você está pronto para subir mais um passo na escada até chegar no `CI`? Ótimo, porque chegou a hora da gente atacar a tarefa: `Estabilizar Testes Locais` e iremos começar pela parte do `Paralelismo` do comando `npm test`, conhecimento que inlcusive pode ser utilizado para várias outras situações 💪
+
+**Link para a página do concurrently no NPM**
+
+- [https://www.npmjs.com/package/concurrently](https://www.npmjs.com/package/concurrently)
+
+> lupesi
+
+```json
+{
+  "Estabilizar npm run test": [
+    "Agora temos outro problema, quando executamos o comando de teste sozinho, ele retorna erro em todos os testes, isso acontece pois os outros serviços não estão executando juntos, causando assim o erro.",
+    "Primeiramente podemos começar adicionando ao comando a parte que levanta o docker e espera ele estar pronto, npm run services:up && npm run wait-for-postgres",
+    "Ainda continua dando erro, isso porque o servidor não está sendo executado junto, o problema é: o servidor não roda em modo detached",
+    "Usaremos então o concurrently para executar comando concorrentes, concurrently -n next,jest --hide next -k -s command-jest 'next dev' 'jest --runInBand'",
+    {
+      "Parâmetros": [
+        "-n, abreviação de --names, nomeia o log de cada processo.",
+        "--hide, esconde os logos de determinado processo",
+        "-k, abreviação de --kill-others, mata todos os outros processo quando um retorna sucesso",
+        "-s, abreviação de --sucess, retorna 0 quando um processo desejado retorne 0 também"
+      ]
+    }
+  ]
+}
+```
+
+### Estabilizar "npm test" (Orquestrador)
+
+Chegou a hora de programar o `Orquestrador` e fazer um `Experimento Social` de verdade aqui com os alunos do `curso.dev`, incluindo você 😍
+
+**Link do Pull Request**
+
+Aqui está o link que eu comentei: [https://github.com/filipedeschamps/clone-tabnews/pull/21](https://github.com/filipedeschamps/clone-tabnews/pull/21)
+
+**Link para a página do async-retry no NPM**
+
+- [https://www.npmjs.com/package/async-retry](https://www.npmjs.com/package/async-retry)
+
+## Dia 30
+
+### 🚗 Pista Rápida
+
+O `Dia 29` levantou uma bola que foi muito bem cortada aqui no `Dia 30` por todo mundo do `curso.dev` num nível que eu não to conseguindo me acreditar até agora 🎉 Então nesta `Pista Rápida` iremos analisar tudo o que aconteceu e, ao final dela, irei colocar mais uma **dica** que me fez ganhar bastante espaço nas empresas que trabalhei 💪
+
+**Link do Pull Request**
+
+Aqui está o link que eu comentei: [https://github.com/filipedeschamps/clone-tabnews/pull/21](https://github.com/filipedeschamps/clone-tabnews/pull/21)
+
+### rafaelcorrea-dev: "maxTimeout"
+
+**MUITA** gente contribuiu com o `Pull Request` sobre o `Experimento Social` e nessas horas é importante adotar uma **estratégia** de como encarar ele. Dado a isso, fiz a decisão de **separar** o que são sugestões sobre `refatoração` de sugestões que alterem a `mecânica` ou `performance` do script `npm test` e nesta `Pista Lenta` irei atacar a sugestão do [rafaelcorrea-dev](https://github.com/rafaelcorrea-dev) sobre o parâmetro `maxTimeout` do `async-retry` 🎉
+
+### FernandoWeber, aprendendofelipe, Ilopesr: "Windows"
+
+**Muita** coisa aconteceu desde a última aula, sugestões super válidas continuaram entrando no Pull Request, incluindo sobre a **compatibilidade** do script `npm test` com o sistema operacional `Windows` 🤝 Estas sugestões ganharam força através dos alunos `FernandoWeber`, [`aprendendofelipe`](https://github.com/aprendendofelipe) e [`Ilopesr`](https://github.com/Ilopesr) 💪
+
+### andrecruzmendes, KleitonBarone, MarcosASFigueiredo: "/status"
+
+Na aula passada eu falei que **duas** pessoas tinham encostado a mão em cima de um `bug`, mas não conseguiram destacar com clareza onde estava o problema. O interessante é que, depois disso, eu notei que uma **terceira** pessoa consertou esse suposto `bug`, mas não pelo motivo da existência dele 😳 Então nesta aula vamos analisar as contribuições dos alunos [`andrecruzmendes`](https://github.com/andrecruzmendes), [`KleitonBarone`](https://github.com/KleitonBarone) e [`MarcosASFigueiredo`](https://github.com/MarcosASFigueiredo) 🎉
+
+**Link para o commit feito na aula**
+
+- [makes `npm test` more robust with `async-retry` and `orchestrator.js`](https://github.com/filipedeschamps/clone-tabnews/commit/6d2c744b25c751f17abedbc8d8223eab3548c6ed)
