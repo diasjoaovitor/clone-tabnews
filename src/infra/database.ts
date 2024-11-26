@@ -1,5 +1,14 @@
 import { Client } from 'pg'
 
+const getSslValues = () => {
+  if (process.env.POSTGRES_CA) {
+    return {
+      ca: process.env.POSTGRES_CA
+    }
+  }
+  return process.env.NODE_ENV === 'production'
+}
+
 const getNewClient = async () => {
   const client = new Client({
     host: process.env.POSTGRES_HOST,
@@ -7,7 +16,7 @@ const getNewClient = async () => {
     user: process.env.POSTGRES_USER,
     database: process.env.POSTGRES_DB,
     password: process.env.POSTGRES_PASSWORD,
-    ssl: process.env.NODE_ENV === 'production'
+    ssl: getSslValues()
   })
   await client.connect()
   return client
