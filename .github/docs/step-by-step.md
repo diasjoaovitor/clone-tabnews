@@ -2288,3 +2288,47 @@ Na aula passada eu falei que **duas** pessoas tinham encostado a mão em cima 
 **Link para o commit feito na aula**
 
 - [makes `npm test` more robust with `async-retry` and `orchestrator.js`](https://github.com/filipedeschamps/clone-tabnews/commit/6d2c744b25c751f17abedbc8d8223eab3548c6ed)
+
+## Dia 31
+
+### 🚗 Pista Rápida
+
+Em todos os `Dias` da plataforma eu tento passar conhecimentos que vão deixando o projeto mais **profissional**, tanto **diretamente** trabalhando na parte técnica dele, quanto **indiretamente** com conhecimentos que vão impactar a sua postura, que isto vai impactar na qualidade do trabalho que você consegue executar no dia a dia e, que por fim, vai impactar na parte técnica de qualquer projeto que você **encostar** daqui pra frente. O massa é que o `Dia 31` não foge desse padrão, aliás, foge sim, porque o projeto dá um salto inédito de profissionalismo 💪
+
+### Configurar "Continuous Integration" (com GitHub Actions)
+
+Olha só que massa desenvolver as coisas de forma **orgânica**: de um lado, o assunto `Continuous Integration` assusta muita gente (é como se fosse uma coisa muito difícil de se atingir) e do outro lado tem **você**, agora, neste exato momento, que já fez a **maioria** das coisas que se precisava fazer pra atingir justamente o estágio de `Continuous Integration` e só falta dar um **_chutinho pra bola entrar no gol_** ⚽️ 🎉
+
+**Link para o commit feito na aula**
+
+- [adds `Automated Tests` GitHub Action](https://github.com/filipedeschamps/clone-tabnews/commit/4a8ff19415b5a247ca946638a80f0e395355d97b)
+
+### Lint Code: Style
+
+Chegou o momento **perfeito** para esclarecer algumas categorias das ferramentas de `Linting`, tanto de `estilo` quanto de `qualidade`, e nesta Pista Lenta iremos engatar no nosso `CI` a **garantia** de que a **estilização** do código está **100%** utilizando o `Prettier` 💪
+
+**Desafio**
+
+Ao final eu proponho um **novo desafio** para você... você topa? 😍
+
+**Links para os commits feitos na aula**
+
+- [adds `Linting` GitHub Action](https://github.com/filipedeschamps/clone-tabnews/commit/d2aea6fbbb6f796804d2353fb21d94e554fcda71)
+- [fix `prettier` style linting](https://github.com/filipedeschamps/clone-tabnews/commit/66debb49178a6180d698ae2957d84f96aba4a03f)
+
+### Lint Code: Quality
+
+Então o desafio agora é trazer o `ESLint` para o nosso projeto para ele ajudar a manter certas regras básicas de **Qualidade de Código** e engatar isso no fluxo do `CI` para que essas regras sejam garantidamente aplicadas 🤝
+
+Ao executar o comando `next lint`, o Next irá instalar as versões mais atualizadas dos módulos `eslint` e `eslint-config-next`. No entanto, conforme apontado pelo aluno [`matheusl`](https://curso.dev/alunos/matheusl/f3da2fca-8ba5-4412-a9de-ef53365e012e), a versão mais atual do ESLint é incompatível com a versão do Next que estamos utilizando no projeto até esse ponto. Portanto, após a instalação automática desses pacotes pelo Next, você deverá alterar manualmente para as versões usadas na aula com o comando `npm install eslint@8.57.0 eslint-config-next@14.2.4`, a fim de evitar esse problema de compatibilidade.
+
+**Links para as páginas no NPM dos plugins instalados**
+
+- [https://www.npmjs.com/package/eslint-plugin-jest](https://www.npmjs.com/package/eslint-plugin-jest)
+- [https://www.npmjs.com/package/eslint-config-prettier](https://www.npmjs.com/package/eslint-config-prettier)
+
+**Links para os commits feitos na aula**
+
+- [adds `lint:eslint:check` script with `ESLint`](https://github.com/filipedeschamps/clone-tabnews/commit/38287e909c5db5f3601b95bf798a56ce3e586549)
+- [adds `eslint` job in `Linting` GitHub Action](https://github.com/filipedeschamps/clone-tabnews/commit/83462d4f629d09065298593e27c4247abf23685f)
+- [fix `eslint` linting](https://github.com/filipedeschamps/clone-tabnews/commit/b776dc629f71447cb1a79e94fe74dda54ec6dc82)
