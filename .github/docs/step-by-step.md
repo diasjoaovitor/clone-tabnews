@@ -2332,3 +2332,63 @@ Ao executar o comando `next lint`, o Next irá instalar as versões mais atuali
 - [adds `lint:eslint:check` script with `ESLint`](https://github.com/filipedeschamps/clone-tabnews/commit/38287e909c5db5f3601b95bf798a56ce3e586549)
 - [adds `eslint` job in `Linting` GitHub Action](https://github.com/filipedeschamps/clone-tabnews/commit/83462d4f629d09065298593e27c4247abf23685f)
 - [fix `eslint` linting](https://github.com/filipedeschamps/clone-tabnews/commit/b776dc629f71447cb1a79e94fe74dda54ec6dc82)
+
+## Dia 32
+
+### 🚗 Pista Rápida
+
+Os alunos que passarem por todas as Pistas Lentas do Dia 32 vão dar um salto na frente de muitos profissionais do mercado. Isso porque temos uma conversa séria sobre o "medo de commits", boas práticas, como separar "mudanças lógicas" em commits distintos e qual convenção iremos utilizar daqui para frente 🤝
+
+### É verdade mesmo que commits bem feitos fazem diferença?
+
+Por algum motivo que eu ainda estou para descobrir, o assunto `Commit` coloca uma **pressão extra** na gente... você sente isso também? Se não sente, você vai sentir em algum momento, por isso que eu quis separar esse assunto no seu próprio `Dia` para novamente a gente conseguir conversar com qualidade em cada parte desse tema e para também eu não precisar passar chutado por um tema sensível e **acalorado** 🔥
+
+### Como definir o escopo de um commit?
+
+Se a aula anterior deixou você com o **estômago embrulhado**, ótimo, porque a partir dessa aula eu vou fazer de tudo para **desembrulhar**, começando por entender melhor onde **começa** e **termina** um `commit`, como que eu defino quais arquivos ou quais alterações participam de um `commit` e quais deveriam participar de outro 🤝
+
+<details>
+  <summary><strong>Spoiler (clique somente depois de assistir a aula)</strong></summary>
+<br>
+Sobre o **plot twist** ao final da aula, a minha opinião é que, neste caso, a alteração no `código` e alteração da `documentação` deveriam ser feitos em um mesmo `commit`. O racional por trás disso é que eles existem por um **mesmo motivo** e deixar eles num estado **dessincronizados** poderá causar confusão no consumo do produto. Isto porque, o `código` do produto irá estar se comportando de uma forma diferente do que a `documentação` está instruindo.
+
+Imagine uma situação onde uma **ação** no produto, que antes poderia ser **desfeita** e está documentada que possui essa habilidade (como por exemplo **deletar uma publicação** e em seguida **desfazer** essa ação), agora com uma nova versão do `código` não é mais possível **desfazer**. Caso o `commit` que implementa no `código` a remoção do comportamento de desfazer entre em produção de forma descasada com a atualização da `documentação` informando que não é mais possível esta ação, usuários que estão lendo a `documentação` (desatualizada), por um momento poderão contar com um recurso que na prática **não existe mais**.
+
+Conclusão: eu "grudaria" estas duas alterações em um único `commit` para não correr o risco de ficar dessincronizado.
+
+</details>
+
+### Como definir a mensagem de um commit?
+
+Chegamos na última aula **teórica** sobre como podemos nos tornar profissionais mais **completos** no assunto `commit`, onde o ponto de destaque é sobre o `Tempo verbal` utilizado ao escrever a mensagem principal 🤝
+
+**Links**
+
+- Falando em `Tempo verbal`, sugiro ler [este comentário do andrecruzmendes](https://curso.dev/alunos/andrecruzmendes/ca7f4617-03bc-4142-b05a-b5615e48905d) que está sensacional 🎉
+- Site do [Conventional Commits](https://www.conventionalcommits.org/) (versão [Português](https://www.conventionalcommits.org/pt-br/v1.0.0/))
+
+## Dia 33
+
+### 🚗 Pista Rápida:
+
+No meio do Dia 33 acontece um evento que eu estava louco pra acontecer! É um evento que, quando acontece com você e você não tá preparado, dá uma suadeira bonita, um calafrio no corpo inteiro, mas que com a didática aqui do curso.dev, o que parece ser um monstro indomável, se torna uma ferramenta muito poderosa no seu dia a dia 🤝
+
+### Lint dos commits (Local)
+
+Vamos colocar a mão na massa na parte técnica e começar julgando o que até então tecnicamente eu fiz com os commits do projeto e depois vamos incluir novas dependências para nos ajudar a escrever mensagens no formato certo 💪
+
+#### Let's code
+
+Testar mensagens de commit:
+
+```sh
+echo "teste" | npx commitlint
+```
+
+### Lint dos commits (CI)
+
+Esta vai ser uma `Pista Lenta` muito massa, muito massa **MESMO**, porque não somente eu e você vamos fazer o `CI` barrar `commits` fora do padrão, como também **elevar** os conhecimentos em `Git`, isso porquê gente vai dar o primeiro passo dentro de um comando que muita gente tem medo: `git rebase` 🔥
+
+### Git Hooks para criação de commits (+ Desafio)
+
+Simplesmente **sensacional** que o nosso `CI` agora está **barrando** mensagens de `commit` com o formato errado, **trancando** o `Pull Request`, mas agora também não quero mais fazer `push` de coisa errada e passar vergonha, não é mesmo? Então nesta aula vamos colocar a mão na massa nos `Hooks` do `Git` para entender como que eles podem nos ajudar na missão de validar os `commits` de forma local 💪
