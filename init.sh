@@ -12,7 +12,7 @@ function cleanup {
 trap cleanup INT
 
 if [ "$1" != "test" ]; then
-  npm run services:up && npm run services:wait:database && npm run migration:up && next dev
+  npm run services:up && npm run services:wait:database && npm run migrations:up && next dev
 else
   npm run services:up && concurrently -n next,jest --hide next -k -s command-jest "next dev" "jest --runInBand --verbose"
   cleanup

@@ -2392,3 +2392,110 @@ Esta vai ser uma `Pista Lenta` muito massa, muito massa **MESMO**, porque nã
 ### Git Hooks para criação de commits (+ Desafio)
 
 Simplesmente **sensacional** que o nosso `CI` agora está **barrando** mensagens de `commit` com o formato errado, **trancando** o `Pull Request`, mas agora também não quero mais fazer `push` de coisa errada e passar vergonha, não é mesmo? Então nesta aula vamos colocar a mão na massa nos `Hooks` do `Git` para entender como que eles podem nos ajudar na missão de validar os `commits` de forma local 💪
+
+## Dia 34
+
+### 🚗 Pista Rápida
+
+Dentro do `Dia 34` acontece um **problema** que eu não planejava e isso se tornou um **conteúdo raríssimo** e que vai ser mais um daqueles **conhecimentos** que você fica até **mais feliz** e se sente um **profissional melhor** só por possuir ele.
+
+Fora isso, eu quero mostrar um conteúdo `bônus` que eu não mostrei em nenhuma das `Pistas Lentas` 💪
+
+**Artigo citado no vídeo**
+
+- [npm audit: Broken by Design](https://overreacted.io/npm-audit-broken-by-design/)
+
+### Uma história macabra sobre "Tipo da Licença"
+
+A minha ficha caiu sobre a **importância** de uma `licença` por volta de `2017` quando a `Meta`, na época chamada ainda de `Facebook`, entrou numa **grande polêmica** por conta do `React` (na verdade não especificamente sobre o `React`, mas sobre a `licença` dele) 🔥
+
+### Semantic Versioning
+
+Para nossa sorte, quando o sistema de módulos do `Node.js` foi padronizado, se escolheu o `Semantic Versioning` para ditar o que seria escrito na versão de cada módulo. Isso porque, na versão de um software, você pode escrever qualquer coisa, como por exemplo: `v1`, `v2`, `v3` ou `r2010-a` e ninguém sabe o que isso significa só olhando para esse tipo de versão. Isso acontece, porque essas versões não possuem **semântica** alguma contida nelas, e é aí que entra a `Versão Semântica`, pois ela obedece uma **estrutura** que carrega um **significado semântico**, ou seja, ela, por conta própria, **transmite um significado**.
+
+### Resolvendo conflito de "Peer Dependencies"
+
+Você sabe que alguém já foi **picado** pela **cobra** do `Semantic Versioning` quando toda hora essa pessoa está preocupada na **consistência** entre as instalações de um projeto. Mas talvez, pior do que isso, é você se encontrar com um erro de `Peer Dependency` que, para a nossa **sorte**, isso aconteceu ao longo da aula no momento em que as **dependências** estavam sendo **atualizadas** e tudo foi registrado e explicado com a **_"didática `curso.dev`"_** 💪
+
+### Finalizando atualizações
+
+Nesta aula vamos continuar atualizando as **dependências**, incluindo sobre as versões `major` e levar este assunto até ao final, até abrir o `Pull Request` 💪
+
+## Dia 35
+
+### 🚗 Pista Rápida:
+
+Quantas vezes na sua vida, você deixou de perceber que você concluiu uma tarefa que estava muito além da capacidade da pessoa que você era quando iniciou a tarefa? 💪
+
+### Refatorando Scripts e "Efeito Estilingue Infinito"
+
+Esta é uma `Pista Lenta` bem menos densa, ao menos comparada com as últimas, mas isto não significa que não terá **conhecimentos importantes**, muito pelo contrário, eu falo sobre o `Efeito Estilingue Infinito` que é algo que pode fazer **muita diferença** na sua vida e carreira, e também colocamos a mão na massa refatorando a seção `scripts` do `package.json` 🤝
+
+### Refatorando Testes Automatizados
+
+Nesta aula iremos **refatorar** os **Testes Automatizados** para seguir um **novo padrão** que separa o `Contexto` da `Afirmação`. A ideia é tirar **duplicidade de informação** e evitar que a descrição dos testes fique fora de sincronia com o que o código realmente faz, pelo menos na parte da `Afirmação` para que o código seja a única fonte de verdade 🤝
+
+### Encerramento da Milestone 1 🎉
+
+Nesta aula, encerramos com **muito orgulho** a `Milestone Fundação` 💪 💪 💪 E para isso, revisamos a sugestão de mais `2` alunos e aplicamos elas de uma forma que até uma pessoa **sênior** ficará impressionada 😍 Por fim, consertamos um bug no projeto que estava sendo escondido pelo fato do ambiente do `CI` apontar que tudo estava `100%`, mas não estava 🤝
+
+## 📸 Tira uma "selfie" comigo?
+
+Eu vou te falar... é só no `curso.dev` que essas coisas acontecem 😂 📸
+
+#### Instagram
+
+Você topa me marcar lá no Instagram?
+O meu perfil é o [`@filipedeschamps`](https://www.instagram.com/filipedeschamps/) 😍
+
+🔴 Caso o seu perfil seja `privado`, você primeiro precisa mandar uma mensagem aqui pedindo para eu adicionar você como amigo, para depois me marcar no stories, caso contrário, eu não irei receber notificação.
+
+E mesmo assim, peço que me avise pelos comentários que você publicou e me marcou no Instagram, pois as vezes ele não me notifica 🤝
+
+#### LinkedIn
+
+Caso queira me marcar no LinkedIn, meu perfil é este: [https://www.linkedin.com/in/filipedeschamps/](https://www.linkedin.com/in/filipedeschamps/)
+
+#### Publicar imagem nos comentários
+
+Caso você queira publicar a imagem nos comentários, você pode utilizar este serviço **gratuito** que não precisa de cadastro: [https://imgur.com/](https://imgur.com/)
+
+**Passos para publicar a imagem**:
+
+1. Abra o [https://imgur.com/](https://imgur.com/) e após o site carregar, simplesmente arraste a imagem **diretamente** para ele.
+2. Após finalizar o upload, no canto superior direito da própria imagem, clique no botão `...` e escolha a opção `Get share links`.
+3. No momento que estou escrevendo estas instruções, **nenhum formato** disponibilizado é compatível com `Markdown`, porém o mais próximo é o que está dentro de `BBCode (Forums)`, e que será algo assim:
+
+   ```
+   [img]https://i.imgur.com/UKRJMdy.jpeg[/img]
+   ```
+
+4. Altere o formato acima para o `Markdown` abaixo:
+
+   ```
+   ![](https://i.imgur.com/UKRJMdy.jpeg)
+   ```
+
+5. Pronto! Ao utilizar o formato `Markdown`, a imagem irá aparecer automaticamente com a sua publicação 🎉
+
+## Eu tenho uma dificuldade... me ajuda? 🤝
+
+Não sei se você já esbarrou em alguma propaganda do `curso.dev` mas, se esbarrou, nota que eu tenho uma **dificuldade enorme** de passar para as pessoas que isso aqui não é um curso normal... que a experiência, a vivência aqui dentro é algo diferente.
+
+O detalhe é que é só você quem está vivendo isso na posição de `aluno`, porque eu estou aqui do outro lado na posição de `instrutor`, então é realmente só você quem vai conseguir vivenciar a experiência `curso.dev` e talvez com isso arranjar as palavras certas para descrever o que tá acontecendo aqui dentro, ainda mais agora depois de completar `35 Dias` de material e encerrar a `Milestone Fundação` 🤝
+
+## Tópicos que eu tenho curiosidade
+
+1. Quais foram os impactos dos materiais na sua vida `pessoal` ou `profissional`?
+2. Você percebeu uma mudança na sua `postura` ou forma de encarar desafios após esses 35 Dias?
+3. Qual `aula` ou `conhecimento` apresentado até então que teve o maior impacto em você?
+4. Como os conhecimentos influenciaram a maneira como você pensa sobre `programação` ou `carreira`?
+5. Você conseguiu conquistar algo como uma promoção, emprego ou reconhecimento durante este tempo?
+6. O que você diria para alguém que foi `traumatizado` por `"vendedores de curso"` e está com dúvidas se será a mesma coisa ao se matricular no `curso.dev`?
+7. E por fim: Como você descreve a experiência `curso.dev` para alguém lá de fora?
+
+# Atenção 🛑
+
+Da mesma forma que no primeiro `Pitstop`, tudo que você escrever abaixo ficará **público** na Home ([https://curso.dev/](https://curso.dev/)), junto como o seu `username`. E como está sendo utilizado o exato mesmo sistema de comentários das outras aulas, você poderá interagir com outros depoimentos, seja adicionando novos comentários ou qualificando. Esta é uma área controlada pelos alunos 💪
+
+Eu só irei interferir caso algum depoimento ou comentário venha ferir os Termos de Uso da plataforma, combinado? 🤝
