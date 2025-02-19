@@ -1444,22 +1444,22 @@ tree -a -I 'node_modules|.next|.swc|.git|assets|docs|_'
 ├── .env.development
 ├── .eslintrc.json
 ├── .github
-│   └── workflows
-│       └── ci.yml
+│  └── workflows
+│      └── ci.yml
 ├── .gitignore
 ├── .husky
-│   └── pre-commit
+│  └── pre-commit
 ├── .lintstagedrc.js
 ├── .nvmrc
 ├── .prettierignore
 ├── .prettierrc.json
 ├── .vscode
-│   └── settings.json
+│  └── settings.json
 ├── README.md
 ├── generators
-│   ├── plopfile.js
-│   └── templates
-│       └── index.tsx.hbs
+│  ├── plopfile.js
+│  └── templates
+│      └── index.tsx.hbs
 ├── init-dev.sh
 ├── jest.config.js
 ├── jest.setup.ts
@@ -1467,25 +1467,25 @@ tree -a -I 'node_modules|.next|.swc|.git|assets|docs|_'
 ├── next.config.mjs
 ├── package.json
 ├── src
-│   ├── app
-│   │   ├── api
-│   │   │   └── v1
-│   │   │       └── status
-│   │   │           └── route.ts
-│   │   ├── layout.tsx
-│   │   └── page.tsx
-│   ├── infra
-│   │   ├── compose.yml
-│   │   └── database.ts
-│   └── tests
-│       ├── integration
-│       │   └── api
-│       │       └── v1
-│       │           └── status
-│       │               └── get.test.ts
-│       └── interface
-│           └── app
-│               └── home.test.tsx
+│  ├── app
+│  │  ├── api
+│  │  │  └── v1
+│  │  │      └── status
+│  │  │          └── route.ts
+│  │  ├── layout.tsx
+│  │  └── page.tsx
+│  ├── infra
+│  │  ├── compose.yml
+│  │  └── database.ts
+│  └── tests
+│      ├── integration
+│      │  └── api
+│      │      └── v1
+│      │          └── status
+│      │              └── get.test.ts
+│      └── interface
+│          └── app
+│              └── home.test.tsx
 ├── tsconfig.json
 └── package-lock.json
 ```
@@ -2224,7 +2224,7 @@ Os comentários de `LeoAnders` e `devjuan` apresentam uma alternativa para exibi
 
 ### Estabilizar "npm test" (Paralelismo)
 
-Você está pronto para subir mais um passo na escada até chegar no `CI`? Ótimo, porque chegou a hora da gente atacar a tarefa: `Estabilizar Testes Locais` e iremos começar pela parte do `Paralelismo` do comando `npm test`, conhecimento que inlcusive pode ser utilizado para várias outras situações 💪
+Você está pronto para subir mais um passo na escada até chegar no `CI`? Ótimo, porque chegou a hora da gente atacar a tarefa: `Estabilizar Testes Locais` e iremos começar pela parte do `Paralelismo` do comando `npm test`, conhecimento que inlcusive pode ser utilizado para várias outras situações 💪
 
 **Link para a página do concurrently no NPM**
 
@@ -2253,11 +2253,11 @@ Você está pronto para subir mais um passo na escada até chegar no `CI`? Óti
 
 ### Estabilizar "npm test" (Orquestrador)
 
-Chegou a hora de programar o `Orquestrador` e fazer um `Experimento Social` de verdade aqui com os alunos do `curso.dev`, incluindo você 😍
+Chegou a hora de programar o `Orquestrador` e fazer um `Experimento Social` de verdade aqui com os alunos do `curso.dev`, incluindo você 😍
 
 **Link do Pull Request**
 
-Aqui está o link que eu comentei: [https://github.com/filipedeschamps/clone-tabnews/pull/21](https://github.com/filipedeschamps/clone-tabnews/pull/21)
+Aqui está o link que eu comentei: [https://github.com/filipedeschamps/clone-tabnews/pull/21](https://github.com/filipedeschamps/clone-tabnews/pull/21)
 
 **Link para a página do async-retry no NPM**
 
@@ -2267,60 +2267,60 @@ Aqui está o link que eu comentei: [https://github.com/filipedeschamps/clone-ta
 
 ### 🚗 Pista Rápida
 
-O `Dia 29` levantou uma bola que foi muito bem cortada aqui no `Dia 30` por todo mundo do `curso.dev` num nível que eu não to conseguindo me acreditar até agora 🎉 Então nesta `Pista Rápida` iremos analisar tudo o que aconteceu e, ao final dela, irei colocar mais uma **dica** que me fez ganhar bastante espaço nas empresas que trabalhei 💪
+O `Dia 29` levantou uma bola que foi muito bem cortada aqui no `Dia 30` por todo mundo do `curso.dev` num nível que eu não to conseguindo me acreditar até agora 🎉 Então nesta `Pista Rápida` iremos analisar tudo o que aconteceu e, ao final dela, irei colocar mais uma **dica** que me fez ganhar bastante espaço nas empresas que trabalhei 💪
 
 **Link do Pull Request**
 
-Aqui está o link que eu comentei: [https://github.com/filipedeschamps/clone-tabnews/pull/21](https://github.com/filipedeschamps/clone-tabnews/pull/21)
+Aqui está o link que eu comentei: [https://github.com/filipedeschamps/clone-tabnews/pull/21](https://github.com/filipedeschamps/clone-tabnews/pull/21)
 
 ### rafaelcorrea-dev: "maxTimeout"
 
-**MUITA** gente contribuiu com o `Pull Request` sobre o `Experimento Social` e nessas horas é importante adotar uma **estratégia** de como encarar ele. Dado a isso, fiz a decisão de **separar** o que são sugestões sobre `refatoração` de sugestões que alterem a `mecânica` ou `performance` do script `npm test` e nesta `Pista Lenta` irei atacar a sugestão do [rafaelcorrea-dev](https://github.com/rafaelcorrea-dev) sobre o parâmetro `maxTimeout` do `async-retry` 🎉
+**MUITA** gente contribuiu com o `Pull Request` sobre o `Experimento Social` e nessas horas é importante adotar uma **estratégia** de como encarar ele. Dado a isso, fiz a decisão de **separar** o que são sugestões sobre `refatoração` de sugestões que alterem a `mecânica` ou `performance` do script `npm test` e nesta `Pista Lenta` irei atacar a sugestão do [rafaelcorrea-dev](https://github.com/rafaelcorrea-dev) sobre o parâmetro `maxTimeout` do `async-retry` 🎉
 
 ### FernandoWeber, aprendendofelipe, Ilopesr: "Windows"
 
-**Muita** coisa aconteceu desde a última aula, sugestões super válidas continuaram entrando no Pull Request, incluindo sobre a **compatibilidade** do script `npm test` com o sistema operacional `Windows` 🤝 Estas sugestões ganharam força através dos alunos `FernandoWeber`, [`aprendendofelipe`](https://github.com/aprendendofelipe) e [`Ilopesr`](https://github.com/Ilopesr) 💪
+**Muita** coisa aconteceu desde a última aula, sugestões super válidas continuaram entrando no Pull Request, incluindo sobre a **compatibilidade** do script `npm test` com o sistema operacional `Windows` 🤝 Estas sugestões ganharam força através dos alunos `FernandoWeber`, [`aprendendofelipe`](https://github.com/aprendendofelipe) e [`Ilopesr`](https://github.com/Ilopesr) 💪
 
 ### andrecruzmendes, KleitonBarone, MarcosASFigueiredo: "/status"
 
-Na aula passada eu falei que **duas** pessoas tinham encostado a mão em cima de um `bug`, mas não conseguiram destacar com clareza onde estava o problema. O interessante é que, depois disso, eu notei que uma **terceira** pessoa consertou esse suposto `bug`, mas não pelo motivo da existência dele 😳 Então nesta aula vamos analisar as contribuições dos alunos [`andrecruzmendes`](https://github.com/andrecruzmendes), [`KleitonBarone`](https://github.com/KleitonBarone) e [`MarcosASFigueiredo`](https://github.com/MarcosASFigueiredo) 🎉
+Na aula passada eu falei que **duas** pessoas tinham encostado a mão em cima de um `bug`, mas não conseguiram destacar com clareza onde estava o problema. O interessante é que, depois disso, eu notei que uma **terceira** pessoa consertou esse suposto `bug`, mas não pelo motivo da existência dele 😳 Então nesta aula vamos analisar as contribuições dos alunos [`andrecruzmendes`](https://github.com/andrecruzmendes), [`KleitonBarone`](https://github.com/KleitonBarone) e [`MarcosASFigueiredo`](https://github.com/MarcosASFigueiredo) 🎉
 
 **Link para o commit feito na aula**
 
-- [makes `npm test` more robust with `async-retry` and `orchestrator.js`](https://github.com/filipedeschamps/clone-tabnews/commit/6d2c744b25c751f17abedbc8d8223eab3548c6ed)
+- [makes `npm test` more robust with `async-retry` and `orchestrator.js`](https://github.com/filipedeschamps/clone-tabnews/commit/6d2c744b25c751f17abedbc8d8223eab3548c6ed)
 
 ## Dia 31
 
 ### 🚗 Pista Rápida
 
-Em todos os `Dias` da plataforma eu tento passar conhecimentos que vão deixando o projeto mais **profissional**, tanto **diretamente** trabalhando na parte técnica dele, quanto **indiretamente** com conhecimentos que vão impactar a sua postura, que isto vai impactar na qualidade do trabalho que você consegue executar no dia a dia e, que por fim, vai impactar na parte técnica de qualquer projeto que você **encostar** daqui pra frente. O massa é que o `Dia 31` não foge desse padrão, aliás, foge sim, porque o projeto dá um salto inédito de profissionalismo 💪
+Em todos os `Dias` da plataforma eu tento passar conhecimentos que vão deixando o projeto mais **profissional**, tanto **diretamente** trabalhando na parte técnica dele, quanto **indiretamente** com conhecimentos que vão impactar a sua postura, que isto vai impactar na qualidade do trabalho que você consegue executar no dia a dia e, que por fim, vai impactar na parte técnica de qualquer projeto que você **encostar** daqui pra frente. O massa é que o `Dia 31` não foge desse padrão, aliás, foge sim, porque o projeto dá um salto inédito de profissionalismo 💪
 
 ### Configurar "Continuous Integration" (com GitHub Actions)
 
-Olha só que massa desenvolver as coisas de forma **orgânica**: de um lado, o assunto `Continuous Integration` assusta muita gente (é como se fosse uma coisa muito difícil de se atingir) e do outro lado tem **você**, agora, neste exato momento, que já fez a **maioria** das coisas que se precisava fazer pra atingir justamente o estágio de `Continuous Integration` e só falta dar um **_chutinho pra bola entrar no gol_** ⚽️ 🎉
+Olha só que massa desenvolver as coisas de forma **orgânica**: de um lado, o assunto `Continuous Integration` assusta muita gente (é como se fosse uma coisa muito difícil de se atingir) e do outro lado tem **você**, agora, neste exato momento, que já fez a **maioria** das coisas que se precisava fazer pra atingir justamente o estágio de `Continuous Integration` e só falta dar um **_chutinho pra bola entrar no gol_** ⚽️ 🎉
 
 **Link para o commit feito na aula**
 
-- [adds `Automated Tests` GitHub Action](https://github.com/filipedeschamps/clone-tabnews/commit/4a8ff19415b5a247ca946638a80f0e395355d97b)
+- [adds `Automated Tests` GitHub Action](https://github.com/filipedeschamps/clone-tabnews/commit/4a8ff19415b5a247ca946638a80f0e395355d97b)
 
 ### Lint Code: Style
 
-Chegou o momento **perfeito** para esclarecer algumas categorias das ferramentas de `Linting`, tanto de `estilo` quanto de `qualidade`, e nesta Pista Lenta iremos engatar no nosso `CI` a **garantia** de que a **estilização** do código está **100%** utilizando o `Prettier` 💪
+Chegou o momento **perfeito** para esclarecer algumas categorias das ferramentas de `Linting`, tanto de `estilo` quanto de `qualidade`, e nesta Pista Lenta iremos engatar no nosso `CI` a **garantia** de que a **estilização** do código está **100%** utilizando o `Prettier` 💪
 
 **Desafio**
 
-Ao final eu proponho um **novo desafio** para você... você topa? 😍
+Ao final eu proponho um **novo desafio** para você... você topa? 😍
 
 **Links para os commits feitos na aula**
 
-- [adds `Linting` GitHub Action](https://github.com/filipedeschamps/clone-tabnews/commit/d2aea6fbbb6f796804d2353fb21d94e554fcda71)
-- [fix `prettier` style linting](https://github.com/filipedeschamps/clone-tabnews/commit/66debb49178a6180d698ae2957d84f96aba4a03f)
+- [adds `Linting` GitHub Action](https://github.com/filipedeschamps/clone-tabnews/commit/d2aea6fbbb6f796804d2353fb21d94e554fcda71)
+- [fix `prettier` style linting](https://github.com/filipedeschamps/clone-tabnews/commit/66debb49178a6180d698ae2957d84f96aba4a03f)
 
 ### Lint Code: Quality
 
-Então o desafio agora é trazer o `ESLint` para o nosso projeto para ele ajudar a manter certas regras básicas de **Qualidade de Código** e engatar isso no fluxo do `CI` para que essas regras sejam garantidamente aplicadas 🤝
+Então o desafio agora é trazer o `ESLint` para o nosso projeto para ele ajudar a manter certas regras básicas de **Qualidade de Código** e engatar isso no fluxo do `CI` para que essas regras sejam garantidamente aplicadas 🤝
 
-Ao executar o comando `next lint`, o Next irá instalar as versões mais atualizadas dos módulos `eslint` e `eslint-config-next`. No entanto, conforme apontado pelo aluno [`matheusl`](https://curso.dev/alunos/matheusl/f3da2fca-8ba5-4412-a9de-ef53365e012e), a versão mais atual do ESLint é incompatível com a versão do Next que estamos utilizando no projeto até esse ponto. Portanto, após a instalação automática desses pacotes pelo Next, você deverá alterar manualmente para as versões usadas na aula com o comando `npm install eslint@8.57.0 eslint-config-next@14.2.4`, a fim de evitar esse problema de compatibilidade.
+Ao executar o comando `next lint`, o Next irá instalar as versões mais atualizadas dos módulos `eslint` e `eslint-config-next`. No entanto, conforme apontado pelo aluno [`matheusl`](https://curso.dev/alunos/matheusl/f3da2fca-8ba5-4412-a9de-ef53365e012e), a versão mais atual do ESLint é incompatível com a versão do Next que estamos utilizando no projeto até esse ponto. Portanto, após a instalação automática desses pacotes pelo Next, você deverá alterar manualmente para as versões usadas na aula com o comando `npm install eslint@8.57.0 eslint-config-next@14.2.4`, a fim de evitar esse problema de compatibilidade.
 
 **Links para as páginas no NPM dos plugins instalados**
 
@@ -2329,9 +2329,9 @@ Ao executar o comando `next lint`, o Next irá instalar as versões mais atuali
 
 **Links para os commits feitos na aula**
 
-- [adds `lint:eslint:check` script with `ESLint`](https://github.com/filipedeschamps/clone-tabnews/commit/38287e909c5db5f3601b95bf798a56ce3e586549)
-- [adds `eslint` job in `Linting` GitHub Action](https://github.com/filipedeschamps/clone-tabnews/commit/83462d4f629d09065298593e27c4247abf23685f)
-- [fix `eslint` linting](https://github.com/filipedeschamps/clone-tabnews/commit/b776dc629f71447cb1a79e94fe74dda54ec6dc82)
+- [adds `lint:eslint:check` script with `ESLint`](https://github.com/filipedeschamps/clone-tabnews/commit/38287e909c5db5f3601b95bf798a56ce3e586549)
+- [adds `eslint` job in `Linting` GitHub Action](https://github.com/filipedeschamps/clone-tabnews/commit/83462d4f629d09065298593e27c4247abf23685f)
+- [fix `eslint` linting](https://github.com/filipedeschamps/clone-tabnews/commit/b776dc629f71447cb1a79e94fe74dda54ec6dc82)
 
 ## Dia 32
 
@@ -2341,31 +2341,31 @@ Os alunos que passarem por todas as Pistas Lentas do Dia 32 vão dar um salto na
 
 ### É verdade mesmo que commits bem feitos fazem diferença?
 
-Por algum motivo que eu ainda estou para descobrir, o assunto `Commit` coloca uma **pressão extra** na gente... você sente isso também? Se não sente, você vai sentir em algum momento, por isso que eu quis separar esse assunto no seu próprio `Dia` para novamente a gente conseguir conversar com qualidade em cada parte desse tema e para também eu não precisar passar chutado por um tema sensível e **acalorado** 🔥
+Por algum motivo que eu ainda estou para descobrir, o assunto `Commit` coloca uma **pressão extra** na gente... você sente isso também? Se não sente, você vai sentir em algum momento, por isso que eu quis separar esse assunto no seu próprio `Dia` para novamente a gente conseguir conversar com qualidade em cada parte desse tema e para também eu não precisar passar chutado por um tema sensível e **acalorado** 🔥
 
 ### Como definir o escopo de um commit?
 
-Se a aula anterior deixou você com o **estômago embrulhado**, ótimo, porque a partir dessa aula eu vou fazer de tudo para **desembrulhar**, começando por entender melhor onde **começa** e **termina** um `commit`, como que eu defino quais arquivos ou quais alterações participam de um `commit` e quais deveriam participar de outro 🤝
+Se a aula anterior deixou você com o **estômago embrulhado**, ótimo, porque a partir dessa aula eu vou fazer de tudo para **desembrulhar**, começando por entender melhor onde **começa** e **termina** um `commit`, como que eu defino quais arquivos ou quais alterações participam de um `commit` e quais deveriam participar de outro 🤝
 
 <details>
   <summary><strong>Spoiler (clique somente depois de assistir a aula)</strong></summary>
 <br>
-Sobre o **plot twist** ao final da aula, a minha opinião é que, neste caso, a alteração no `código` e alteração da `documentação` deveriam ser feitos em um mesmo `commit`. O racional por trás disso é que eles existem por um **mesmo motivo** e deixar eles num estado **dessincronizados** poderá causar confusão no consumo do produto. Isto porque, o `código` do produto irá estar se comportando de uma forma diferente do que a `documentação` está instruindo.
+Sobre o **plot twist** ao final da aula, a minha opinião é que, neste caso, a alteração no `código` e alteração da `documentação` deveriam ser feitos em um mesmo `commit`. O racional por trás disso é que eles existem por um **mesmo motivo** e deixar eles num estado **dessincronizados** poderá causar confusão no consumo do produto. Isto porque, o `código` do produto irá estar se comportando de uma forma diferente do que a `documentação` está instruindo.
 
-Imagine uma situação onde uma **ação** no produto, que antes poderia ser **desfeita** e está documentada que possui essa habilidade (como por exemplo **deletar uma publicação** e em seguida **desfazer** essa ação), agora com uma nova versão do `código` não é mais possível **desfazer**. Caso o `commit` que implementa no `código` a remoção do comportamento de desfazer entre em produção de forma descasada com a atualização da `documentação` informando que não é mais possível esta ação, usuários que estão lendo a `documentação` (desatualizada), por um momento poderão contar com um recurso que na prática **não existe mais**.
+Imagine uma situação onde uma **ação** no produto, que antes poderia ser **desfeita** e está documentada que possui essa habilidade (como por exemplo **deletar uma publicação** e em seguida **desfazer** essa ação), agora com uma nova versão do `código` não é mais possível **desfazer**. Caso o `commit` que implementa no `código` a remoção do comportamento de desfazer entre em produção de forma descasada com a atualização da `documentação` informando que não é mais possível esta ação, usuários que estão lendo a `documentação` (desatualizada), por um momento poderão contar com um recurso que na prática **não existe mais**.
 
-Conclusão: eu "grudaria" estas duas alterações em um único `commit` para não correr o risco de ficar dessincronizado.
+Conclusão: eu "grudaria" estas duas alterações em um único `commit` para não correr o risco de ficar dessincronizado.
 
 </details>
 
 ### Como definir a mensagem de um commit?
 
-Chegamos na última aula **teórica** sobre como podemos nos tornar profissionais mais **completos** no assunto `commit`, onde o ponto de destaque é sobre o `Tempo verbal` utilizado ao escrever a mensagem principal 🤝
+Chegamos na última aula **teórica** sobre como podemos nos tornar profissionais mais **completos** no assunto `commit`, onde o ponto de destaque é sobre o `Tempo verbal` utilizado ao escrever a mensagem principal 🤝
 
 **Links**
 
-- Falando em `Tempo verbal`, sugiro ler [este comentário do andrecruzmendes](https://curso.dev/alunos/andrecruzmendes/ca7f4617-03bc-4142-b05a-b5615e48905d) que está sensacional 🎉
-- Site do [Conventional Commits](https://www.conventionalcommits.org/) (versão [Português](https://www.conventionalcommits.org/pt-br/v1.0.0/))
+- Falando em `Tempo verbal`, sugiro ler [este comentário do andrecruzmendes](https://curso.dev/alunos/andrecruzmendes/ca7f4617-03bc-4142-b05a-b5615e48905d) que está sensacional 🎉
+- Site do [Conventional Commits](https://www.conventionalcommits.org/) (versão [Português](https://www.conventionalcommits.org/pt-br/v1.0.0/))
 
 ## Dia 33
 
@@ -2387,19 +2387,19 @@ echo "teste" | npx commitlint
 
 ### Lint dos commits (CI)
 
-Esta vai ser uma `Pista Lenta` muito massa, muito massa **MESMO**, porque não somente eu e você vamos fazer o `CI` barrar `commits` fora do padrão, como também **elevar** os conhecimentos em `Git`, isso porquê gente vai dar o primeiro passo dentro de um comando que muita gente tem medo: `git rebase` 🔥
+Esta vai ser uma `Pista Lenta` muito massa, muito massa **MESMO**, porque não somente eu e você vamos fazer o `CI` barrar `commits` fora do padrão, como também **elevar** os conhecimentos em `Git`, isso porquê gente vai dar o primeiro passo dentro de um comando que muita gente tem medo: `git rebase` 🔥
 
 ### Git Hooks para criação de commits (+ Desafio)
 
-Simplesmente **sensacional** que o nosso `CI` agora está **barrando** mensagens de `commit` com o formato errado, **trancando** o `Pull Request`, mas agora também não quero mais fazer `push` de coisa errada e passar vergonha, não é mesmo? Então nesta aula vamos colocar a mão na massa nos `Hooks` do `Git` para entender como que eles podem nos ajudar na missão de validar os `commits` de forma local 💪
+Simplesmente **sensacional** que o nosso `CI` agora está **barrando** mensagens de `commit` com o formato errado, **trancando** o `Pull Request`, mas agora também não quero mais fazer `push` de coisa errada e passar vergonha, não é mesmo? Então nesta aula vamos colocar a mão na massa nos `Hooks` do `Git` para entender como que eles podem nos ajudar na missão de validar os `commits` de forma local 💪
 
 ## Dia 34
 
 ### 🚗 Pista Rápida
 
-Dentro do `Dia 34` acontece um **problema** que eu não planejava e isso se tornou um **conteúdo raríssimo** e que vai ser mais um daqueles **conhecimentos** que você fica até **mais feliz** e se sente um **profissional melhor** só por possuir ele.
+Dentro do `Dia 34` acontece um **problema** que eu não planejava e isso se tornou um **conteúdo raríssimo** e que vai ser mais um daqueles **conhecimentos** que você fica até **mais feliz** e se sente um **profissional melhor** só por possuir ele.
 
-Fora isso, eu quero mostrar um conteúdo `bônus` que eu não mostrei em nenhuma das `Pistas Lentas` 💪
+Fora isso, eu quero mostrar um conteúdo `bônus` que eu não mostrei em nenhuma das `Pistas Lentas` 💪
 
 **Artigo citado no vídeo**
 
@@ -2407,19 +2407,19 @@ Fora isso, eu quero mostrar um conteúdo `bônus` que eu não mostrei em nenhu
 
 ### Uma história macabra sobre "Tipo da Licença"
 
-A minha ficha caiu sobre a **importância** de uma `licença` por volta de `2017` quando a `Meta`, na época chamada ainda de `Facebook`, entrou numa **grande polêmica** por conta do `React` (na verdade não especificamente sobre o `React`, mas sobre a `licença` dele) 🔥
+A minha ficha caiu sobre a **importância** de uma `licença` por volta de `2017` quando a `Meta`, na época chamada ainda de `Facebook`, entrou numa **grande polêmica** por conta do `React` (na verdade não especificamente sobre o `React`, mas sobre a `licença` dele) 🔥
 
 ### Semantic Versioning
 
-Para nossa sorte, quando o sistema de módulos do `Node.js` foi padronizado, se escolheu o `Semantic Versioning` para ditar o que seria escrito na versão de cada módulo. Isso porque, na versão de um software, você pode escrever qualquer coisa, como por exemplo: `v1`, `v2`, `v3` ou `r2010-a` e ninguém sabe o que isso significa só olhando para esse tipo de versão. Isso acontece, porque essas versões não possuem **semântica** alguma contida nelas, e é aí que entra a `Versão Semântica`, pois ela obedece uma **estrutura** que carrega um **significado semântico**, ou seja, ela, por conta própria, **transmite um significado**.
+Para nossa sorte, quando o sistema de módulos do `Node.js` foi padronizado, se escolheu o `Semantic Versioning` para ditar o que seria escrito na versão de cada módulo. Isso porque, na versão de um software, você pode escrever qualquer coisa, como por exemplo: `v1`, `v2`, `v3` ou `r2010-a` e ninguém sabe o que isso significa só olhando para esse tipo de versão. Isso acontece, porque essas versões não possuem **semântica** alguma contida nelas, e é aí que entra a `Versão Semântica`, pois ela obedece uma **estrutura** que carrega um **significado semântico**, ou seja, ela, por conta própria, **transmite um significado**.
 
 ### Resolvendo conflito de "Peer Dependencies"
 
-Você sabe que alguém já foi **picado** pela **cobra** do `Semantic Versioning` quando toda hora essa pessoa está preocupada na **consistência** entre as instalações de um projeto. Mas talvez, pior do que isso, é você se encontrar com um erro de `Peer Dependency` que, para a nossa **sorte**, isso aconteceu ao longo da aula no momento em que as **dependências** estavam sendo **atualizadas** e tudo foi registrado e explicado com a **_"didática `curso.dev`"_** 💪
+Você sabe que alguém já foi **picado** pela **cobra** do `Semantic Versioning` quando toda hora essa pessoa está preocupada na **consistência** entre as instalações de um projeto. Mas talvez, pior do que isso, é você se encontrar com um erro de `Peer Dependency` que, para a nossa **sorte**, isso aconteceu ao longo da aula no momento em que as **dependências** estavam sendo **atualizadas** e tudo foi registrado e explicado com a **_"didática `curso.dev`"_** 💪
 
 ### Finalizando atualizações
 
-Nesta aula vamos continuar atualizando as **dependências**, incluindo sobre as versões `major` e levar este assunto até ao final, até abrir o `Pull Request` 💪
+Nesta aula vamos continuar atualizando as **dependências**, incluindo sobre as versões `major` e levar este assunto até ao final, até abrir o `Pull Request` 💪
 
 ## Dia 35
 
@@ -2429,73 +2429,83 @@ Quantas vezes na sua vida, você deixou de perceber que você concluiu uma taref
 
 ### Refatorando Scripts e "Efeito Estilingue Infinito"
 
-Esta é uma `Pista Lenta` bem menos densa, ao menos comparada com as últimas, mas isto não significa que não terá **conhecimentos importantes**, muito pelo contrário, eu falo sobre o `Efeito Estilingue Infinito` que é algo que pode fazer **muita diferença** na sua vida e carreira, e também colocamos a mão na massa refatorando a seção `scripts` do `package.json` 🤝
+Esta é uma `Pista Lenta` bem menos densa, ao menos comparada com as últimas, mas isto não significa que não terá **conhecimentos importantes**, muito pelo contrário, eu falo sobre o `Efeito Estilingue Infinito` que é algo que pode fazer **muita diferença** na sua vida e carreira, e também colocamos a mão na massa refatorando a seção `scripts` do `package.json` 🤝
 
 ### Refatorando Testes Automatizados
 
-Nesta aula iremos **refatorar** os **Testes Automatizados** para seguir um **novo padrão** que separa o `Contexto` da `Afirmação`. A ideia é tirar **duplicidade de informação** e evitar que a descrição dos testes fique fora de sincronia com o que o código realmente faz, pelo menos na parte da `Afirmação` para que o código seja a única fonte de verdade 🤝
+Nesta aula iremos **refatorar** os **Testes Automatizados** para seguir um **novo padrão** que separa o `Contexto` da `Afirmação`. A ideia é tirar **duplicidade de informação** e evitar que a descrição dos testes fique fora de sincronia com o que o código realmente faz, pelo menos na parte da `Afirmação` para que o código seja a única fonte de verdade 🤝
 
 ### Encerramento da Milestone 1 🎉
 
-Nesta aula, encerramos com **muito orgulho** a `Milestone Fundação` 💪 💪 💪 E para isso, revisamos a sugestão de mais `2` alunos e aplicamos elas de uma forma que até uma pessoa **sênior** ficará impressionada 😍 Por fim, consertamos um bug no projeto que estava sendo escondido pelo fato do ambiente do `CI` apontar que tudo estava `100%`, mas não estava 🤝
+Nesta aula, encerramos com **muito orgulho** a `Milestone Fundação` 💪 💪 💪 E para isso, revisamos a sugestão de mais `2` alunos e aplicamos elas de uma forma que até uma pessoa **sênior** ficará impressionada 😍 Por fim, consertamos um bug no projeto que estava sendo escondido pelo fato do ambiente do `CI` apontar que tudo estava `100%`, mas não estava 🤝
 
 ## 📸 Tira uma "selfie" comigo?
 
-Eu vou te falar... é só no `curso.dev` que essas coisas acontecem 😂 📸
+Eu vou te falar... é só no `curso.dev` que essas coisas acontecem 😂 📸
 
 #### Instagram
 
 Você topa me marcar lá no Instagram?
-O meu perfil é o [`@filipedeschamps`](https://www.instagram.com/filipedeschamps/) 😍
+O meu perfil é o [`@filipedeschamps`](https://www.instagram.com/filipedeschamps/) 😍
 
-🔴 Caso o seu perfil seja `privado`, você primeiro precisa mandar uma mensagem aqui pedindo para eu adicionar você como amigo, para depois me marcar no stories, caso contrário, eu não irei receber notificação.
+🔴 Caso o seu perfil seja `privado`, você primeiro precisa mandar uma mensagem aqui pedindo para eu adicionar você como amigo, para depois me marcar no stories, caso contrário, eu não irei receber notificação.
 
 E mesmo assim, peço que me avise pelos comentários que você publicou e me marcou no Instagram, pois as vezes ele não me notifica 🤝
 
 #### LinkedIn
 
-Caso queira me marcar no LinkedIn, meu perfil é este: [https://www.linkedin.com/in/filipedeschamps/](https://www.linkedin.com/in/filipedeschamps/)
+Caso queira me marcar no LinkedIn, meu perfil é este: [https://www.linkedin.com/in/filipedeschamps/](https://www.linkedin.com/in/filipedeschamps/)
 
 #### Publicar imagem nos comentários
 
-Caso você queira publicar a imagem nos comentários, você pode utilizar este serviço **gratuito** que não precisa de cadastro: [https://imgur.com/](https://imgur.com/)
+Caso você queira publicar a imagem nos comentários, você pode utilizar este serviço **gratuito** que não precisa de cadastro: [https://imgur.com/](https://imgur.com/)
 
 **Passos para publicar a imagem**:
 
-1. Abra o [https://imgur.com/](https://imgur.com/) e após o site carregar, simplesmente arraste a imagem **diretamente** para ele.
-2. Após finalizar o upload, no canto superior direito da própria imagem, clique no botão `...` e escolha a opção `Get share links`.
-3. No momento que estou escrevendo estas instruções, **nenhum formato** disponibilizado é compatível com `Markdown`, porém o mais próximo é o que está dentro de `BBCode (Forums)`, e que será algo assim:
+1. Abra o [https://imgur.com/](https://imgur.com/) e após o site carregar, simplesmente arraste a imagem **diretamente** para ele.
+2. Após finalizar o upload, no canto superior direito da própria imagem, clique no botão `...` e escolha a opção `Get share links`.
+3. No momento que estou escrevendo estas instruções, **nenhum formato** disponibilizado é compatível com `Markdown`, porém o mais próximo é o que está dentro de `BBCode (Forums)`, e que será algo assim:
 
    ```
    [img]https://i.imgur.com/UKRJMdy.jpeg[/img]
    ```
 
-4. Altere o formato acima para o `Markdown` abaixo:
+4. Altere o formato acima para o `Markdown` abaixo:
 
    ```
    ![](https://i.imgur.com/UKRJMdy.jpeg)
    ```
 
-5. Pronto! Ao utilizar o formato `Markdown`, a imagem irá aparecer automaticamente com a sua publicação 🎉
+5. Pronto! Ao utilizar o formato `Markdown`, a imagem irá aparecer automaticamente com a sua publicação 🎉
 
 ## Eu tenho uma dificuldade... me ajuda? 🤝
 
-Não sei se você já esbarrou em alguma propaganda do `curso.dev` mas, se esbarrou, nota que eu tenho uma **dificuldade enorme** de passar para as pessoas que isso aqui não é um curso normal... que a experiência, a vivência aqui dentro é algo diferente.
+Não sei se você já esbarrou em alguma propaganda do `curso.dev` mas, se esbarrou, nota que eu tenho uma **dificuldade enorme** de passar para as pessoas que isso aqui não é um curso normal... que a experiência, a vivência aqui dentro é algo diferente.
 
-O detalhe é que é só você quem está vivendo isso na posição de `aluno`, porque eu estou aqui do outro lado na posição de `instrutor`, então é realmente só você quem vai conseguir vivenciar a experiência `curso.dev` e talvez com isso arranjar as palavras certas para descrever o que tá acontecendo aqui dentro, ainda mais agora depois de completar `35 Dias` de material e encerrar a `Milestone Fundação` 🤝
+O detalhe é que é só você quem está vivendo isso na posição de `aluno`, porque eu estou aqui do outro lado na posição de `instrutor`, então é realmente só você quem vai conseguir vivenciar a experiência `curso.dev` e talvez com isso arranjar as palavras certas para descrever o que tá acontecendo aqui dentro, ainda mais agora depois de completar `35 Dias` de material e encerrar a `Milestone Fundação` 🤝
 
-## Tópicos que eu tenho curiosidade
+#### Tópicos que eu tenho curiosidade
 
-1. Quais foram os impactos dos materiais na sua vida `pessoal` ou `profissional`?
-2. Você percebeu uma mudança na sua `postura` ou forma de encarar desafios após esses 35 Dias?
-3. Qual `aula` ou `conhecimento` apresentado até então que teve o maior impacto em você?
-4. Como os conhecimentos influenciaram a maneira como você pensa sobre `programação` ou `carreira`?
+1. Quais foram os impactos dos materiais na sua vida `pessoal` ou `profissional`?
+2. Você percebeu uma mudança na sua `postura` ou forma de encarar desafios após esses 35 Dias?
+3. Qual `aula` ou `conhecimento` apresentado até então que teve o maior impacto em você?
+4. Como os conhecimentos influenciaram a maneira como você pensa sobre `programação` ou `carreira`?
 5. Você conseguiu conquistar algo como uma promoção, emprego ou reconhecimento durante este tempo?
-6. O que você diria para alguém que foi `traumatizado` por `"vendedores de curso"` e está com dúvidas se será a mesma coisa ao se matricular no `curso.dev`?
-7. E por fim: Como você descreve a experiência `curso.dev` para alguém lá de fora?
+6. O que você diria para alguém que foi `traumatizado` por `"vendedores de curso"` e está com dúvidas se será a mesma coisa ao se matricular no `curso.dev`?
+7. E por fim: Como você descreve a experiência `curso.dev` para alguém lá de fora?
 
-# Atenção 🛑
+#### Atenção 🛑
 
-Da mesma forma que no primeiro `Pitstop`, tudo que você escrever abaixo ficará **público** na Home ([https://curso.dev/](https://curso.dev/)), junto como o seu `username`. E como está sendo utilizado o exato mesmo sistema de comentários das outras aulas, você poderá interagir com outros depoimentos, seja adicionando novos comentários ou qualificando. Esta é uma área controlada pelos alunos 💪
+Da mesma forma que no primeiro `Pitstop`, tudo que você escrever abaixo ficará **público** na Home ([https://curso.dev/](https://curso.dev/)), junto como o seu `username`. E como está sendo utilizado o exato mesmo sistema de comentários das outras aulas, você poderá interagir com outros depoimentos, seja adicionando novos comentários ou qualificando. Esta é uma área controlada pelos alunos 💪
 
 Eu só irei interferir caso algum depoimento ou comentário venha ferir os Termos de Uso da plataforma, combinado? 🤝
+
+## Dia 36
+
+### 🚗 Pista Rápida:
+
+O `Dia 36` é o `Dia` em que eu e você abrimos a `Milestone` mais **importante** do projeto 💪 🤝
+
+### Promessa importante daqui para frente 💪
+
+Para inaugurarmos a próxima Milestone do jeito certo e tendo você na sua **maior capacidade**, eu gostaria que você fizesse uma **promessa**, uma muito importante e que vai **libertar** você a se desafiar mais daqui para frente 💪
