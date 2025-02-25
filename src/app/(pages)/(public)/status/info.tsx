@@ -1,7 +1,9 @@
 import { TStatusBody } from '@/app/api/v1/status/route'
 
 const fetchApi = async (path: string) => {
-  const response = await fetch(process.env.NEXT_PUBLIC_API_BASE_URL + path)
+  const response = await fetch(process.env.NEXT_PUBLIC_API_BASE_URL + path, {
+    cache: 'no-store'
+  })
   if (!response.ok) {
     throw new Error('Failed to fetch data')
   }
