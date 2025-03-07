@@ -1,5 +1,7 @@
 import { Suspense } from 'react'
+
 import { Loader } from '@/components'
+
 import { Info } from './info'
 
 const Status = () => {

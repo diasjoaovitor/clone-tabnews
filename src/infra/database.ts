@@ -1,4 +1,5 @@
 import { Client } from 'pg'
+
 import { ServiceError } from './errors'
 
 const getNewClient = async () => {

@@ -1,4 +1,5 @@
 import retry from 'async-retry'
+
 import database from '@/infra'
 
 const waitForAllServices = async () => {
