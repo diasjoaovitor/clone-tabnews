@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server'
-import { ClientBase } from 'pg'
 import migrationRunner, { RunnerOption } from 'node-pg-migrate'
-import { join } from 'path'
-import database, { controller } from '@/infra'
 import { RunMigration } from 'node-pg-migrate/dist/migration'
+import { join } from 'path'
+import { ClientBase } from 'pg'
+
+import database, { controller } from '@/infra'
 
 const getDefaultMigrationOptions = ({
   dbClient,
