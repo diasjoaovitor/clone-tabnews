@@ -1,3 +1,3 @@
-const Home = () => <h1>Home</h1>
+const Home = () => <h1>Marcelly é linda ❤</h1>
 
 export default Home

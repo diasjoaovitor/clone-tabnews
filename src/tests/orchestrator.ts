@@ -1,5 +1,9 @@
 import retry from 'async-retry'
-import database from '@/infra'
+
+import { database } from '@/infra'
+import { migrator } from '@/models'
+import { userRepository } from '@/repositories'
+import { TCreateUserSchema } from '@/schemas'
 
 const waitForAllServices = async () => {
   await retry(
@@ -21,9 +25,18 @@ const clearDatabase = async () => {
   await database.query('drop schema public cascade; create schema public;')
 }
 
+const runPendingMigrations = async () => {
+  await migrator.runPendingMigrations()
+}
+
+const createUser = async (params: TCreateUserSchema) =>
+  await userRepository.create(params)
+
 const orchestrator = {
   waitForAllServices,
-  clearDatabase
+  clearDatabase,
+  runPendingMigrations,
+  createUser
 }
 
 export default orchestrator

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { QueryResult, QueryResultRow } from 'pg'
-import database from '@/infra'
+
+import { controller, database } from '@/infra'
 
 export type TStatusBody = {
   updated_at: string
@@ -13,7 +14,7 @@ export type TStatusBody = {
   }
 }
 
-export const GET = async () => {
+const getHandler = async () => {
   const updatedAt = new Date().toISOString()
 
   const {
@@ -50,3 +51,7 @@ export const GET = async () => {
     status: 200
   })
 }
+
+export const { GET, DELETE, HEAD, OPTIONS, PATCH, POST, PUT } = controller({
+  GET: getHandler
+})

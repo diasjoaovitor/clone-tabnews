@@ -3,9 +3,9 @@ import orchestrator from '@/tests/orchestrator'
 
 beforeAll(orchestrator.waitForAllServices)
 
-describe('Not allowed methods to /api/v1/migrations', () => {
+describe('Not allowed methods to /api/v1/users', () => {
   test('should return 405 and the response error', async () => {
-    const url = 'http://localhost:3000/api/v1/migrations'
+    const url = 'http://localhost:3000/api/v1/users'
     const notAllowedMethods = ['PUT', 'PATCH', 'DELETE', 'OPTIONS']
     const expectedData: TErrorResponse = {
       name: 'MethodNotAllowedError',

@@ -1,5 +1,5 @@
-import orchestrator from '@/tests/orchestrator'
 import { TStatusBody } from '@/app/api/v1/status/route'
+import orchestrator from '@/tests/orchestrator'
 
 beforeAll(orchestrator.waitForAllServices)
 

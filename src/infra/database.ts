@@ -1,5 +1,7 @@
 import { Client } from 'pg'
 
+import { ServiceError } from './errors'
+
 const getNewClient = async () => {
   const client = new Client({
     host: process.env.POSTGRES_HOST,
@@ -23,16 +25,17 @@ const query = async (
     const result = await client.query(query, args)
     return result
   } catch (error) {
-    console.error(error)
-    throw error
+    const serviceErrorObject = new ServiceError({
+      message: 'Erro na conexão com Banco ou na Query.',
+      cause: error
+    })
+    throw serviceErrorObject
   } finally {
     await client?.end()
   }
 }
 
-const database = {
+export const database = {
   query,
   getNewClient
 }
-
-export default database
