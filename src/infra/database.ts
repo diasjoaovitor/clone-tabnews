@@ -35,9 +35,7 @@ const query = async (
   }
 }
 
-const database = {
+export const database = {
   query,
   getNewClient
 }
-
-export default database

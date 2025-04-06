@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { QueryResult, QueryResultRow } from 'pg'
 
-import database, { controller } from '@/infra'
+import { controller, database } from '@/infra'
 
 export type TStatusBody = {
   updated_at: string
