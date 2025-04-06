@@ -4,7 +4,7 @@ import migrationRunner, { RunnerOption } from 'node-pg-migrate'
 import { RunMigration } from 'node-pg-migrate/dist/migration'
 import { ClientBase } from 'pg'
 
-import database, { ServiceError } from '@/infra'
+import { database, ServiceError } from '@/infra'
 
 const getDefaultMigrationOptions = ({
   dbClient,
@@ -20,6 +20,9 @@ const getDefaultMigrationOptions = ({
     migrationsTable: 'pgmigrations',
     dbClient,
     dryRun
+  }
+  if (process.env.NODE_ENV === 'test') {
+    return { ...options, log: () => {} }
   }
   return options
 }
@@ -62,9 +65,7 @@ const runPendingMigrations = async () =>
     return migratedMigrations
   })
 
-const migrator = {
+export const migrator = {
   listPendingMigrations,
   runPendingMigrations
 }
-
-export default migrator

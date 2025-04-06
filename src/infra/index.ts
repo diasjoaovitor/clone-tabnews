@@ -1,3 +1,3 @@
 export * from './controller'
-export { default } from './database'
+export * from './database'
 export * from './errors'
