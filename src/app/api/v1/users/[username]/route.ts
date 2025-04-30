@@ -10,13 +10,15 @@ const getHandler = async (_: NextRequest, context: any) => {
   return NextResponse.json(userFound)
 }
 
-const putHandler = async (request: NextRequest) => {
+const patchHandler = async (request: NextRequest, context: any) => {
+  const params = await context.params
+  const username = params.username
   const userInputValues = await request.json()
-  const updatedUser = await user.update(userInputValues)
+  const updatedUser = await user.update(username, userInputValues)
   return NextResponse.json(updatedUser, { status: 200 })
 }
 
-export const { GET, PUT, DELETE, HEAD, OPTIONS, PATCH, POST } = controller({
+export const { GET, PATCH, DELETE, HEAD, OPTIONS, POST, PUT } = controller({
   GET: getHandler,
-  PUT: putHandler
+  PATCH: patchHandler
 })
