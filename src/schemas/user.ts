@@ -19,12 +19,9 @@ export const createUserSchema = z.object({
 export type TCreateUserSchema = z.infer<typeof createUserSchema>
 
 export const updateUserSchema = z.object({
-  id: z
-    .string({ message: 'O id é obrigatório.' })
-    .uuid({ message: 'O id informado não é um uuid válido.' }),
-  username: usernameSchema,
-  email: emailSchema,
-  password: passwordSchema
+  username: usernameSchema.optional(),
+  email: emailSchema.optional(),
+  password: passwordSchema.optional()
 })
 
 export type TUpdateUserSchema = z.infer<typeof updateUserSchema>

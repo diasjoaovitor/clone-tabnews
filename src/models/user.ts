@@ -10,6 +10,10 @@ import {
 } from '@/schemas'
 import { TUser } from '@/types'
 
+import { password } from '.'
+
+const { hash } = password
+
 const validateUniqueUsername = async ({
   username,
   id
@@ -21,7 +25,7 @@ const validateUniqueUsername = async ({
   if (foundUserByUsername && foundUserByUsername.id !== id) {
     throw new ValidationError({
       message: 'O username informado já está sendo utilizado.',
-      action: 'Utilize outro username para realizar o cadastro.',
+      action: 'Utilize outro username para realizar esta operação.',
       statusCode: 409
     })
   }
@@ -38,7 +42,7 @@ const validateUniqueEmail = async ({
   if (foundUserByEmail && foundUserByEmail.id !== id) {
     throw new ValidationError({
       message: 'O email informado já está sendo utilizado.',
-      action: 'Utilize outro email para realizar o cadastro.',
+      action: 'Utilize outro email para realizar esta operação.',
       statusCode: 409
     })
   }
@@ -69,12 +73,19 @@ const create = async (params: TCreateUserSchema): Promise<TUser> => {
   await validateUniqueEmail({ email })
   await validateUniqueUsername({ username })
 
-  const user = await userRepository.create({ username, email, password })
+  const user = await userRepository.create({
+    username,
+    email,
+    password: await hash(password)
+  })
   return user
 }
 
-const update = async (params: TUpdateUserSchema): Promise<TUser> => {
-  const { id, username, email, password } = params
+const update = async (
+  currentUsername: string,
+  params: TUpdateUserSchema
+): Promise<TUser> => {
+  const { username, email, password } = params
 
   try {
     updateUserSchema.parse(params)
@@ -84,24 +95,29 @@ const update = async (params: TUpdateUserSchema): Promise<TUser> => {
     })
   }
 
-  const foundUserById = await userRepository.findOneById(id)
-  if (!foundUserById) {
-    if (!foundUserById) {
-      throw new NotFoundError({
-        message: 'Usuário não encontrado.',
-        action: 'Verifique o id informado e tente novamente.'
-      })
-    }
+  const foundUserByUsername =
+    await userRepository.findOneByUsername(currentUsername)
+  if (!foundUserByUsername) {
+    throw new NotFoundError({
+      message: 'O username informado não foi encontrado no sistema.',
+      action: 'Verifique se o username está digitado corretamente.'
+    })
   }
 
-  if (username !== foundUserById.username) {
-    await validateUniqueUsername({ username, id })
+  if (username && username !== foundUserByUsername.username) {
+    await validateUniqueUsername({ username, id: foundUserByUsername.id })
   }
-  if (email !== foundUserById.email) {
-    await validateUniqueEmail({ email, id })
+  if (email && email !== foundUserByUsername.email) {
+    await validateUniqueEmail({ email, id: foundUserByUsername.id })
+  }
+  if (password) {
+    params.password = await hash(password)
   }
 
-  const user = await userRepository.update({ id, username, email, password })
+  const user = await userRepository.update({
+    ...foundUserByUsername,
+    ...params
+  })
   return user
 }
 
