@@ -1,7 +1,11 @@
+import { faker } from '@faker-js/faker'
 import retry from 'async-retry'
 
 import { database } from '@/infra'
 import { migrator } from '@/models'
+import { userRepository } from '@/repositories'
+import { TCreateUserSchema } from '@/schemas'
+import { formatUsername } from '@/utils'
 
 const waitForAllServices = async () => {
   await retry(
@@ -27,10 +31,20 @@ const runPendingMigrations = async () => {
   await migrator.runPendingMigrations()
 }
 
+const createUser = async (user: Partial<TCreateUserSchema>) => {
+  return await userRepository.create({
+    username: formatUsername(faker.internet.username()),
+    email: faker.internet.email(),
+    password: faker.internet.password(),
+    ...user
+  })
+}
+
 const orchestrator = {
   waitForAllServices,
   clearDatabase,
-  runPendingMigrations
+  runPendingMigrations,
+  createUser
 }
 
 export default orchestrator
