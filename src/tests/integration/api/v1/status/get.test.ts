@@ -1,5 +1,5 @@
-import { TStatusBody } from '@/app/api/v1/status/route'
 import orchestrator from '@/tests/orchestrator'
+import { TStatus } from '@/types/status'
 
 beforeAll(orchestrator.waitForAllServices)
 
@@ -9,13 +9,13 @@ describe('GET to /api/v1/status', () => {
       const response = await fetch('http://localhost:3000/api/v1/status')
       expect(response.status).toBe(200)
 
-      const data: TStatusBody = await response.json()
+      const data: TStatus = await response.json()
       const { updated_at } = data
 
       const parsedUpdatedAt = new Date(updated_at).toISOString()
       expect(updated_at).toBe(parsedUpdatedAt)
 
-      const expectedData: TStatusBody = {
+      const expectedData: TStatus = {
         updated_at,
         dependencies: {
           database: {

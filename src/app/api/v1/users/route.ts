@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-import { controller } from '@/infra'
-import { user } from '@/models'
+import controller from '@/infra/controller'
+import user from '@/models/user'
 
 const postHandler = async (request: NextRequest) => {
   const userInputValues = await request.json()

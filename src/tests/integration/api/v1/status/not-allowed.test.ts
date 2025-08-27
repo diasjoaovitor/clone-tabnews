@@ -1,4 +1,4 @@
-import { TErrorResponse } from '@/infra'
+import { TErrorResponse } from '@/infra/errors'
 import orchestrator from '@/tests/orchestrator'
 
 beforeAll(orchestrator.waitForAllServices)

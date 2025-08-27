@@ -1,6 +1,6 @@
-import { database } from '@/infra'
-import { TCreateUserSchema } from '@/schemas'
-import { TUser } from '@/types'
+import database from '@/infra/database'
+import { TCreateUserSchema } from '@/schemas/user'
+import { TUser } from '@/types/user'
 
 const findOneById = async (id: string): Promise<TUser | null> => {
   const {
@@ -75,10 +75,12 @@ const update = async (params: TUser): Promise<TUser> => {
   return user
 }
 
-export const userRepository = {
+const userRepository = {
   findOneById,
   findOneByUsername,
   findOneByEmail,
   create,
   update
 }
+
+export default userRepository

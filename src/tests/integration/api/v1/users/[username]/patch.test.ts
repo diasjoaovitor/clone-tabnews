@@ -1,9 +1,9 @@
 import { version as uuidVersion } from 'uuid'
 
-import { password } from '@/models'
-import { userRepository } from '@/repositories'
+import password from '@/models/password'
+import userRepository from '@/repositories/user'
 import orchestrator from '@/tests/orchestrator'
-import { TUser } from '@/types'
+import { TUser } from '@/types/user'
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices()

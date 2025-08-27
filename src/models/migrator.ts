@@ -4,7 +4,8 @@ import migrationRunner, { RunnerOption } from 'node-pg-migrate'
 import { RunMigration } from 'node-pg-migrate/dist/migration'
 import { ClientBase } from 'pg'
 
-import { database, ServiceError } from '@/infra'
+import database from '@/infra/database'
+import { ServiceError } from '@/infra/errors'
 
 const getDefaultMigrationOptions = ({
   dbClient,
@@ -65,7 +66,9 @@ const runPendingMigrations = async () =>
     return migratedMigrations
   })
 
-export const migrator = {
+const migrator = {
   listPendingMigrations,
   runPendingMigrations
 }
+
+export default migrator

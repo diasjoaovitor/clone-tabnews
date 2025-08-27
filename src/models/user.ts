@@ -1,16 +1,16 @@
 import { z } from 'zod'
 
-import { NotFoundError, ValidationError } from '@/infra'
-import { userRepository } from '@/repositories'
+import { NotFoundError, ValidationError } from '@/infra/errors'
+import userRepository from '@/repositories/user'
 import {
   createUserSchema,
   TCreateUserSchema,
   TUpdateUserSchema,
   updateUserSchema
-} from '@/schemas'
-import { TUser } from '@/types'
+} from '@/schemas/user'
+import { TUser } from '@/types/user'
 
-import { password } from '.'
+import password from './password'
 
 const { hash } = password
 
@@ -121,8 +121,10 @@ const update = async (
   return user
 }
 
-export const user = {
+const user = {
   findOneByUsername,
   create,
   update
 }
+
+export default user

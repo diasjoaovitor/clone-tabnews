@@ -56,17 +56,17 @@ const onErrorHandler = async (error: any) => {
   })
 }
 
-export const controller = (request: Partial<TRequest>) => {
+const controller = (request: Partial<TRequest>) => {
   const handler: Partial<TRequest> = {}
   for (const method of httpMethods) {
     const key = method as THttpMethod
     const fn = request[key]
-    if (fn) {
-      handler[key] = (req: NextRequest, context?: any) =>
-        fn(req, context).catch(onErrorHandler)
-    } else {
-      handler[key] = onNoMatchHandler
-    }
+    handler[key] = fn
+      ? (req: NextRequest, context?: any) =>
+          fn(req, context).catch(onErrorHandler)
+      : onNoMatchHandler
   }
   return handler as TRequest
 }
+
+export default controller

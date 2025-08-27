@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-import { controller } from '@/infra'
-import { user } from '@/models'
+import controller from '@/infra/controller'
+import user from '@/models/user'
 
 const getHandler = async (_: NextRequest, context: any) => {
   const params = await context.params

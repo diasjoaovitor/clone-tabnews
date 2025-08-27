@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 
-import { controller } from '@/infra'
-import { migrator } from '@/models'
+import controller from '@/infra/controller'
+import migrator from '@/models/migrator'
 
 const getHandler = async () => {
   const pendingMigrations = await migrator.listPendingMigrations()

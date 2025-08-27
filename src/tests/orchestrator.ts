@@ -1,11 +1,11 @@
 import { faker } from '@faker-js/faker'
 import retry from 'async-retry'
 
-import { database } from '@/infra'
-import { migrator } from '@/models'
-import { userRepository } from '@/repositories'
-import { TCreateUserSchema } from '@/schemas'
-import { formatUsername } from '@/utils'
+import database from '@/infra/database'
+import migrator from '@/models/migrator'
+import userRepository from '@/repositories/user'
+import { TCreateUserSchema } from '@/schemas/user'
+import { formatUsername } from '@/utils/formatters'
 
 const waitForAllServices = async () => {
   await retry(
