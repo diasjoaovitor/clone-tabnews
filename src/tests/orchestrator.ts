@@ -1,16 +1,18 @@
 import { faker } from '@faker-js/faker'
 import retry from 'async-retry'
 
-import { database } from '@/infra'
-import { migrator } from '@/models'
-import { userRepository } from '@/repositories'
-import { TCreateUserSchema } from '@/schemas'
-import { formatUsername } from '@/utils'
+import database from '@/infra/database'
+import migrator from '@/server/models/migrator'
+import session from '@/server/models/session'
+import user from '@/server/models/user'
+import { API_BASE_URL } from '@/shared/constants/base-url'
+import { TCreateUserSchema } from '@/shared/schemas/user'
+import { formatUsername } from '@/shared/utils/formatters'
 
 const waitForAllServices = async () => {
   await retry(
     async () => {
-      const response = await fetch('http://localhost:3000/api/v1/status')
+      const response = await fetch(`${API_BASE_URL}/status`)
       if (!response.ok) {
         throw new Error('Service not ready')
       }
@@ -31,20 +33,22 @@ const runPendingMigrations = async () => {
   await migrator.runPendingMigrations()
 }
 
-const createUser = async (user: Partial<TCreateUserSchema>) => {
-  return await userRepository.create({
+const createUser = async (userObject?: Partial<TCreateUserSchema>) =>
+  await user.create({
     username: formatUsername(faker.internet.username()),
     email: faker.internet.email(),
     password: faker.internet.password(),
-    ...user
+    ...userObject
   })
-}
+
+const createSession = async (userId: string) => await session.create(userId)
 
 const orchestrator = {
   waitForAllServices,
   clearDatabase,
   runPendingMigrations,
-  createUser
+  createUser,
+  createSession
 }
 
 export default orchestrator

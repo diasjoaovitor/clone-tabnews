@@ -1,9 +1,10 @@
 import { version as uuidVersion } from 'uuid'
 
-import { password } from '@/models'
-import { userRepository } from '@/repositories'
+import password from '@/server/models/password'
+import userRepository from '@/server/repositories/user'
+import { API_BASE_URL } from '@/shared/constants/base-url'
+import { TUser } from '@/shared/types/user'
 import orchestrator from '@/tests/orchestrator'
-import { TUser } from '@/types'
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices()
@@ -20,7 +21,7 @@ describe('PATCH /api/v1/users/[username]', () => {
         })
 
         const response = await fetch(
-          `http://localhost:3000/api/v1/users/${createdUser1.username}`,
+          `${API_BASE_URL}/users/${createdUser1.username}`,
           {
             method: 'PATCH',
             headers: {
@@ -58,7 +59,7 @@ describe('PATCH /api/v1/users/[username]', () => {
         })
 
         const response = await fetch(
-          `http://localhost:3000/api/v1/users/${createdUser1.username}`,
+          `${API_BASE_URL}/users/${createdUser1.username}`,
           {
             method: 'PATCH',
             headers: {
@@ -96,7 +97,7 @@ describe('PATCH /api/v1/users/[username]', () => {
         })
 
         const response = await fetch(
-          `http://localhost:3000/api/v1/users/${createdUser1.username}`,
+          `${API_BASE_URL}/users/${createdUser1.username}`,
           {
             method: 'PATCH',
             headers: {
@@ -140,18 +141,15 @@ describe('PATCH /api/v1/users/[username]', () => {
           username: 'OwnUsername'
         })
 
-        const response = await fetch(
-          'http://localhost:3000/api/v1/users/OWNUSERNAME',
-          {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              username: 'ownusername'
-            })
-          }
-        )
+        const response = await fetch(`${API_BASE_URL}/users/OWNUSERNAME`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            username: 'ownusername'
+          })
+        })
 
         expect(response.status).toBe(200)
 
@@ -173,7 +171,7 @@ describe('PATCH /api/v1/users/[username]', () => {
         })
 
         const response = await fetch(
-          `http://localhost:3000/api/v1/users/${createdUser.username}`,
+          `${API_BASE_URL}/users/${createdUser.username}`,
           {
             method: 'PATCH',
             headers: {
@@ -203,7 +201,7 @@ describe('PATCH /api/v1/users/[username]', () => {
     describe('Failure', () => {
       test("With nonexistent 'username'", async () => {
         const response = await fetch(
-          'http://localhost:3000/api/v1/users/UsuarioInexistente',
+          `${API_BASE_URL}/users/UsuarioInexistente`,
           {
             method: 'PATCH',
             headers: {
@@ -234,18 +232,15 @@ describe('PATCH /api/v1/users/[username]', () => {
           username: 'user2'
         })
 
-        const response = await fetch(
-          'http://localhost:3000/api/v1/users/user2',
-          {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              username: 'user1'
-            })
-          }
-        )
+        const response = await fetch(`${API_BASE_URL}/users/user2`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            username: 'user1'
+          })
+        })
 
         expect(response.status).toBe(409)
 
@@ -269,7 +264,7 @@ describe('PATCH /api/v1/users/[username]', () => {
         })
 
         const response = await fetch(
-          `http://localhost:3000/api/v1/users/${createdUser2.username}`,
+          `${API_BASE_URL}/users/${createdUser2.username}`,
           {
             method: 'PATCH',
             headers: {
@@ -303,7 +298,7 @@ describe('PATCH /api/v1/users/[username]', () => {
         })
 
         const response = await fetch(
-          `http://localhost:3000/api/v1/users/${createdUser2.username}`,
+          `${API_BASE_URL}/users/${createdUser2.username}`,
           {
             method: 'PATCH',
             headers: {

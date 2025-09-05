@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '@/shared/constants/base-url'
 import orchestrator from '@/tests/orchestrator'
 
 beforeAll(async () => {
@@ -9,12 +10,9 @@ describe('POST to /api/v1/migrations', () => {
   describe('Anonymous user', () => {
     describe('Running pending migrations', () => {
       test('For the first time', async () => {
-        const response = await fetch(
-          'http://localhost:3000/api/v1/migrations',
-          {
-            method: 'POST'
-          }
-        )
+        const response = await fetch(`${API_BASE_URL}/migrations`, {
+          method: 'POST'
+        })
         expect(response.status).toBe(201)
 
         const responseBody = await response.json()
@@ -23,12 +21,9 @@ describe('POST to /api/v1/migrations', () => {
       })
 
       test('For the second time', async () => {
-        const response = await fetch(
-          'http://localhost:3000/api/v1/migrations',
-          {
-            method: 'POST'
-          }
-        )
+        const response = await fetch(`${API_BASE_URL}/migrations`, {
+          method: 'POST'
+        })
         expect(response.status).toBe(200)
 
         const responseBody = await response.json()

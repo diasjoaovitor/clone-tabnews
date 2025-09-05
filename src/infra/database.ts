@@ -17,7 +17,7 @@ const getNewClient = async () => {
 
 const query = async (
   query: string | { text: string; values: (number | string)[] },
-  args?: string[]
+  args?: (number | string | Date)[]
 ) => {
   let client
   try {
@@ -35,7 +35,9 @@ const query = async (
   }
 }
 
-export const database = {
+const database = {
   query,
   getNewClient
 }
+
+export default database

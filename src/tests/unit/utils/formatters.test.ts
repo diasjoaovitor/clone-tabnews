@@ -1,4 +1,4 @@
-import { formatUsername } from '.'
+import { formatUsername } from '@/shared/utils/formatters'
 
 describe('formatUsername', () => {
   it('should remove special characters', () => {

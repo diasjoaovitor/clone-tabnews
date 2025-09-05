@@ -8,7 +8,9 @@ const hash = async (password: string) => {
 const compare = async (providedPassword: string, storedPassword: string) =>
   await bcryptjs.compare(providedPassword, storedPassword)
 
-export const password = {
+const password = {
   hash,
   compare
 }
+
+export default password

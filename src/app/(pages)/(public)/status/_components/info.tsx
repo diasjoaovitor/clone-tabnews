@@ -1,14 +1,5 @@
-import { TStatusBody } from '@/app/api/v1/status/route'
-
-const fetchApi = async (path: string) => {
-  const response = await fetch(process.env.NEXT_PUBLIC_API_BASE_URL + path, {
-    cache: 'no-store'
-  })
-  if (!response.ok) {
-    throw new Error('Failed to fetch data')
-  }
-  return response.json()
-}
+import { fetchApi } from '@/infra/fetch-api'
+import { TStatus } from '@/shared/types/status'
 
 export const Info = async () => {
   const {
@@ -16,7 +7,7 @@ export const Info = async () => {
       database: { max_connections, opened_connections, version }
     },
     updated_at
-  } = (await fetchApi('/api/v1/status')) as TStatusBody
+  } = await fetchApi<TStatus>('/api/v1/status', { cache: 'no-store' })
 
   return (
     <>

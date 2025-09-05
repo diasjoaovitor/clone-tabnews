@@ -6,9 +6,9 @@ import orchestrator from '@/tests/orchestrator'
 
 beforeAll(orchestrator.waitForAllServices)
 
-describe('Not allowed methods to /api/v1/status', () => {
+describe('Not allowed methods to /api/v1/sessions', () => {
   test('should return 405 and the response error', async () => {
-    const url = `${API_BASE_URL}/status`
+    const url = `${API_BASE_URL}/sessions`
     const notAllowedMethods = HTTP_METHODS.filter((method) => method !== 'GET')
 
     const expectedData: TErrorResponse = {

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 
-import { controller } from '@/infra'
-import { migrator } from '@/models'
+import controller from '@/infra/controller'
+import migrator from '@/server/models/migrator'
 
 const getHandler = async () => {
   const pendingMigrations = await migrator.listPendingMigrations()
@@ -16,7 +16,8 @@ const postHandler = async () => {
   return NextResponse.json(migratedMigrations, { status })
 }
 
-export const { GET, POST, DELETE, HEAD, OPTIONS, PATCH, PUT } = controller({
-  GET: getHandler,
-  POST: postHandler
-})
+export const { GET, POST, DELETE, HEAD, OPTIONS, PATCH, PUT } =
+  controller.handleRequest({
+    GET: getHandler,
+    POST: postHandler
+  })
