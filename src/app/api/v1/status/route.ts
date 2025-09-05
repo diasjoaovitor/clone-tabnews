@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 
 import controller from '@/infra/controller'
-import status from '@/models/status'
+import status from '@/server/models/status'
 
 const getHandler = async () => {
   const body = await status.check()
@@ -11,6 +11,7 @@ const getHandler = async () => {
   })
 }
 
-export const { GET, DELETE, HEAD, OPTIONS, PATCH, POST, PUT } = controller({
-  GET: getHandler
-})
+export const { GET, DELETE, HEAD, OPTIONS, PATCH, POST, PUT } =
+  controller.handleRequest({
+    GET: getHandler
+  })

@@ -1,5 +1,6 @@
 import { version as uuidVersion } from 'uuid'
 
+import { API_BASE_URL } from '@/shared/constants/base-url'
 import orchestrator from '@/tests/orchestrator'
 
 beforeAll(async () => {
@@ -15,9 +16,7 @@ describe('GET /api/v1/users/[username]', () => {
         username: 'MesmoCase'
       })
 
-      const response = await fetch(
-        'http://localhost:3000/api/v1/users/MesmoCase'
-      )
+      const response = await fetch(`${API_BASE_URL}/users/MesmoCase`)
 
       expect(response.status).toBe(200)
 
@@ -42,9 +41,7 @@ describe('GET /api/v1/users/[username]', () => {
         username: 'CaseDiferente'
       })
 
-      const response = await fetch(
-        'http://localhost:3000/api/v1/users/casediferente'
-      )
+      const response = await fetch(`${API_BASE_URL}/users/casediferente`)
 
       expect(response.status).toBe(200)
 
@@ -65,9 +62,7 @@ describe('GET /api/v1/users/[username]', () => {
     })
 
     test('With nonexistent username', async () => {
-      const response = await fetch(
-        'http://localhost:3000/api/v1/users/UsuarioInexistente'
-      )
+      const response = await fetch(`${API_BASE_URL}/users/UsuarioInexistente`)
 
       expect(response.status).toBe(404)
 

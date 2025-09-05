@@ -17,7 +17,7 @@ const getNewClient = async () => {
 
 const query = async (
   query: string | { text: string; values: (number | string)[] },
-  args?: string[]
+  args?: (number | string | Date)[]
 ) => {
   let client
   try {

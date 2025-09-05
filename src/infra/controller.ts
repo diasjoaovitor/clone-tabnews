@@ -1,36 +1,46 @@
+import * as cookie from 'cookie'
+import { HTTP_METHOD, HTTP_METHODS } from 'next/dist/server/web/http'
 import { NextRequest, NextResponse } from 'next/server'
+
+import session from '@/server/models/session'
 
 import {
   InternalServerError,
   MethodNotAllowedError,
   NotFoundError,
+  UnauthorizedError,
   ValidationError
 } from './errors'
-
-type THttpMethod =
-  | 'GET'
-  | 'POST'
-  | 'PUT'
-  | 'PATCH'
-  | 'DELETE'
-  | 'HEAD'
-  | 'OPTIONS'
 
 type THandler = (req: NextRequest, context?: any) => Promise<NextResponse>
 
 type TRequest = {
-  [key in THttpMethod]: THandler
+  [key in HTTP_METHOD]: THandler
 }
 
-const httpMethods: THttpMethod[] = [
-  'GET',
-  'POST',
-  'PUT',
-  'PATCH',
-  'DELETE',
-  'HEAD',
-  'OPTIONS'
-]
+const setSessionCookie = (sessionToken: string) => {
+  const setCookie = cookie.serialize('session_id', sessionToken, {
+    path: '/',
+    maxAge: session.EXPIRATION_IN_MILLISECONDS / 1000,
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true
+  })
+  const headers = new Headers()
+  headers.set('Set-Cookie', setCookie)
+  return headers
+}
+
+const clearSessionCookie = () => {
+  const setCookie = cookie.serialize('session_id', 'invalid', {
+    path: '/',
+    maxAge: -1,
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true
+  })
+  const headers = new Headers()
+  headers.set('Set-Cookie', setCookie)
+  return headers
+}
 
 const onNoMatchHandler = async () => {
   const publicErrorObject = new MethodNotAllowedError()
@@ -46,8 +56,15 @@ const onErrorHandler = async (error: any) => {
     })
   }
 
+  if (error instanceof UnauthorizedError) {
+    const headers = clearSessionCookie()
+    return NextResponse.json(error, {
+      status: error.statusCode,
+      headers
+    })
+  }
+
   const publicErrorObject = new InternalServerError({
-    statusCode: error.statusCode,
     cause: error
   })
   console.error(publicErrorObject)
@@ -56,10 +73,10 @@ const onErrorHandler = async (error: any) => {
   })
 }
 
-const controller = (request: Partial<TRequest>) => {
+const handleRequest = (request: Partial<TRequest>) => {
   const handler: Partial<TRequest> = {}
-  for (const method of httpMethods) {
-    const key = method as THttpMethod
+  for (const method of HTTP_METHODS) {
+    const key = method as HTTP_METHOD
     const fn = request[key]
     handler[key] = fn
       ? (req: NextRequest, context?: any) =>
@@ -67,6 +84,12 @@ const controller = (request: Partial<TRequest>) => {
       : onNoMatchHandler
   }
   return handler as TRequest
+}
+
+const controller = {
+  handleRequest,
+  setSessionCookie,
+  clearSessionCookie
 }
 
 export default controller

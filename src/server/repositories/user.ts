@@ -1,6 +1,6 @@
 import database from '@/infra/database'
-import { TCreateUserSchema } from '@/schemas/user'
-import { TUser } from '@/types/user'
+import { TCreateUserSchema } from '@/shared/schemas/user'
+import { TUser } from '@/shared/types/user'
 
 const findOneById = async (id: string): Promise<TUser | null> => {
   const {

@@ -1,5 +1,6 @@
 import { version as uuidVersion } from 'uuid'
 
+import { API_BASE_URL } from '@/shared/constants/base-url'
 import orchestrator from '@/tests/orchestrator'
 
 beforeAll(async () => {
@@ -11,7 +12,7 @@ beforeAll(async () => {
 describe('POST /api/v1/users', () => {
   describe('Anonymous user', () => {
     test('With unique and valid data', async () => {
-      const response = await fetch('http://localhost:3000/api/v1/users', {
+      const response = await fetch(`${API_BASE_URL}/users`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -42,7 +43,7 @@ describe('POST /api/v1/users', () => {
     })
 
     test("With missing 'username'", async () => {
-      const response = await fetch('http://localhost:3000/api/v1/users', {
+      const response = await fetch(`${API_BASE_URL}/users`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -63,7 +64,7 @@ describe('POST /api/v1/users', () => {
     })
 
     test("With missing 'email'", async () => {
-      const response = await fetch('http://localhost:3000/api/v1/users', {
+      const response = await fetch(`${API_BASE_URL}/users`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -86,7 +87,7 @@ describe('POST /api/v1/users', () => {
     })
 
     test("With missing 'password'", async () => {
-      const response = await fetch('http://localhost:3000/api/v1/users', {
+      const response = await fetch(`${API_BASE_URL}/users`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -110,7 +111,7 @@ describe('POST /api/v1/users', () => {
     })
 
     test("With duplicated 'email'", async () => {
-      const response1 = await fetch('http://localhost:3000/api/v1/users', {
+      const response1 = await fetch(`${API_BASE_URL}/users`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -124,7 +125,7 @@ describe('POST /api/v1/users', () => {
 
       expect(response1.status).toBe(201)
 
-      const response2 = await fetch('http://localhost:3000/api/v1/users', {
+      const response2 = await fetch(`${API_BASE_URL}/users`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -149,7 +150,7 @@ describe('POST /api/v1/users', () => {
     })
 
     test("With duplicated 'username'", async () => {
-      const response1 = await fetch('http://localhost:3000/api/v1/users', {
+      const response1 = await fetch(`${API_BASE_URL}/users`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -163,7 +164,7 @@ describe('POST /api/v1/users', () => {
 
       expect(response1.status).toBe(201)
 
-      const response2 = await fetch('http://localhost:3000/api/v1/users', {
+      const response2 = await fetch(`${API_BASE_URL}/users`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

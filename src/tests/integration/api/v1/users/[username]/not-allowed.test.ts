@@ -1,12 +1,17 @@
+import { HTTP_METHODS } from 'next/dist/server/web/http'
+
 import { TErrorResponse } from '@/infra/errors'
+import { API_BASE_URL } from '@/shared/constants/base-url'
 import orchestrator from '@/tests/orchestrator'
 
 beforeAll(orchestrator.waitForAllServices)
 
 describe('Not allowed methods to /api/v1/users', () => {
   test('should return 405 and the response error', async () => {
-    const url = 'http://localhost:3000/api/v1/users/username'
-    const notAllowedMethods = ['POST', 'PUT', 'DELETE', 'OPTIONS']
+    const url = `${API_BASE_URL}/users/username`
+    const notAllowedMethods = HTTP_METHODS.filter(
+      (method) => method !== 'GET' && method !== 'PATCH'
+    )
     const expectedData: TErrorResponse = {
       name: 'MethodNotAllowedError',
       message: 'Método não permitido para este endpoint.',
@@ -18,11 +23,8 @@ describe('Not allowed methods to /api/v1/users', () => {
         method
       })
       expect(response.status).toBe(expectedData.status_code)
+      if (method === 'HEAD') return
       expect(await response.json()).toEqual(expectedData)
     }
-    const response = await fetch(url, {
-      method: 'HEAD'
-    })
-    expect(response.status).toBe(expectedData.status_code)
   })
 })

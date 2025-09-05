@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 import controller from '@/infra/controller'
-import user from '@/models/user'
+import user from '@/server/models/user'
 
 const getHandler = async (_: NextRequest, context: any) => {
   const params = await context.params
@@ -18,7 +18,8 @@ const patchHandler = async (request: NextRequest, context: any) => {
   return NextResponse.json(updatedUser, { status: 200 })
 }
 
-export const { GET, PATCH, DELETE, HEAD, OPTIONS, POST, PUT } = controller({
-  GET: getHandler,
-  PATCH: patchHandler
-})
+export const { GET, PATCH, DELETE, HEAD, OPTIONS, POST, PUT } =
+  controller.handleRequest({
+    GET: getHandler,
+    PATCH: patchHandler
+  })

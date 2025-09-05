@@ -1,14 +1,13 @@
-import { z } from 'zod'
-
 import { NotFoundError, ValidationError } from '@/infra/errors'
-import userRepository from '@/repositories/user'
+import { validateSchema } from '@/infra/validation'
+import userRepository from '@/server/repositories/user'
 import {
   createUserSchema,
   TCreateUserSchema,
   TUpdateUserSchema,
   updateUserSchema
-} from '@/schemas/user'
-import { TUser } from '@/types/user'
+} from '@/shared/schemas/user'
+import { TUser } from '@/shared/types/user'
 
 import password from './password'
 
@@ -48,6 +47,17 @@ const validateUniqueEmail = async ({
   }
 }
 
+const findOneById = async (id: string): Promise<TUser> => {
+  const user = await userRepository.findOneById(id)
+  if (!user) {
+    throw new NotFoundError({
+      message: 'O id informado não foi encontrado no sistema.',
+      action: 'Verifique se o id está digitado corretamente.'
+    })
+  }
+  return user
+}
+
 const findOneByUsername = async (username: string): Promise<TUser> => {
   const user = await userRepository.findOneByUsername(username)
   if (!user) {
@@ -59,16 +69,21 @@ const findOneByUsername = async (username: string): Promise<TUser> => {
   return user
 }
 
+const findOneByEmail = async (email: string): Promise<TUser> => {
+  const user = await userRepository.findOneByEmail(email)
+  if (!user) {
+    throw new NotFoundError({
+      message: 'O email informado não foi encontrado no sistema.',
+      action: 'Verifique se o email está digitado corretamente.'
+    })
+  }
+  return user
+}
+
 const create = async (params: TCreateUserSchema): Promise<TUser> => {
   const { username, email, password } = params
 
-  try {
-    createUserSchema.parse(params)
-  } catch (error) {
-    throw new ValidationError({
-      message: (error as z.ZodError).errors[0].message
-    })
-  }
+  validateSchema(createUserSchema, params)
 
   await validateUniqueEmail({ email })
   await validateUniqueUsername({ username })
@@ -87,13 +102,7 @@ const update = async (
 ): Promise<TUser> => {
   const { username, email, password } = params
 
-  try {
-    updateUserSchema.parse(params)
-  } catch (error) {
-    throw new ValidationError({
-      message: (error as z.ZodError).errors[0].message
-    })
-  }
+  validateSchema(updateUserSchema, params)
 
   const foundUserByUsername =
     await userRepository.findOneByUsername(currentUsername)
@@ -122,7 +131,9 @@ const update = async (
 }
 
 const user = {
+  findOneById,
   findOneByUsername,
+  findOneByEmail,
   create,
   update
 }

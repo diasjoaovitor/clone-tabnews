@@ -1,12 +1,13 @@
+import { API_BASE_URL } from '@/shared/constants/base-url'
+import { TStatus } from '@/shared/types/status'
 import orchestrator from '@/tests/orchestrator'
-import { TStatus } from '@/types/status'
 
 beforeAll(orchestrator.waitForAllServices)
 
 describe('GET to /api/v1/status', () => {
   describe('Anonymous user', () => {
     test('Retrieving current system status', async () => {
-      const response = await fetch('http://localhost:3000/api/v1/status')
+      const response = await fetch(`${API_BASE_URL}/status`)
       expect(response.status).toBe(200)
 
       const data: TStatus = await response.json()
