@@ -5,9 +5,9 @@ import session from '@/server/models/session'
 import user from '@/server/models/user'
 
 const getHandler = async (request: NextRequest) => {
-  const sessionToken = request.cookies.get('session_id')!.value
+  const sessionToken = request.cookies.get('session_id')?.value
 
-  const sessionObject = await session.findOneValidByToken(sessionToken)
+  const sessionObject = await session.findOneValidByToken(sessionToken ?? '')
   const renewedSessionObject = await session.renew(sessionObject.id)
 
   const headers = controller.setSessionCookie(renewedSessionObject.token)
