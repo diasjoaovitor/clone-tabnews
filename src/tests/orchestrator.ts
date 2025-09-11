@@ -9,6 +9,8 @@ import { API_BASE_URL } from '@/shared/constants/base-url'
 import { TCreateUserSchema } from '@/shared/schemas/user'
 import { formatUsername } from '@/shared/utils/formatters'
 
+const emailHttpUrl = `http://${process.env.EMAIL_HTTP_HOST}:${process.env.EMAIL_HTTP_PORT}`
+
 const waitForAllServices = async () => {
   await retry(
     async () => {
@@ -43,12 +45,34 @@ const createUser = async (userObject?: Partial<TCreateUserSchema>) =>
 
 const createSession = async (userId: string) => await session.create(userId)
 
+const deleteAllEmails = async () => {
+  await fetch(`${emailHttpUrl}/messages`, {
+    method: 'DELETE'
+  })
+}
+
+const getLastEmail = async () => {
+  const emailListResponse = await fetch(`${emailHttpUrl}/messages`)
+  const emailListBody = await emailListResponse.json()
+  const lastEmailItem = emailListBody.at(-1)
+
+  const emailTextResponse = await fetch(
+    `${emailHttpUrl}/messages/${lastEmailItem.id}.plain`
+  )
+  const emailTextBody = await emailTextResponse.text()
+
+  lastEmailItem.text = emailTextBody
+  return lastEmailItem
+}
+
 const orchestrator = {
   waitForAllServices,
   clearDatabase,
   runPendingMigrations,
   createUser,
-  createSession
+  createSession,
+  deleteAllEmails,
+  getLastEmail
 }
 
 export default orchestrator

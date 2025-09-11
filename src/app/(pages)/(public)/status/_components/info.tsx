@@ -1,5 +1,4 @@
-import { fetchApi } from '@/infra/fetch-api'
-import { TStatus } from '@/shared/types/status'
+import status from '@/server/models/status'
 
 export const Info = async () => {
   const {
@@ -7,7 +6,7 @@ export const Info = async () => {
       database: { max_connections, opened_connections, version }
     },
     updated_at
-  } = await fetchApi<TStatus>('/api/v1/status', { cache: 'no-store' })
+  } = await status.check()
 
   return (
     <>
