@@ -23,6 +23,6 @@ const getHandler = async (request: NextRequest) => {
 }
 
 export const { GET, DELETE, HEAD, OPTIONS, PATCH, POST, PUT } =
-  controller.handleRequest({
+  controller.handle({
     GET: getHandler
   })

@@ -73,12 +73,11 @@ const onErrorHandler = async (error: any) => {
   })
 }
 
-const handleRequest = (request: Partial<TRequest>) => {
+const handle = (request: Partial<TRequest>) => {
   const handler: Partial<TRequest> = {}
   for (const method of HTTP_METHODS) {
-    const key = method as HTTP_METHOD
-    const fn = request[key]
-    handler[key] = fn
+    const fn = request[method]
+    handler[method] = fn
       ? (req: NextRequest, context?: any) =>
           fn(req, context).catch(onErrorHandler)
       : onNoMatchHandler
@@ -87,7 +86,7 @@ const handleRequest = (request: Partial<TRequest>) => {
 }
 
 const controller = {
-  handleRequest,
+  handle,
   setSessionCookie,
   clearSessionCookie
 }
