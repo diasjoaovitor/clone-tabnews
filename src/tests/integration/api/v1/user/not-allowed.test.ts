@@ -6,9 +6,9 @@ import orchestrator from '@/tests/orchestrator'
 
 beforeAll(orchestrator.waitForAllServices)
 
-describe('Not allowed methods to /api/v1/sessions', () => {
+describe('Not allowed methods to /api/v1/user', () => {
   test('should return 405 and the response error', async () => {
-    const url = `${API_BASE_URL}/sessions`
+    const url = `${API_BASE_URL}/user`
     const notAllowedMethods = HTTP_METHODS.filter((method) => method !== 'GET')
 
     const expectedData: TErrorResponse = {
@@ -22,7 +22,7 @@ describe('Not allowed methods to /api/v1/sessions', () => {
         method
       })
       expect(response.status).toBe(expectedData.status_code)
-      if (method === 'HEAD') return
+      if (method === 'HEAD') continue
       expect(await response.json()).toEqual(expectedData)
     }
   })

@@ -19,7 +19,7 @@ const patchHandler = async (request: NextRequest, context: any) => {
 }
 
 export const { GET, PATCH, DELETE, HEAD, OPTIONS, POST, PUT } =
-  controller.handleRequest({
+  controller.handle({
     GET: getHandler,
     PATCH: patchHandler
   })

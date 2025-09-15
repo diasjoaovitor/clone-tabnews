@@ -34,7 +34,7 @@ const deleteHandler = async (request: NextRequest) => {
 }
 
 export const { POST, DELETE, GET, HEAD, OPTIONS, PATCH, PUT } =
-  controller.handleRequest({
+  controller.handle({
     POST: postHandler,
     DELETE: deleteHandler
   })

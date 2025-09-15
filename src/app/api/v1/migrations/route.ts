@@ -17,7 +17,7 @@ const postHandler = async () => {
 }
 
 export const { GET, POST, DELETE, HEAD, OPTIONS, PATCH, PUT } =
-  controller.handleRequest({
+  controller.handle({
     GET: getHandler,
     POST: postHandler
   })

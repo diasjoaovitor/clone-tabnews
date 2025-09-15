@@ -22,7 +22,7 @@ describe('Not allowed methods to /api/v1/status', () => {
         method
       })
       expect(response.status).toBe(expectedData.status_code)
-      if (method === 'HEAD') return
+      if (method === 'HEAD') continue
       expect(await response.json()).toEqual(expectedData)
     }
   })
