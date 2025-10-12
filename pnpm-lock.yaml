@@ -86,12 +86,6 @@ importers:
       '@types/set-cookie-parser':
         specifier: 2.4.10
         version: 2.4.10
-      '@typescript-eslint/eslint-plugin':
-        specifier: 8.19.0
-        version: 8.19.0(@typescript-eslint/parser@8.19.0(eslint@9.37.0(jiti@2.6.1))(typescript@5.7.2))(eslint@9.37.0(jiti@2.6.1))(typescript@5.7.2)
-      '@typescript-eslint/parser':
-        specifier: 8.19.0
-        version: 8.19.0(eslint@9.37.0(jiti@2.6.1))(typescript@5.7.2)
       commitlint-config-emoji-convention:
         specifier: 1.0.0
         version: 1.0.0
