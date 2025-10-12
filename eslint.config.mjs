@@ -22,7 +22,7 @@ const eslintConfig = [
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error'
     },
-    ignorePatterns: ['.next']
+    ignorePatterns: ['.next', 'next-env.d.ts']
   })
 ]
 
