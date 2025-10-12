@@ -5,6 +5,7 @@
   "repository": "https://github.com/diasjoaovitor/clone-tabnews.git",
   "author": "João Vitor <jvitordiass@outlook.com.br>",
   "license": "MIT",
+  "type": "module",
   "scripts": {
     "dev": "./init.sh",
     "build": "next build",
@@ -17,8 +18,8 @@
     "services:wait:database": "node src/infra/scripts/wait-for-postgres.js",
     "migrations:create": "node-pg-migrate -m src/infra/migrations create",
     "migrations:up": "node-pg-migrate -m src/infra/migrations --envPath .env.development up",
-    "lint:check": "next lint",
-    "lint:fix": "next lint --fix",
+    "eslint:check": "eslint",
+    "eslint:fix": "eslint --fix",
     "prettier:check": "prettier --check .",
     "prettier:fix": "prettier --write .",
     "prepare": "husky",
