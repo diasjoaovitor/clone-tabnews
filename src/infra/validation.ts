@@ -7,7 +7,7 @@ export const validateSchema = (schema: z.ZodSchema, params: any) => {
     schema.parse(params)
   } catch (error) {
     throw new ValidationError({
-      message: (error as z.ZodError).errors[0].message
+      message: (error as z.ZodError).issues[0].message
     })
   }
 }
