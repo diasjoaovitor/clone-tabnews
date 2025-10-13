@@ -407,7 +407,6 @@ tenho como exemplo o meu resumo da aula de hoje no notion:
   - Pode ser visto como mais cansativo do que a própria tarefa em si, mas é essencial para a gestão do projeto.
   - Muito perigoso quando se olha mais para as barreiras de tecnologia avançadas do que para as barreiras de negócios avançadas.
 - JIRA - Visão geral de quantas tarefas são necessárias para finalizar o projeto em relação com quantas foram executadas semanalmente. Permite mostrar que está sendo executado mais tarefas mas que também o número de tarefas necessárias está aumentando de uma forma muito simples.
-
   - Por exemplo:
 
   |            | Semana 1 | Semana 2 | Semana 3 |
