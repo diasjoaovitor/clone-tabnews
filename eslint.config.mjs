@@ -23,7 +23,14 @@ const eslintConfig = [
       'simple-import-sort/exports': 'error'
     },
     ignorePatterns: ['.next', 'next-env.d.ts']
-  })
+  }),
+  {
+    rules: {
+      '@typescript-eslint/explicit-function-return-type': 'error'
+    },
+    files: ['src/**/*.ts'],
+    ignores: ['src/tests/**/*.ts', '**/route.ts']
+  }
 ]
 
 export default eslintConfig
