@@ -1,4 +1,4 @@
-import email from '@/infra/email'
+import { email } from '@/infra'
 import orchestrator from '@/tests/orchestrator'
 
 beforeAll(async () => {

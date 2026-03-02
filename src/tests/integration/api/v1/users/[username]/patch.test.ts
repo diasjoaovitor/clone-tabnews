@@ -1,10 +1,10 @@
 import { version as uuidVersion } from 'uuid'
 
-import password from '@/server/models/password'
-import userRepository from '@/server/repositories/user'
-import { API_BASE_URL } from '@/shared/constants/base-url'
-import { TUser } from '@/shared/types/user'
+import { API_BASE_URL } from '@/constants'
+import { passwordModel } from '@/models'
+import { TUser, userRepository } from '@/repositories'
 import orchestrator from '@/tests/orchestrator'
+import { TApiResponse } from '@/types'
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices()
@@ -36,15 +36,14 @@ describe('PATCH /api/v1/users/[username]', () => {
         expect(response.status).toBe(200)
 
         const responseBody = await response.json()
-
-        expect(responseBody).toEqual({
-          id: responseBody.id,
+        const expectedData: TApiResponse<TUser> = {
+          ...createdUser1,
           username: 'uniqueUser2',
-          email: responseBody.email,
-          password: responseBody.password,
-          created_at: responseBody.created_at,
+          created_at: createdUser1.created_at.toISOString(),
           updated_at: responseBody.updated_at
-        })
+        }
+
+        expect(responseBody).toEqual(expectedData)
 
         expect(uuidVersion(responseBody.id)).toBe(4)
         expect(Date.parse(responseBody.created_at)).not.toBeNaN()
@@ -119,17 +118,17 @@ describe('PATCH /api/v1/users/[username]', () => {
 
         expect(responseBody.updated_at > responseBody.created_at).toBe(true)
 
-        const userInDatabase = (await userRepository.findOneByUsername(
+        const userInDatabase = await userRepository.findUniqueByUsername(
           createdUser1.username
-        )) as TUser
-        const correctPasswordMatch = await password.compare(
+        )
+        const correctPasswordMatch = await passwordModel.compare(
           'newPassword2',
-          userInDatabase.password
+          userInDatabase!.password
         )
 
-        const incorrectPasswordMatch = await password.compare(
+        const incorrectPasswordMatch = await passwordModel.compare(
           'newPassword1',
-          userInDatabase.password
+          userInDatabase!.password
         )
 
         expect(correctPasswordMatch).toBe(true)
@@ -199,6 +198,34 @@ describe('PATCH /api/v1/users/[username]', () => {
     })
 
     describe('Failure', () => {
+      test('With invalid data', async () => {
+        const createdUser = await orchestrator.createUser()
+
+        const response = await fetch(
+          `${API_BASE_URL}/users/${createdUser.username}`,
+          {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              email: 'invalid-email'
+            })
+          }
+        )
+
+        expect(response.status).toBe(400)
+
+        const responseBody = await response.json()
+
+        expect(responseBody).toEqual({
+          name: 'ValidationError',
+          message: '✖ O email informado não é válido.\n  → at email',
+          action: 'Ajuste os dados enviados e tente novamente.',
+          status_code: 400
+        })
+      })
+
       test("With nonexistent 'username'", async () => {
         const response = await fetch(
           `${API_BASE_URL}/users/UsuarioInexistente`,

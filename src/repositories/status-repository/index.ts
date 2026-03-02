@@ -1,8 +1,8 @@
 import { QueryResult, QueryResultRow } from 'pg'
 
-import database from '@/infra/database'
+import { database } from '@/infra'
 
-const getServerVersion = async () => {
+const getServerVersion = async (): Promise<string> => {
   const {
     rows: [{ server_version }]
   } = (await database.query(
@@ -12,17 +12,17 @@ const getServerVersion = async () => {
   return server_version
 }
 
-const getMaxConnections = async () => {
+const getMaxConnections = async (): Promise<number> => {
   const {
     rows: [{ max_connections }]
   } = (await database.query(
     'show max_connections;'
   )) as QueryResult<QueryResultRow>
 
-  return max_connections
+  return Number(max_connections)
 }
 
-const getOpenedConnections = async () => {
+const getOpenedConnections = async (): Promise<number> => {
   const databaseName = process.env.POSTGRES_DB as string
   const {
     rows: [{ count }]
@@ -34,10 +34,8 @@ const getOpenedConnections = async () => {
   return count
 }
 
-const statusRepository = {
+export const statusRepository = {
   getServerVersion,
   getMaxConnections,
   getOpenedConnections
 }
-
-export default statusRepository

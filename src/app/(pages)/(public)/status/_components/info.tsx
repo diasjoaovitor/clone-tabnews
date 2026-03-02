@@ -1,4 +1,4 @@
-import status from '@/server/models/status'
+import { statusModel } from '@/models'
 
 export const Info = async () => {
   const {
@@ -6,11 +6,11 @@ export const Info = async () => {
       database: { max_connections, opened_connections, version }
     },
     updated_at
-  } = await status.check()
+  } = await statusModel.check()
 
   return (
     <>
-      <p>Última atualização: {updated_at}</p>
+      <p>Última atualização: {updated_at.toISOString()}</p>
       <p>Banco de Dados</p>
       <ul>
         <li>Versão: {version}</li>

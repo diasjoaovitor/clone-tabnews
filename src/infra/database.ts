@@ -1,8 +1,8 @@
-import { Client } from 'pg'
+import { Client, QueryResult } from 'pg'
 
 import { ServiceError } from './errors'
 
-const getNewClient = async () => {
+const getNewClient = async (): Promise<Client> => {
   const client = new Client({
     host: process.env.POSTGRES_HOST,
     port: process.env.POSTGRES_PORT as number | undefined,
@@ -18,8 +18,8 @@ const getNewClient = async () => {
 const query = async (
   query: string | { text: string; values: (number | string)[] },
   args?: (number | string | Date)[]
-) => {
-  let client
+): Promise<QueryResult> => {
+  let client: Client | undefined
   try {
     client = await getNewClient()
     const result = await client.query(query, args)
@@ -35,9 +35,7 @@ const query = async (
   }
 }
 
-const database = {
+export const database = {
   query,
   getNewClient
 }
-
-export default database

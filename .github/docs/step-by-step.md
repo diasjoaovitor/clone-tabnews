@@ -1264,7 +1264,7 @@ altere o retorno da rota `/status`:
 
 ```ts
 import { NextResponse } from 'next/server'
-import { database } from '@/infra/database'
+import { database } from '@/infra'
 
 export const GET = async () => {
   const result = await database.query('SELECT 1 + 1;')
@@ -1280,7 +1280,7 @@ export const GET = async () => {
 e configure o teste:
 
 ```ts
-import { database } from '@/infra/database'
+import { database } from '@/infra'
 
 describe('GET to /api/v1/status', () => {
   test('should return 200', async () => {
@@ -1496,7 +1496,7 @@ O arquivo `route.ts` ficou da seguinte forma:
 ```ts
 import { NextResponse } from 'next/server'
 import { QueryResult, QueryResultRow } from 'pg'
-import { database } from '@/infra/database'
+import { database } from '@/infra'
 
 export type TStatusBody = {
   updated_at: string
@@ -1904,7 +1904,7 @@ import { NextResponse } from 'next/server'
 import { ClientBase } from 'pg'
 import migrationRunner, { RunnerOption } from 'node-pg-migrate'
 import { join } from 'path'
-import { database } from '@/infra/database'
+import { database } from '@/infra'
 
 const getDefaultMigrationOptions = ({
   dbClient,
@@ -2012,7 +2012,7 @@ export const database = {
 `tests/orchestrator.ts`
 
 ```ts
-import { database } from '@/infra/database'
+import { database } from '@/infra'
 
 export const cleanDatabase = async () => {
   await database.query('drop schema public cascade; create schema public;')

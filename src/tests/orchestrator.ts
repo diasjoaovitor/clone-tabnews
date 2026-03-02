@@ -1,13 +1,10 @@
 import { faker } from '@faker-js/faker'
 import retry from 'async-retry'
 
-import database from '@/infra/database'
-import migrator from '@/server/models/migrator'
-import session from '@/server/models/session'
-import user from '@/server/models/user'
-import { API_BASE_URL } from '@/shared/constants/base-url'
-import { TCreateUserSchema } from '@/shared/schemas/user'
-import { formatUsername } from '@/shared/utils/formatters'
+import { API_BASE_URL } from '@/constants'
+import { database } from '@/infra'
+import { migratorModel, sessionModel, TCreateUser, userModel } from '@/models'
+import { formatUsername } from '@/utils'
 
 const emailHttpUrl = `http://${process.env.EMAIL_HTTP_HOST}:${process.env.EMAIL_HTTP_PORT}`
 
@@ -32,18 +29,19 @@ const clearDatabase = async () => {
 }
 
 const runPendingMigrations = async () => {
-  await migrator.runPendingMigrations()
+  await migratorModel.runPendingMigrations()
 }
 
-const createUser = async (userObject?: Partial<TCreateUserSchema>) =>
-  await user.create({
+const createUser = async (userObject?: Partial<TCreateUser>) =>
+  await userModel.create({
     username: formatUsername(faker.internet.username()),
     email: faker.internet.email(),
     password: faker.internet.password(),
     ...userObject
   })
 
-const createSession = async (userId: string) => await session.create(userId)
+const createSession = async (user_id: string) =>
+  await sessionModel.create(user_id)
 
 const deleteAllEmails = async () => {
   await fetch(`${emailHttpUrl}/messages`, {
