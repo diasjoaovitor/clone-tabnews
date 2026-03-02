@@ -1,9 +1,11 @@
 import setCookieParser from 'set-cookie-parser'
 import { version as uuidVersion } from 'uuid'
 
-import session from '@/server/models/session'
-import { API_BASE_URL } from '@/shared/constants/base-url'
+import { API_BASE_URL } from '@/constants'
+import { sessionModel } from '@/models'
+import { TSession } from '@/repositories'
 import orchestrator from '@/tests/orchestrator'
+import { TApiResponse } from '@/types'
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices()
@@ -114,16 +116,16 @@ describe('POST /api/v1/sessions', () => {
 
       expect(response.status).toBe(201)
 
-      const responseBody = await response.json()
-
-      expect(responseBody).toEqual({
+      const responseBody: TApiResponse<TSession> = await response.json()
+      const expectedData: TApiResponse<TSession> = {
         id: responseBody.id,
         token: responseBody.token,
         user_id: createdUser.id,
         expires_at: responseBody.expires_at,
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at
-      })
+      }
+      expect(responseBody).toEqual(expectedData)
 
       expect(uuidVersion(responseBody.id)).toBe(4)
       expect(Date.parse(responseBody.expires_at)).not.toBeNaN()
@@ -137,7 +139,7 @@ describe('POST /api/v1/sessions', () => {
       createdAt.setMilliseconds(0)
 
       expect(expiresAt.getTime() - createdAt.getTime()).toBe(
-        session.EXPIRATION_IN_MILLISECONDS
+        sessionModel.EXPIRATION_IN_MILLISECONDS
       )
 
       const parsedSetCookie = setCookieParser(
@@ -150,7 +152,7 @@ describe('POST /api/v1/sessions', () => {
       expect(parsedSetCookie.session_id).toEqual({
         name: 'session_id',
         value: responseBody.token,
-        maxAge: session.EXPIRATION_IN_MILLISECONDS / 1000,
+        maxAge: sessionModel.EXPIRATION_IN_MILLISECONDS / 1000,
         path: '/',
         httpOnly: true
       })

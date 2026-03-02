@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '@/shared/constants/base-url'
+import { API_BASE_URL } from '@/constants'
 import orchestrator from '@/tests/orchestrator'
 
 beforeAll(async () => {

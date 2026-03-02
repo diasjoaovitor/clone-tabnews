@@ -1,15 +1,11 @@
-import { NotFoundError, UnauthorizedError } from '@/infra/errors'
-import password from '@/server/models/password'
-import user from '@/server/models/user'
-import { TUser } from '@/shared/types/user'
+import { NotFoundError, UnauthorizedError } from '@/infra'
+import { passwordModel, userModel } from '@/models'
+import { TUser } from '@/repositories'
 
-const { compare } = password
-
-const findUserByEmail = async (email: string) => {
-  let storedUser: TUser
-
+const findUserByEmail = async (email: string): Promise<TUser> => {
   try {
-    storedUser = await user.findOneByEmail(email)
+    const user = await userModel.findUniqueByEmail(email)
+    return user
   } catch (error) {
     if (error instanceof NotFoundError) {
       throw new UnauthorizedError({
@@ -17,11 +13,8 @@ const findUserByEmail = async (email: string) => {
         action: 'Verifique se este dado está correto.'
       })
     }
-
     throw error
   }
-
-  return storedUser
 }
 
 const validatePassword = async ({
@@ -30,8 +23,11 @@ const validatePassword = async ({
 }: {
   password: string
   storedPassword: string
-}) => {
-  const correctPasswordMatch = await compare(password, storedPassword)
+}): Promise<void> => {
+  const correctPasswordMatch = await passwordModel.compare(
+    password,
+    storedPassword
+  )
   if (!correctPasswordMatch) {
     throw new UnauthorizedError({
       message: 'Senha não confere.',
@@ -46,13 +42,11 @@ const getAuthenticatedUser = async ({
 }: {
   email: string
   password: string
-}) => {
+}): Promise<TUser> => {
   try {
-    const storedUser = await findUserByEmail(email)
-
-    await validatePassword({ password, storedPassword: storedUser.password })
-
-    return storedUser
+    const user = await findUserByEmail(email)
+    await validatePassword({ password, storedPassword: user.password })
+    return user
   } catch (error) {
     if (error instanceof UnauthorizedError) {
       throw new UnauthorizedError({
@@ -60,13 +54,10 @@ const getAuthenticatedUser = async ({
         action: 'Verifique se os dados enviados estão corretos.'
       })
     }
-
     throw error
   }
 }
 
-const authentication = {
+export const authenticationModel = {
   getAuthenticatedUser
 }
-
-export default authentication

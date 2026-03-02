@@ -1,17 +1,17 @@
 import { NextResponse } from 'next/server'
 
-import controller from '@/infra/controller'
-import migrator from '@/server/models/migrator'
+import { controller } from '@/infra'
+import { migratorModel } from '@/models'
 
 const getHandler = async () => {
-  const pendingMigrations = await migrator.listPendingMigrations()
+  const pendingMigrations = await migratorModel.listPendingMigrations()
   return NextResponse.json(pendingMigrations, {
     status: 200
   })
 }
 
 const postHandler = async () => {
-  const migratedMigrations = await migrator.runPendingMigrations()
+  const migratedMigrations = await migratorModel.runPendingMigrations()
   const status = migratedMigrations.length > 0 ? 201 : 200
   return NextResponse.json(migratedMigrations, { status })
 }

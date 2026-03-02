@@ -1,6 +1,6 @@
 import { version as uuidVersion } from 'uuid'
 
-import { API_BASE_URL } from '@/shared/constants/base-url'
+import { API_BASE_URL } from '@/constants'
 import orchestrator from '@/tests/orchestrator'
 
 beforeAll(async () => {
@@ -57,7 +57,13 @@ describe('POST /api/v1/users', () => {
 
       expect(responseBody).toEqual({
         name: 'ValidationError',
-        message: 'O username é obrigatório.',
+        message:
+          '✖ O username é obrigatório.\n' +
+          '  → at username\n' +
+          '✖ O email informado não é válido.\n' +
+          '  → at email\n' +
+          '✖ A senha é obrigatória.\n' +
+          '  → at password',
         action: 'Ajuste os dados enviados e tente novamente.',
         status_code: 400
       })
@@ -80,7 +86,11 @@ describe('POST /api/v1/users', () => {
 
       expect(responseBody).toEqual({
         name: 'ValidationError',
-        message: 'O email é obrigatório.',
+        message:
+          '✖ O email informado não é válido.\n' +
+          '  → at email\n' +
+          '✖ A senha é obrigatória.\n' +
+          '  → at password',
         action: 'Ajuste os dados enviados e tente novamente.',
         status_code: 400
       })
@@ -104,7 +114,7 @@ describe('POST /api/v1/users', () => {
 
       expect(responseBody).toEqual({
         name: 'ValidationError',
-        message: 'A senha é obrigatória.',
+        message: '✖ A senha é obrigatória.\n  → at password',
         action: 'Ajuste os dados enviados e tente novamente.',
         status_code: 400
       })

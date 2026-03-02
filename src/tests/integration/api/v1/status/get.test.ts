@@ -1,5 +1,5 @@
-import { API_BASE_URL } from '@/shared/constants/base-url'
-import { TStatus } from '@/shared/types/status'
+import { API_BASE_URL } from '@/constants'
+import { TStatus } from '@/models'
 import orchestrator from '@/tests/orchestrator'
 
 beforeAll(orchestrator.waitForAllServices)
@@ -21,7 +21,7 @@ describe('GET to /api/v1/status', () => {
         dependencies: {
           database: {
             version: '16.0',
-            max_connections: '100',
+            max_connections: 100,
             opened_connections: 1
           }
         }

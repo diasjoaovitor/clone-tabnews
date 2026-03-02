@@ -1,18 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-import controller from '@/infra/controller'
-import session from '@/server/models/session'
-import user from '@/server/models/user'
+import { controller } from '@/infra'
+import { sessionModel, userModel } from '@/models'
 
 const getHandler = async (request: NextRequest) => {
   const sessionToken = request.cookies.get('session_id')?.value
 
-  const sessionObject = await session.findOneValidByToken(sessionToken ?? '')
-  const renewedSessionObject = await session.renew(sessionObject.id)
+  const sessionObject = await sessionModel.findUniqueValidByToken(
+    sessionToken ?? ''
+  )
+  const renewedSessionObject = await sessionModel.renew(sessionObject.id)
 
   const headers = controller.setSessionCookie(renewedSessionObject.token)
 
-  const userFound = await user.findOneById(sessionObject.user_id)
+  const userFound = await userModel.findUniqueById(sessionObject.user_id)
 
   headers.set('Cache-Control', 'no-store, no-cache, max-age=0, must-revalidate')
 

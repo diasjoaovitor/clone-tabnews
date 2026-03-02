@@ -1,7 +1,7 @@
 import { HTTP_METHODS } from 'next/dist/server/web/http'
 
-import { TErrorResponse } from '@/infra/errors'
-import { API_BASE_URL } from '@/shared/constants/base-url'
+import { API_BASE_URL } from '@/constants'
+import { TErrorResponse } from '@/infra'
 import orchestrator from '@/tests/orchestrator'
 
 beforeAll(orchestrator.waitForAllServices)

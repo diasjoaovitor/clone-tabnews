@@ -1,17 +1,13 @@
-import { NotFoundError, ValidationError } from '@/infra/errors'
-import { validateSchema } from '@/infra/validation'
-import userRepository from '@/server/repositories/user'
+import { NotFoundError, ValidationError } from '@/infra'
+import { TUser, userRepository } from '@/repositories'
+
+import { passwordModel } from '../password-model'
 import {
   createUserSchema,
-  TCreateUserSchema,
-  TUpdateUserSchema,
+  TCreateUser,
+  TUpdateUser,
   updateUserSchema
-} from '@/shared/schemas/user'
-import { TUser } from '@/shared/types/user'
-
-import password from './password'
-
-const { hash } = password
+} from './schema'
 
 const validateUniqueUsername = async ({
   username,
@@ -20,7 +16,8 @@ const validateUniqueUsername = async ({
   username: string
   id?: string
 }): Promise<void> => {
-  const foundUserByUsername = await userRepository.findOneByUsername(username)
+  const foundUserByUsername =
+    await userRepository.findUniqueByUsername(username)
   if (foundUserByUsername && foundUserByUsername.id !== id) {
     throw new ValidationError({
       message: 'O username informado já está sendo utilizado.',
@@ -37,7 +34,7 @@ const validateUniqueEmail = async ({
   email: string
   id?: string
 }): Promise<void> => {
-  const foundUserByEmail = await userRepository.findOneByEmail(email)
+  const foundUserByEmail = await userRepository.findUniqueByEmail(email)
   if (foundUserByEmail && foundUserByEmail.id !== id) {
     throw new ValidationError({
       message: 'O email informado já está sendo utilizado.',
@@ -47,8 +44,25 @@ const validateUniqueEmail = async ({
   }
 }
 
-const findOneById = async (id: string): Promise<TUser> => {
-  const user = await userRepository.findOneById(id)
+const create = async (data: TCreateUser): Promise<TUser> => {
+  const validData = createUserSchema.parse(data)
+  const { username, email, password } = validData
+
+  await validateUniqueEmail({ email })
+  await validateUniqueUsername({ username })
+
+  const passwordHash = await passwordModel.hash(password)
+  const user = await userRepository.create({
+    username,
+    email,
+    password: passwordHash
+  })
+
+  return user
+}
+
+const findUniqueById = async (id: string): Promise<TUser> => {
+  const user = await userRepository.findUniqueById(id)
   if (!user) {
     throw new NotFoundError({
       message: 'O id informado não foi encontrado no sistema.',
@@ -58,8 +72,8 @@ const findOneById = async (id: string): Promise<TUser> => {
   return user
 }
 
-const findOneByUsername = async (username: string): Promise<TUser> => {
-  const user = await userRepository.findOneByUsername(username)
+const findUniqueByUsername = async (username: string): Promise<TUser> => {
+  const user = await userRepository.findUniqueByUsername(username)
   if (!user) {
     throw new NotFoundError({
       message: 'O username informado não foi encontrado no sistema.',
@@ -69,8 +83,8 @@ const findOneByUsername = async (username: string): Promise<TUser> => {
   return user
 }
 
-const findOneByEmail = async (email: string): Promise<TUser> => {
-  const user = await userRepository.findOneByEmail(email)
+const findUniqueByEmail = async (email: string): Promise<TUser> => {
+  const user = await userRepository.findUniqueByEmail(email)
   if (!user) {
     throw new NotFoundError({
       message: 'O email informado não foi encontrado no sistema.',
@@ -80,32 +94,15 @@ const findOneByEmail = async (email: string): Promise<TUser> => {
   return user
 }
 
-const create = async (params: TCreateUserSchema): Promise<TUser> => {
-  const { username, email, password } = params
-
-  validateSchema(createUserSchema, params)
-
-  await validateUniqueEmail({ email })
-  await validateUniqueUsername({ username })
-
-  const user = await userRepository.create({
-    username,
-    email,
-    password: await hash(password)
-  })
-  return user
-}
-
 const update = async (
-  currentUsername: string,
-  params: TUpdateUserSchema
+  data: TUpdateUser,
+  currentUsername: string
 ): Promise<TUser> => {
-  const { username, email, password } = params
-
-  validateSchema(updateUserSchema, params)
+  const validData = updateUserSchema.parse(data)
+  const { username, email, password } = validData
 
   const foundUserByUsername =
-    await userRepository.findOneByUsername(currentUsername)
+    await userRepository.findUniqueByUsername(currentUsername)
   if (!foundUserByUsername) {
     throw new NotFoundError({
       message: 'O username informado não foi encontrado no sistema.',
@@ -114,28 +111,33 @@ const update = async (
   }
 
   if (username && username !== foundUserByUsername.username) {
-    await validateUniqueUsername({ username, id: foundUserByUsername.id })
+    await validateUniqueUsername({
+      username,
+      id: foundUserByUsername.id
+    })
   }
   if (email && email !== foundUserByUsername.email) {
     await validateUniqueEmail({ email, id: foundUserByUsername.id })
   }
   if (password) {
-    params.password = await hash(password)
+    data.password = await passwordModel.hash(password)
   }
 
-  const user = await userRepository.update({
-    ...foundUserByUsername,
-    ...params
-  })
+  const user = await userRepository.update(
+    {
+      ...foundUserByUsername,
+      ...data
+    },
+    foundUserByUsername.id
+  )
+
   return user
 }
 
-const user = {
-  findOneById,
-  findOneByUsername,
-  findOneByEmail,
+export const userModel = {
   create,
+  findUniqueById,
+  findUniqueByUsername,
+  findUniqueByEmail,
   update
 }
-
-export default user

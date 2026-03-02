@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server'
 
-import controller from '@/infra/controller'
-import status from '@/server/models/status'
+import { controller } from '@/infra'
+import { statusModel } from '@/models'
 
 const getHandler = async () => {
-  const body = await status.check()
+  const body = await statusModel.check()
 
   return NextResponse.json(body, {
     status: 200

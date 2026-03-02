@@ -1,8 +1,8 @@
 import setCookieParser from 'set-cookie-parser'
 import { version as uuidVersion } from 'uuid'
 
-import session from '@/server/models/session'
-import { API_BASE_URL } from '@/shared/constants/base-url'
+import { API_BASE_URL } from '@/constants'
+import { sessionModel } from '@/models'
 import orchestrator from '@/tests/orchestrator'
 
 beforeAll(async () => {
@@ -49,7 +49,7 @@ describe('GET /api/v1/user', () => {
       expect(Date.parse(responseBody.updated_at)).not.toBeNaN()
 
       // Session renewal assertions
-      const renewedSessionObject = await session.findOneValidByToken(
+      const renewedSessionObject = await sessionModel.findUniqueValidByToken(
         sessionObject.token
       )
 
@@ -71,7 +71,7 @@ describe('GET /api/v1/user', () => {
       expect(parsedSetCookie.session_id).toEqual({
         name: 'session_id',
         value: sessionObject.token,
-        maxAge: session.EXPIRATION_IN_MILLISECONDS / 1000,
+        maxAge: sessionModel.EXPIRATION_IN_MILLISECONDS / 1000,
         path: '/',
         httpOnly: true
       })
@@ -79,7 +79,7 @@ describe('GET /api/v1/user', () => {
 
     test('With halfway-expired session', async () => {
       jest.useFakeTimers({
-        now: new Date(Date.now() - session.EXPIRATION_IN_MILLISECONDS / 2)
+        now: new Date(Date.now() - sessionModel.EXPIRATION_IN_MILLISECONDS / 2)
       })
 
       const createdUser = await orchestrator.createUser({
@@ -114,7 +114,7 @@ describe('GET /api/v1/user', () => {
       expect(Date.parse(responseBody.updated_at)).not.toBeNaN()
 
       // Session renewal assertions
-      const renewedSessionObject = await session.findOneValidByToken(
+      const renewedSessionObject = await sessionModel.findUniqueValidByToken(
         sessionObject.token
       )
 
@@ -136,7 +136,7 @@ describe('GET /api/v1/user', () => {
       expect(parsedSetCookie.session_id).toEqual({
         name: 'session_id',
         value: sessionObject.token,
-        maxAge: session.EXPIRATION_IN_MILLISECONDS / 1000,
+        maxAge: sessionModel.EXPIRATION_IN_MILLISECONDS / 1000,
         path: '/',
         httpOnly: true
       })
@@ -182,7 +182,7 @@ describe('GET /api/v1/user', () => {
 
     test('With expired session', async () => {
       jest.useFakeTimers({
-        now: new Date(Date.now() - session.EXPIRATION_IN_MILLISECONDS)
+        now: new Date(Date.now() - sessionModel.EXPIRATION_IN_MILLISECONDS)
       })
 
       const createdUser = await orchestrator.createUser({

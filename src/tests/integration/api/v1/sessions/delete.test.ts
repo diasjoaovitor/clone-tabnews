@@ -1,8 +1,8 @@
 import setCookieParser from 'set-cookie-parser'
 import { version as uuidVersion } from 'uuid'
 
-import session from '@/server/models/session'
-import { API_BASE_URL } from '@/shared/constants/base-url'
+import { API_BASE_URL } from '@/constants'
+import { sessionModel } from '@/models'
 import orchestrator from '@/tests/orchestrator'
 
 beforeAll(async () => {
@@ -38,7 +38,7 @@ describe('DELETE /api/v1/sessions', () => {
 
     test('With expired session', async () => {
       jest.useFakeTimers({
-        now: new Date(Date.now() - session.EXPIRATION_IN_MILLISECONDS)
+        now: new Date(Date.now() - sessionModel.EXPIRATION_IN_MILLISECONDS)
       })
 
       const createdUser = await orchestrator.createUser()
