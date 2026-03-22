@@ -16,13 +16,13 @@ const getNewClient = async (): Promise<Client> => {
 }
 
 const query = async (
-  query: string | { text: string; values: (number | string)[] },
-  args?: (number | string | Date)[]
+  query: string | { text: string; values: any[] },
+  values?: any[]
 ): Promise<QueryResult> => {
   let client: Client | undefined
   try {
     client = await getNewClient()
-    const result = await client.query(query, args)
+    const result = await client.query(query, values)
     return result
   } catch (error) {
     const serviceErrorObject = new ServiceError({
