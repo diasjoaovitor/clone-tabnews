@@ -1,21 +1,47 @@
-import { statusModel } from '@/models'
+import { TStatusDto } from '@/dtos'
+
+import { getStatus } from './actions'
+
+type TStatusKey = keyof TStatusDto['dependencies']['database']
+
+type TStatusHtml = Record<
+  TStatusKey,
+  { label: string; value: string | number | undefined }
+>
 
 export const Info = async () => {
   const {
-    dependencies: {
-      database: { max_connections, opened_connections, version }
-    },
+    dependencies: { database },
     updated_at
-  } = await statusModel.check()
+  } = await getStatus()
+
+  const status: TStatusHtml = {
+    version: {
+      label: 'Versão',
+      value: database.version
+    },
+    opened_connections: {
+      label: 'Conexões abertas',
+      value: database.opened_connections
+    },
+    max_connections: {
+      label: 'Conexões máximas',
+      value: database.max_connections
+    }
+  }
+
+  const databaseKeys = Object.keys(database) as TStatusKey[]
 
   return (
     <>
       <p>Última atualização: {updated_at.toISOString()}</p>
       <p>Banco de Dados</p>
       <ul>
-        <li>Versão: {version}</li>
-        <li>Conexões abertas: {opened_connections}</li>
-        <li>Conexões máximas: {max_connections}</li>
+        {databaseKeys.map((key) => (
+          <li key={key}>
+            {status[key].label}: {status[key].value}
+          </li>
+        ))}
       </ul>
     </>
   )
