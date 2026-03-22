@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-import { controller } from '@/infra'
-import { authenticationModel, sessionModel } from '@/models'
+import { getSessionDto } from '@/dtos'
+import { controller, ForbiddenError, session } from '@/infra'
+import { authenticationModel, authorizationModel, sessionModel } from '@/models'
 
 const postHandler = async (request: NextRequest) => {
   const userInputValues = await request.json()
@@ -9,13 +10,17 @@ const postHandler = async (request: NextRequest) => {
     email: userInputValues.email,
     password: userInputValues.password
   })
+  if (!authorizationModel.can(authenticatedUser, 'create:session')) {
+    throw new ForbiddenError({
+      message: 'Você não possui permissão para fazer login.',
+      action: 'Contate o suporte caso você acredite que isto seja um erro.'
+    })
+  }
   const newSession = await sessionModel.create(authenticatedUser.id)
-  const headers = controller.setSessionCookie(newSession.token)
-  const response = NextResponse.json(newSession, {
-    status: 201,
-    headers
+  await session.save(newSession.token)
+  return NextResponse.json(getSessionDto(authenticatedUser, newSession), {
+    status: 201
   })
-  return response
 }
 
 const deleteHandler = async (request: NextRequest) => {
@@ -23,18 +28,15 @@ const deleteHandler = async (request: NextRequest) => {
   const sessionObject = await sessionModel.findUniqueValidByToken(
     sessionToken ?? ''
   )
+  const user = await session.getUser()
   const expiredSession = await sessionModel.expires(sessionObject.id)
-
-  const headers = controller.clearSessionCookie()
-
-  return NextResponse.json(expiredSession, {
-    status: 200,
-    headers
+  await session.clear()
+  return NextResponse.json(getSessionDto(user, expiredSession), {
+    status: 200
   })
 }
 
-export const { POST, DELETE, GET, HEAD, OPTIONS, PATCH, PUT } =
-  controller.handle({
-    POST: postHandler,
-    DELETE: deleteHandler
-  })
+export const { POST, DELETE, GET, HEAD, OPTIONS, PATCH, PUT } = controller({
+  POST: { handler: postHandler, feature: 'create:session' },
+  DELETE: deleteHandler
+})

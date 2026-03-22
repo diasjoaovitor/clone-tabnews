@@ -1,46 +1,29 @@
-import * as cookie from 'cookie'
 import { HTTP_METHOD, HTTP_METHODS } from 'next/dist/server/web/http'
 import { NextRequest, NextResponse } from 'next/server'
 import { z, ZodError } from 'zod'
 
-import { sessionModel } from '@/models'
+import { authorizationModel } from '@/models'
+import { TFeature } from '@/repositories'
 
 import {
+  ForbiddenError,
   InternalServerError,
   MethodNotAllowedError,
   NotFoundError,
   UnauthorizedError,
   ValidationError
 } from './errors'
+import { session } from './session'
 
-type THandler = (req: NextRequest, context?: any) => Promise<NextResponse>
+type TRequest = (request: NextRequest, context?: any) => Promise<NextResponse>
 
-type TRequest = {
-  [key in HTTP_METHOD]: THandler
+type TRouteConfig = {
+  handler: TRequest
+  feature?: TFeature
 }
 
-const setSessionCookie = (sessionToken: string): Headers => {
-  const setCookie = cookie.serialize('session_id', sessionToken, {
-    path: '/',
-    maxAge: sessionModel.EXPIRATION_IN_MILLISECONDS / 1000,
-    secure: process.env.NODE_ENV === 'production',
-    httpOnly: true
-  })
-  const headers = new Headers()
-  headers.set('Set-Cookie', setCookie)
-  return headers
-}
-
-const clearSessionCookie = (): Headers => {
-  const setCookie = cookie.serialize('session_id', 'invalid', {
-    path: '/',
-    maxAge: -1,
-    secure: process.env.NODE_ENV === 'production',
-    httpOnly: true
-  })
-  const headers = new Headers()
-  headers.set('Set-Cookie', setCookie)
-  return headers
+type TRequests = {
+  [key in HTTP_METHOD]?: TRequest | TRouteConfig
 }
 
 const onNoMatchHandler = async (): Promise<NextResponse> => {
@@ -60,17 +43,20 @@ const onErrorHandler = async (error: any): Promise<NextResponse> => {
     })
   }
 
-  if (error instanceof ValidationError || error instanceof NotFoundError) {
+  if (
+    error instanceof ValidationError ||
+    error instanceof NotFoundError ||
+    error instanceof ForbiddenError
+  ) {
     return NextResponse.json(error, {
       status: error.statusCode
     })
   }
 
   if (error instanceof UnauthorizedError) {
-    const headers = clearSessionCookie()
+    await session.clear()
     return NextResponse.json(error, {
-      status: error.statusCode,
-      headers
+      status: error.statusCode
     })
   }
 
@@ -83,20 +69,45 @@ const onErrorHandler = async (error: any): Promise<NextResponse> => {
   })
 }
 
-const handle = (request: Partial<TRequest>): TRequest => {
-  const handler: Partial<TRequest> = {}
-  for (const method of HTTP_METHODS) {
-    const fn = request[method]
-    handler[method] = fn
-      ? (req: NextRequest, context?: any): Promise<NextResponse> =>
-          fn(req, context).catch(onErrorHandler)
-      : onNoMatchHandler
+const can = async (feature: TFeature | undefined): Promise<boolean> => {
+  if (!feature) return true
+  const user = await session.getUser()
+  if (!authorizationModel.can(user, feature)) {
+    throw new ForbiddenError({
+      message: 'Você não possui permissão para executar esta ação.',
+      action: `Verifique se o seu usuário possui a feature "${feature}"`
+    })
   }
-  return handler as TRequest
+  return false
 }
 
-export const controller = {
-  handle,
-  setSessionCookie,
-  clearSessionCookie
+export const controller = (
+  availableRequests: Partial<TRequests>
+): TRequests => {
+  const requests: Partial<TRequests> = {}
+  for (const method of HTTP_METHODS) {
+    const routeDefinition = availableRequests[method]
+    let fn: TRequest | undefined
+    let feature: TFeature | undefined
+    if (typeof routeDefinition === 'function') {
+      fn = routeDefinition
+    } else {
+      fn = routeDefinition?.handler
+      feature = routeDefinition?.feature
+    }
+    const handler = async (
+      req: NextRequest,
+      context?: any
+    ): Promise<NextResponse> => {
+      try {
+        await can(feature)
+        const response = await fn!(req, context)
+        return response
+      } catch (error) {
+        return onErrorHandler(error)
+      }
+    }
+    requests[method] = fn ? handler : onNoMatchHandler
+  }
+  return requests as TRequests
 }
