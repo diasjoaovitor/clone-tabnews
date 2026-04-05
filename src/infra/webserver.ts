@@ -7,7 +7,7 @@ const getOrigin = (): string => {
     return `https://${process.env.VERCEL_URL}`
   }
 
-  return 'https://fintab.com.br'
+  return 'https://diasjoaovitor.com.br'
 }
 
 export const webserver = {

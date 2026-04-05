@@ -61,16 +61,16 @@ const sendEmailToUser = async (
   activationTokenId: string
 ): Promise<void> => {
   await email.send({
-    from: 'FinTab <contato@fintab.com.br>',
+    from: 'Clone TabNews <contato@diasjoaovitor.com.br>',
     to: user.email,
-    subject: 'Ative seu cadastro no FinTab!',
+    subject: 'Ative seu cadastro no Clone TabNews!',
     text: dedent`
-      ${user.username}, clique no link abaixo para ativar seu cadastro no FinTab:
+      ${user.username}, clique no link abaixo para ativar seu cadastro no Clone TabNews:
 
       ${webserver.origin}/cadastro/ativar/${activationTokenId}
 
       Atenciosamente,
-      Equipe FinTab
+      Equipe Clone TabNews
     `
   })
 }

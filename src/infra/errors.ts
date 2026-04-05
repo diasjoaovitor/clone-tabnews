@@ -31,14 +31,21 @@ export class InternalServerError extends Error {
 export class ServiceError extends Error {
   public action: string
   public statusCode: number
+  public context?: unknown
 
-  constructor({ cause, message }: ErrorOptions & { message?: string }) {
+  constructor({
+    cause,
+    message,
+    action,
+    context
+  }: ErrorOptions & { message?: string; action?: string; context?: unknown }) {
     super(message || 'Serviço indisponível no momento.', {
       cause
     })
     this.name = 'ServiceError'
-    this.action = 'Verifique se o serviço está disponível.'
+    this.action = action || 'Verifique se o serviço está disponível.'
     this.statusCode = 503
+    this.context = context
   }
 
   toJSON(): TErrorResponse {
