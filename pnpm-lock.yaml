@@ -13,9 +13,6 @@ importers:
       bcryptjs:
         specifier: 3.0.2
         version: 3.0.2
-      cookie:
-        specifier: 1.0.2
-        version: 1.0.2
       dedent:
         specifier: ^1.7.2
         version: 1.7.2
@@ -2788,13 +2785,6 @@ packages:
       {
         integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==
       }
-
-  cookie@1.0.2:
-    resolution:
-      {
-        integrity: sha512-9Kr/j4O16ISv8zBBhJoi4bXOYNTkFLOqSL3UDB0njXxCXNezjeyVrJyGOWtgfs/q2km1gwBcfH8q1yEGoMYunA==
-      }
-    engines: { node: '>=18' }
 
   cosmiconfig-typescript-loader@6.2.0:
     resolution:
@@ -8446,8 +8436,6 @@ snapshots:
       split2: 4.2.0
 
   convert-source-map@2.0.0: {}
-
-  cookie@1.0.2: {}
 
   cosmiconfig-typescript-loader@6.2.0(@types/node@24.7.2)(cosmiconfig@9.0.0(typescript@5.9.3))(typescript@5.9.3):
     dependencies:
