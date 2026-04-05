@@ -18,6 +18,8 @@
     "services:wait:database": "node src/infra/scripts/wait-for-postgres.js",
     "migrations:create": "node-pg-migrate -m src/infra/migrations create",
     "migrations:up": "node-pg-migrate -m src/infra/migrations --envPath .env.development up",
+    "migrations:up:dry": "node-pg-migrate -m src/infra/migrations --envPath .env --dry-run up",
+    "migrations:up:deploy": "node-pg-migrate -m src/infra/migrations --envPath .env up",
     "eslint:check": "eslint",
     "eslint:fix": "eslint --fix",
     "prettier:check": "prettier --check .",
