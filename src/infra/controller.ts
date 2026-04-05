@@ -22,9 +22,11 @@ type TRouteConfig = {
   feature?: TFeature
 }
 
-type TRequests = {
+type TRequestsConfig = {
   [key in HTTP_METHOD]?: TRequest | TRouteConfig
 }
+
+type TRequestsResult = Record<HTTP_METHOD, TRequest>
 
 const onNoMatchHandler = async (): Promise<NextResponse> => {
   const publicErrorObject = new MethodNotAllowedError()
@@ -72,19 +74,17 @@ const onErrorHandler = async (error: any): Promise<NextResponse> => {
 const can = async (feature: TFeature | undefined): Promise<boolean> => {
   if (!feature) return true
   const user = await session.getUser()
-  if (!authorizationModel.can(user, feature)) {
-    throw new ForbiddenError({
-      message: 'Você não possui permissão para executar esta ação.',
-      action: `Verifique se o seu usuário possui a feature "${feature}"`
-    })
-  }
-  return false
+  if (authorizationModel.can(user, feature)) return true
+  throw new ForbiddenError({
+    message: 'Você não possui permissão para executar esta ação.',
+    action: `Verifique se o seu usuário possui a feature "${feature}"`
+  })
 }
 
 export const controller = (
-  availableRequests: Partial<TRequests>
-): TRequests => {
-  const requests: Partial<TRequests> = {}
+  availableRequests: Partial<TRequestsConfig>
+): TRequestsResult => {
+  const requests: Partial<TRequestsResult> = {}
   for (const method of HTTP_METHODS) {
     const routeDefinition = availableRequests[method]
     let fn: TRequest | undefined
@@ -109,5 +109,5 @@ export const controller = (
     }
     requests[method] = fn ? handler : onNoMatchHandler
   }
-  return requests as TRequests
+  return requests as TRequestsResult
 }
