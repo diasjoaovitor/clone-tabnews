@@ -1,7 +1,8 @@
 import { NotFoundError, ValidationError } from '@/infra'
-import { TUser, userRepository } from '@/repositories'
+import { TFeature, TUser, userRepository } from '@/repositories'
 
 import { passwordModel } from '../password-model'
+import { defaultFeatures } from './default-features'
 import {
   createUserSchema,
   TCreateUser,
@@ -55,7 +56,8 @@ const create = async (data: TCreateUser): Promise<TUser> => {
   const user = await userRepository.create({
     username,
     email,
-    password: passwordHash
+    password: passwordHash,
+    features: defaultFeatures
   })
 
   return user
@@ -123,14 +125,27 @@ const update = async (
     data.password = await passwordModel.hash(password)
   }
 
-  const user = await userRepository.update(
-    {
-      ...foundUserByUsername,
-      ...data
-    },
-    foundUserByUsername.id
-  )
+  const user = await userRepository.update(foundUserByUsername.id, {
+    ...foundUserByUsername,
+    ...data
+  })
 
+  return user
+}
+
+const setFeatures = async (
+  id: string,
+  features: TFeature[]
+): Promise<TUser> => {
+  const user = await userRepository.setFeatures(id, features)
+  return user
+}
+
+const addFeatures = async (
+  id: string,
+  features: TFeature[]
+): Promise<TUser> => {
+  const user = await userRepository.addFeatures(id, features)
   return user
 }
 
@@ -139,5 +154,7 @@ export const userModel = {
   findUniqueById,
   findUniqueByUsername,
   findUniqueByEmail,
-  update
+  update,
+  setFeatures,
+  addFeatures
 }

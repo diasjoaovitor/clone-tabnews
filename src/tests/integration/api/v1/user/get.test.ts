@@ -1,9 +1,13 @@
-import setCookieParser from 'set-cookie-parser'
+import setCookieParser, { Cookie } from 'set-cookie-parser'
 import { version as uuidVersion } from 'uuid'
 
 import { API_BASE_URL } from '@/constants'
+import { TUserDto } from '@/dtos'
+import { TErrorResponse } from '@/infra'
 import { sessionModel } from '@/models'
 import orchestrator from '@/tests/orchestrator'
+import { TApiResponse } from '@/types'
+import { isoStringFieldsToDate } from '@/utils'
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices()
@@ -12,12 +16,28 @@ beforeAll(async () => {
 })
 
 describe('GET /api/v1/user', () => {
+  describe('Anonymous user', () => {
+    test('Retrieving the endpoint', async () => {
+      const response = await fetch(`${API_BASE_URL}/user`)
+      expect(response.status).toBe(403)
+
+      const responseBody = await response.json()
+      const expectedData: TErrorResponse = {
+        name: 'ForbiddenError',
+        message: 'Você não possui permissão para executar esta ação.',
+        action: 'Verifique se o seu usuário possui a feature "read:session"',
+        status_code: 403
+      }
+      expect(responseBody).toEqual(expectedData)
+    })
+  })
+
   describe('Default user', () => {
     test('With valid session', async () => {
       const createdUser = await orchestrator.createUser({
         username: 'UserWithValidSession'
       })
-
+      const activatedUser = await orchestrator.activateUser(createdUser.id)
       const sessionObject = await orchestrator.createSession(createdUser.id)
 
       const response = await fetch(`${API_BASE_URL}/user`, {
@@ -25,7 +45,6 @@ describe('GET /api/v1/user', () => {
           Cookie: `session_id=${sessionObject.token}`
         }
       })
-
       expect(response.status).toBe(200)
 
       const cacheControl = response.headers.get('Cache-Control')
@@ -33,26 +52,23 @@ describe('GET /api/v1/user', () => {
         'no-store, no-cache, max-age=0, must-revalidate'
       )
 
-      const responseBody = await response.json()
-
-      expect(responseBody).toEqual({
+      const responseBody: TApiResponse<TUserDto> = await response.json()
+      const data: TUserDto = isoStringFieldsToDate(responseBody)
+      const expectedData: TUserDto = {
         id: createdUser.id,
         username: 'UserWithValidSession',
         email: createdUser.email,
-        password: createdUser.password,
-        created_at: createdUser.created_at.toISOString(),
-        updated_at: createdUser.updated_at.toISOString()
-      })
-
-      expect(uuidVersion(responseBody.id)).toBe(4)
-      expect(Date.parse(responseBody.created_at)).not.toBeNaN()
-      expect(Date.parse(responseBody.updated_at)).not.toBeNaN()
+        features: ['create:session', 'read:session', 'update:user'],
+        created_at: createdUser.created_at,
+        updated_at: activatedUser.updated_at
+      }
+      expect(data).toEqual(expectedData)
+      expect(uuidVersion(data.id)).toBe(4)
 
       // Session renewal assertions
       const renewedSessionObject = await sessionModel.findUniqueValidByToken(
         sessionObject.token
       )
-
       expect(
         renewedSessionObject.expires_at > sessionObject.expires_at
       ).toEqual(true)
@@ -67,14 +83,15 @@ describe('GET /api/v1/user', () => {
           map: true
         }
       )
-
-      expect(parsedSetCookie.session_id).toEqual({
+      const expectedParsedSetCookie: Cookie = {
         name: 'session_id',
         value: sessionObject.token,
         maxAge: sessionModel.EXPIRATION_IN_MILLISECONDS / 1000,
         path: '/',
-        httpOnly: true
-      })
+        httpOnly: true,
+        expires: expect.any(Date)
+      }
+      expect(parsedSetCookie.session_id).toEqual(expectedParsedSetCookie)
     })
 
     test('With halfway-expired session', async () => {
@@ -85,7 +102,7 @@ describe('GET /api/v1/user', () => {
       const createdUser = await orchestrator.createUser({
         username: 'UserWithHalfwayExpiredSession'
       })
-
+      const activatedUser = await orchestrator.activateUser(createdUser.id)
       const sessionObject = await orchestrator.createSession(createdUser.id)
 
       jest.useRealTimers()
@@ -95,29 +112,25 @@ describe('GET /api/v1/user', () => {
           cookie: `session_id=${sessionObject.token}`
         }
       })
-
       expect(response.status).toBe(200)
 
-      const responseBody = await response.json()
-
-      expect(responseBody).toEqual({
+      const responseBody: TApiResponse<TUserDto> = await response.json()
+      const data: TUserDto = isoStringFieldsToDate(responseBody)
+      const expectedData: TUserDto = {
         id: createdUser.id,
         username: 'UserWithHalfwayExpiredSession',
         email: createdUser.email,
-        password: createdUser.password,
-        created_at: createdUser.created_at.toISOString(),
-        updated_at: createdUser.updated_at.toISOString()
-      })
-
-      expect(uuidVersion(responseBody.id)).toBe(4)
-      expect(Date.parse(responseBody.created_at)).not.toBeNaN()
-      expect(Date.parse(responseBody.updated_at)).not.toBeNaN()
+        features: ['create:session', 'read:session', 'update:user'],
+        created_at: createdUser.created_at,
+        updated_at: activatedUser.updated_at
+      }
+      expect(data).toEqual(expectedData)
+      expect(uuidVersion(data.id)).toBe(4)
 
       // Session renewal assertions
       const renewedSessionObject = await sessionModel.findUniqueValidByToken(
         sessionObject.token
       )
-
       expect(
         renewedSessionObject.expires_at > sessionObject.expires_at
       ).toEqual(true)
@@ -132,14 +145,15 @@ describe('GET /api/v1/user', () => {
           map: true
         }
       )
-
-      expect(parsedSetCookie.session_id).toEqual({
+      const expectedParsedSetCookie: Cookie = {
         name: 'session_id',
         value: sessionObject.token,
         maxAge: sessionModel.EXPIRATION_IN_MILLISECONDS / 1000,
         path: '/',
-        httpOnly: true
-      })
+        httpOnly: true,
+        expires: expect.any(Date)
+      }
+      expect(parsedSetCookie.session_id).toEqual(expectedParsedSetCookie)
     })
 
     test('With nonexistent session', async () => {
@@ -151,17 +165,16 @@ describe('GET /api/v1/user', () => {
           cookie: `session_id=${nonexistentToken}`
         }
       })
-
       expect(response.status).toBe(401)
 
       const responseBody = await response.json()
-
-      expect(responseBody).toEqual({
+      const expectedData: TErrorResponse = {
         name: 'UnauthorizedError',
         message: 'Usuário não possui sessão ativa.',
         action: 'Verifique se este usuário está logado e tente novamente.',
         status_code: 401
-      })
+      }
+      expect(responseBody).toEqual(expectedData)
 
       // Set-Cookie assertions
       const parsedSetCookie = setCookieParser(
@@ -170,14 +183,15 @@ describe('GET /api/v1/user', () => {
           map: true
         }
       )
-
-      expect(parsedSetCookie.session_id).toEqual({
+      const expectedParsedSetCookie: Cookie = {
         name: 'session_id',
         value: 'invalid',
         maxAge: -1,
         path: '/',
-        httpOnly: true
-      })
+        httpOnly: true,
+        expires: expect.any(Date)
+      }
+      expect(parsedSetCookie.session_id).toEqual(expectedParsedSetCookie)
     })
 
     test('With expired session', async () => {
@@ -188,7 +202,6 @@ describe('GET /api/v1/user', () => {
       const createdUser = await orchestrator.createUser({
         username: 'UserWithExpiredSession'
       })
-
       const sessionObject = await orchestrator.createSession(createdUser.id)
 
       jest.useRealTimers()
@@ -198,17 +211,16 @@ describe('GET /api/v1/user', () => {
           Cookie: `session_id=${sessionObject.token}`
         }
       })
-
       expect(response.status).toBe(401)
 
       const responseBody = await response.json()
-
-      expect(responseBody).toEqual({
+      const expectedData: TErrorResponse = {
         name: 'UnauthorizedError',
         message: 'Usuário não possui sessão ativa.',
         action: 'Verifique se este usuário está logado e tente novamente.',
         status_code: 401
-      })
+      }
+      expect(responseBody).toEqual(expectedData)
 
       // Set-Cookie assertions
       const parsedSetCookie = setCookieParser(
@@ -217,14 +229,15 @@ describe('GET /api/v1/user', () => {
           map: true
         }
       )
-
-      expect(parsedSetCookie.session_id).toEqual({
+      const expectedParsedSetCookie: Cookie = {
         name: 'session_id',
         value: 'invalid',
         maxAge: -1,
         path: '/',
-        httpOnly: true
-      })
+        httpOnly: true,
+        expires: expect.any(Date)
+      }
+      expect(parsedSetCookie.session_id).toEqual(expectedParsedSetCookie)
     })
   })
 })

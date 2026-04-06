@@ -1,9 +1,13 @@
-import setCookieParser from 'set-cookie-parser'
+import setCookieParser, { Cookie } from 'set-cookie-parser'
 import { version as uuidVersion } from 'uuid'
 
 import { API_BASE_URL } from '@/constants'
+import { TSessionDto } from '@/dtos'
+import { TErrorResponse } from '@/infra'
 import { sessionModel } from '@/models'
 import orchestrator from '@/tests/orchestrator'
+import { TApiResponse } from '@/types'
+import { isoStringFieldsToDate } from '@/utils'
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices()
@@ -23,17 +27,16 @@ describe('DELETE /api/v1/sessions', () => {
           cookie: `session_id=${nonexistentToken}`
         }
       })
-
       expect(response.status).toBe(401)
 
       const responseBody = await response.json()
-
-      expect(responseBody).toEqual({
+      const expectedData: TErrorResponse = {
         name: 'UnauthorizedError',
         message: 'Usuário não possui sessão ativa.',
         action: 'Verifique se este usuário está logado e tente novamente.',
         status_code: 401
-      })
+      }
+      expect(responseBody).toEqual(expectedData)
     })
 
     test('With expired session', async () => {
@@ -42,7 +45,6 @@ describe('DELETE /api/v1/sessions', () => {
       })
 
       const createdUser = await orchestrator.createUser()
-
       const sessionObject = await orchestrator.createSession(createdUser.id)
 
       jest.useRealTimers()
@@ -53,22 +55,20 @@ describe('DELETE /api/v1/sessions', () => {
           Cookie: `session_id=${sessionObject.token}`
         }
       })
-
       expect(response.status).toBe(401)
 
       const responseBody = await response.json()
-
-      expect(responseBody).toEqual({
+      const expectedData: TErrorResponse = {
         name: 'UnauthorizedError',
         message: 'Usuário não possui sessão ativa.',
         action: 'Verifique se este usuário está logado e tente novamente.',
         status_code: 401
-      })
+      }
+      expect(responseBody).toEqual(expectedData)
     })
 
     test('With valid session', async () => {
       const createdUser = await orchestrator.createUser()
-
       const sessionObject = await orchestrator.createSession(createdUser.id)
 
       const response = await fetch(`${API_BASE_URL}/sessions`, {
@@ -77,31 +77,24 @@ describe('DELETE /api/v1/sessions', () => {
           Cookie: `session_id=${sessionObject.token}`
         }
       })
-
       expect(response.status).toBe(200)
 
-      const responseBody = await response.json()
-
-      expect(responseBody).toEqual({
-        id: sessionObject.id,
+      const responseBody: TApiResponse<TSessionDto> = await response.json()
+      const data: TSessionDto = isoStringFieldsToDate(responseBody)
+      const expectedData: TSessionDto = {
+        id: expect.any(String),
         token: sessionObject.token,
         user_id: sessionObject.user_id,
-        expires_at: responseBody.expires_at,
-        created_at: responseBody.created_at,
-        updated_at: responseBody.updated_at
-      })
+        expires_at: expect.any(Date),
+        created_at: expect.any(Date),
+        updated_at: expect.any(Date)
+      }
 
-      expect(uuidVersion(responseBody.id)).toBe(4)
-      expect(Date.parse(responseBody.expires_at)).not.toBeNaN()
-      expect(Date.parse(responseBody.created_at)).not.toBeNaN()
-      expect(Date.parse(responseBody.updated_at)).not.toBeNaN()
+      expect(data).toEqual(expectedData)
+      expect(uuidVersion(data.id)).toBe(4)
 
-      expect(
-        responseBody.expires_at < sessionObject.expires_at.toISOString()
-      ).toBe(true)
-      expect(
-        responseBody.updated_at > sessionObject.updated_at.toISOString()
-      ).toBe(true)
+      expect(data.expires_at < sessionObject.expires_at).toBe(true)
+      expect(data.updated_at > sessionObject.updated_at).toBe(true)
 
       // Set-Cookie assertions
       const parsedSetCookie = setCookieParser(
@@ -111,13 +104,15 @@ describe('DELETE /api/v1/sessions', () => {
         }
       )
 
-      expect(parsedSetCookie.session_id).toEqual({
+      const expectedParsedSetCookie: Cookie = {
         name: 'session_id',
         value: 'invalid',
         maxAge: -1,
         path: '/',
-        httpOnly: true
-      })
+        httpOnly: true,
+        expires: expect.any(Date)
+      }
+      expect(parsedSetCookie.session_id).toEqual(expectedParsedSetCookie)
 
       // Double check assertions
       const doubleCheckResponse = await fetch(`${API_BASE_URL}/user`, {
@@ -125,17 +120,16 @@ describe('DELETE /api/v1/sessions', () => {
           Cookie: `session_id=${sessionObject.token}`
         }
       })
-
       expect(doubleCheckResponse.status).toBe(401)
 
       const doubleCheckResponseBody = await doubleCheckResponse.json()
-
-      expect(doubleCheckResponseBody).toEqual({
+      const expectedDoubleCheckResponseBody: TErrorResponse = {
         name: 'UnauthorizedError',
         message: 'Usuário não possui sessão ativa.',
         action: 'Verifique se este usuário está logado e tente novamente.',
         status_code: 401
-      })
+      }
+      expect(doubleCheckResponseBody).toEqual(expectedDoubleCheckResponseBody)
     })
   })
 })

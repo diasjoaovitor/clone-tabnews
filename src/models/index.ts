@@ -1,4 +1,6 @@
+export * from './activation-model'
 export * from './authentication-model'
+export * from './authorization-model'
 export * from './migrator-model'
 export * from './password-model'
 export * from './session-model'

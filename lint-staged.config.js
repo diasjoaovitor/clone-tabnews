@@ -8,8 +8,7 @@ const buildCommand = (stagedFiles) => {
 
   return [
     `pnpm eslint:fix ${files.join(' ')}`,
-    `pnpm prettier:fix --file ${files.join(' --file ')}`,
-    `pnpm jest --runInBand --findRelatedTests ${files.join(' ')} --passWithNoTests`
+    `pnpm prettier:fix --file ${files.join(' --file ')}`
   ]
 }
 

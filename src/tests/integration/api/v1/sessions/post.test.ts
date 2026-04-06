@@ -1,11 +1,13 @@
-import setCookieParser from 'set-cookie-parser'
+import setCookieParser, { Cookie } from 'set-cookie-parser'
 import { version as uuidVersion } from 'uuid'
 
 import { API_BASE_URL } from '@/constants'
+import { TSessionDto } from '@/dtos'
+import { TErrorResponse } from '@/infra'
 import { sessionModel } from '@/models'
-import { TSession } from '@/repositories'
 import orchestrator from '@/tests/orchestrator'
 import { TApiResponse } from '@/types'
+import { isoStringFieldsToDate } from '@/utils'
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices()
@@ -22,25 +24,21 @@ describe('POST /api/v1/sessions', () => {
 
       const response = await fetch(`${API_BASE_URL}/sessions`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
         body: JSON.stringify({
           email: 'email.errado@curso.dev',
           password: 'senha-correta'
         })
       })
-
       expect(response.status).toBe(401)
 
       const responseBody = await response.json()
-
-      expect(responseBody).toEqual({
+      const expectedData: TErrorResponse = {
         name: 'UnauthorizedError',
         message: 'Dados de autenticação não conferem.',
         action: 'Verifique se os dados enviados estão corretos.',
         status_code: 401
-      })
+      }
+      expect(responseBody).toEqual(expectedData)
     })
 
     test('With correct `email` but incorrect `password`', async () => {
@@ -50,25 +48,21 @@ describe('POST /api/v1/sessions', () => {
 
       const response = await fetch(`${API_BASE_URL}/sessions`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
         body: JSON.stringify({
           email: 'email.correto@curso.dev',
           password: 'senha-incorreta'
         })
       })
-
       expect(response.status).toBe(401)
 
       const responseBody = await response.json()
-
-      expect(responseBody).toEqual({
+      const expectedData: TErrorResponse = {
         name: 'UnauthorizedError',
         message: 'Dados de autenticação não conferem.',
         action: 'Verifique se os dados enviados estão corretos.',
         status_code: 401
-      })
+      }
+      expect(responseBody).toEqual(expectedData)
     })
 
     test('With incorrect `email` and incorrect `password`', async () => {
@@ -76,25 +70,21 @@ describe('POST /api/v1/sessions', () => {
 
       const response = await fetch(`${API_BASE_URL}/sessions`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
         body: JSON.stringify({
           email: 'email.incorreto@curso.dev',
           password: 'senha-incorreta'
         })
       })
-
       expect(response.status).toBe(401)
 
       const responseBody = await response.json()
-
-      expect(responseBody).toEqual({
+      const expectedData: TErrorResponse = {
         name: 'UnauthorizedError',
         message: 'Dados de autenticação não conferem.',
         action: 'Verifique se os dados enviados estão corretos.',
         status_code: 401
-      })
+      }
+      expect(responseBody).toEqual(expectedData)
     })
 
     test('With correct `email` and correct `password`', async () => {
@@ -102,43 +92,34 @@ describe('POST /api/v1/sessions', () => {
         email: 'tudo.correto@curso.dev',
         password: 'tudocorreto'
       })
+      await orchestrator.activateUser(createdUser.id)
 
       const response = await fetch(`${API_BASE_URL}/sessions`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
         body: JSON.stringify({
           email: 'tudo.correto@curso.dev',
           password: 'tudocorreto'
         })
       })
-
       expect(response.status).toBe(201)
 
-      const responseBody: TApiResponse<TSession> = await response.json()
-      const expectedData: TApiResponse<TSession> = {
-        id: responseBody.id,
-        token: responseBody.token,
+      const responseBody: TApiResponse<TSessionDto> = await response.json()
+      const data: TSessionDto = isoStringFieldsToDate(responseBody)
+      const expectedData: TApiResponse<TSessionDto> = {
+        id: expect.any(String),
+        token: expect.any(String),
         user_id: createdUser.id,
-        expires_at: responseBody.expires_at,
-        created_at: responseBody.created_at,
-        updated_at: responseBody.updated_at
+        expires_at: expect.any(Date),
+        created_at: expect.any(Date),
+        updated_at: expect.any(Date)
       }
-      expect(responseBody).toEqual(expectedData)
+      expect(data).toEqual(expectedData)
+      expect(uuidVersion(data.id)).toBe(4)
 
-      expect(uuidVersion(responseBody.id)).toBe(4)
-      expect(Date.parse(responseBody.expires_at)).not.toBeNaN()
-      expect(Date.parse(responseBody.created_at)).not.toBeNaN()
-      expect(Date.parse(responseBody.updated_at)).not.toBeNaN()
+      data.expires_at.setMilliseconds(0)
+      data.created_at.setMilliseconds(0)
 
-      const expiresAt = new Date(responseBody.expires_at)
-      const createdAt = new Date(responseBody.created_at)
-
-      expiresAt.setMilliseconds(0)
-      createdAt.setMilliseconds(0)
-
-      expect(expiresAt.getTime() - createdAt.getTime()).toBe(
+      expect(data.expires_at.getTime() - data.created_at.getTime()).toBe(
         sessionModel.EXPIRATION_IN_MILLISECONDS
       )
 
@@ -148,14 +129,15 @@ describe('POST /api/v1/sessions', () => {
           map: true
         }
       )
-
-      expect(parsedSetCookie.session_id).toEqual({
+      const expectedParsedSetCookie: Cookie = {
         name: 'session_id',
-        value: responseBody.token,
+        value: data.token,
         maxAge: sessionModel.EXPIRATION_IN_MILLISECONDS / 1000,
         path: '/',
-        httpOnly: true
-      })
+        httpOnly: true,
+        expires: expect.any(Date)
+      }
+      expect(parsedSetCookie.session_id).toEqual(expectedParsedSetCookie)
     })
   })
 })

@@ -31,14 +31,21 @@ export class InternalServerError extends Error {
 export class ServiceError extends Error {
   public action: string
   public statusCode: number
+  public context?: unknown
 
-  constructor({ cause, message }: ErrorOptions & { message?: string }) {
+  constructor({
+    cause,
+    message,
+    action,
+    context
+  }: ErrorOptions & { message?: string; action?: string; context?: unknown }) {
     super(message || 'Serviço indisponível no momento.', {
       cause
     })
     this.name = 'ServiceError'
-    this.action = 'Verifique se o serviço está disponível.'
+    this.action = action || 'Verifique se o serviço está disponível.'
     this.statusCode = 503
+    this.context = context
   }
 
   toJSON(): TErrorResponse {
@@ -148,6 +155,34 @@ export class UnauthorizedError extends Error {
     this.name = 'UnauthorizedError'
     this.action = action || 'Faça novamente o login para continuar.'
     this.statusCode = 401
+  }
+
+  toJSON(): TErrorResponse {
+    return {
+      name: this.name,
+      message: this.message,
+      action: this.action,
+      status_code: this.statusCode
+    }
+  }
+}
+
+export class ForbiddenError extends Error {
+  public action: string
+  public statusCode: number
+
+  constructor({
+    cause,
+    message,
+    action
+  }: ErrorOptions & { message?: string; action?: string }) {
+    super(message || 'Acesso negado.', {
+      cause
+    })
+    this.name = 'ForbiddenError'
+    this.action =
+      action || 'Verifique as features necessárias antes de continuar.'
+    this.statusCode = 403
   }
 
   toJSON(): TErrorResponse {
