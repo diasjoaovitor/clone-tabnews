@@ -1,6 +1,6 @@
 # Passo a passo do curso.dev
 
-```
+```sh
 quinta-feira, 28 de março de 2024
 ```
 
@@ -110,18 +110,18 @@ Crie o projeto `clone-tabnews` no `GitHub` e marque a opção para criar o `READ
 
 Entre na pasta `clone-tabnews` e crie o arquivo `.nvmrc`:
 
-```
+```sh
 lts/hydrogen
 ```
 
 execute os comandos:
 
-```
+```sh
 nvm install
 nvm alias default lts/hydrogen
 ```
 
-```
+```sh
 npm i next@13.1.6 react@18.2.0 react-dom@18.2.0
 ```
 
@@ -163,7 +163,7 @@ adicione o `script` no arquivo `package.json`:
 
 execute o comando de inicialização:
 
-```
+```sh
 npm run dev
 ```
 
@@ -183,7 +183,7 @@ A Vercel implementou um novo sistema de segurança nos deploys chamado de Deploy
 
 Crie o arquivo `.gitignore`:
 
-```
+```sh
 node_modules
 .next
 ```
@@ -200,7 +200,7 @@ e adicione mais um `script` no arquivo `package.json`:
 
 suba as alterações para o GitHub:
 
-```
+```sh
 git add .
 git commit -m "next app"
 git push origin main
@@ -500,7 +500,7 @@ A princípio, o assunto Prettier é simples, e de fato é, mas esta simplicidade
 
 Instale o [módulo](https://www.npmjs.com/package/prettier) e a [extensão](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) do [prettier](https://prettier.io/)
 
-```
+```sh
 npm i -D prettier
 ```
 
@@ -555,7 +555,7 @@ O prettier a partir da versão 3.0.0 mudou o seu comportamento e por padrão est
 
 Caso você queira simular o comportamento da aula, basta instalar o módulo na versão 2.8.8 da seguinte forma:
 
-```
+```sh
 npm install prettier@2.8.8
 ```
 
@@ -636,13 +636,13 @@ E não perde a oportunidade de ficar até ao final para o desafio de Capture The
 
 Instale ferramentas de `DNS`
 
-```
+```sh
 sudo apt install dnsutils
 ```
 
 Exemplo:
 
-```
+```sh
 dig fintab.com.br
 
 ;; ANSWER SECTION:
@@ -650,14 +650,14 @@ fintab.com.br.          0       IN      A       76.76.21.142
 fintab.com.br.          0       IN      A       76.76.21.9
 ```
 
-```
+```sh
 dig fintab.com.br TXT
 
 ;; ANSWER SECTION:
 fintab.com.br.          0       IN      TXT     "Sou apaixonado pelos alunos do curso.dev"
 ```
 
-```
+```sh
 dig fintab.com.br TXT +trace
 
 ; <<>> DiG 9.16.1-Ubuntu <<>> fintab.com.br TXT +trace
@@ -701,7 +701,7 @@ fintab.com.br.          60      IN      TXT     "Sou apaixonado pelos alunos do 
 
 #### Desafio
 
-```
+```sh
 dig curso.dev TXT
 
 ;; ANSWER SECTION:
@@ -823,7 +823,7 @@ Se você ainda não passou pela jornada dos Testes Automatizados, com o que eu v
 
 Instale o _test runner_ `jest`:
 
-```
+```sh
 npm i -D jest@29.6.2
 ```
 
@@ -887,19 +887,19 @@ O curso não utiliza `TypeScript`, dessa forma, vou mostrar algumas configuraç�
 
 Devido a compatibilidade entre as bibliotecas, atualize todas as dependências do projeto que foram instaladas numa versão específica:
 
-```
+```sh
 npm i next react react-dom
 ```
 
 Instale o `git-commit-msg-linter`:
 
-```
+```sh
 npm i -D git-commit-msg-linter
 ```
 
 Instale e configure o suporte ao `TypeScript`:
 
-```
+```sh
 npm i -D typescript @types/node @types/react @types/react-dom
 ```
 
@@ -992,7 +992,7 @@ export default function RootLayout({
 
 Instale bibliotecas de testes:
 
-```
+```sh
 npm i -D jest @types/jest jest-environment-jsdom @testing-library/react @testing-library/jest-dom @testing-library/user-event cross-fetch
 ```
 
@@ -1037,7 +1037,7 @@ export const GET = async () => {
 
 Faça uma requisição a `api`com o `curl` passando o parâmetro `-v` para obter as informações do protocolo `HTTP`:
 
-```
+```sh
 curl http://localhost:3000/api/status -v
 ```
 
@@ -1150,14 +1150,14 @@ Caso queira saber qual a resposta, sugiro ler [esse comentário](https://curso.d
 
 Instale o [node-postgres](https://www.npmjs.com/package/pg)
 
-```
+```sh
 npm i pg
 npm i -D @types/pg
 ```
 
 crie o arquivo `.env.development`:
 
-```
+```sh
 POSTGRES_HOST=localhost
 POSTGRES_PORT=5432
 POSTGRES_USER=local_user
@@ -1167,7 +1167,7 @@ POSTGRES_PASSWORD=local_password
 
 instale o `dotenv` e configure o arquivo `jest.config.js`:
 
-```
+```sh
 npm i -D dotenv
 ```
 
@@ -1306,7 +1306,7 @@ adicione os `scripts`:
 
 execução:
 
-```
+```sh
 npm run services:up
 npm run dev
 npm run test:watch integration
@@ -1314,14 +1314,14 @@ npm run test:watch integration
 
 caso deseje, instale o _client_ do `postgres` no sistema operacional:
 
-```
+```sh
 sudo apt update
 sudo apt install postgresql-client
 ```
 
 execute o _client_:
 
-```
+```sh
 psql --host=localhost --username=local_user --db=local_db --port=5432
 ```
 
@@ -1346,7 +1346,7 @@ Este é o artigo que eu comentei sobre remover dados sensíveis do histórico do
 
 **Comentário em destaque**
 
-Sugiro ler [esse comentário]() do aluno maion explicando como ele usou o BFG para remover dados sensíveis de dois arquivos do seu repositório 💪
+Sugiro ler [esse comentário](abc) do aluno maion explicando como ele usou o BFG para remover dados sensíveis de dois arquivos do seu repositório 💪
 
 ### Uma história macabra sobre "Choque Elétrico" e "TDD"
 
@@ -1434,11 +1434,11 @@ Pra quem deseja utlizar `TypeScript` no projeto, escrevi um [tutorial no TabNews
 
 Eu fiz algumas alterações no projeto que estamos fazendo no curso e ele está estruturado da seguinte forma:
 
-```
+```sh
 tree -a -I 'node_modules|.next|.swc|.git|assets|docs|_'
 ```
 
-```
+```sh
 ├── .editorconfig
 ├── .env.development
 ├── .eslintrc.json
@@ -1734,13 +1734,13 @@ Nesta Pista Lenta iremos dar passos concretos para se trabalhar com Migrations, 
 
 Instale o `node-pg-migrate` e o `dotenv-expand`:
 
-```
+```sh
 npm i -D node-pg-migrate dotenv-expand
 ```
 
 Adicione a variável de ambiente `DATABASE_URL` no arquivo `.env.development`:
 
-```
+```sh
 DATABASE_URL=postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB
 ```
 
@@ -2442,7 +2442,7 @@ Nesta aula, encerramos com **muito orgulho** a `Milestone Fundação` 💪 💪 
 
 Eu vou te falar... é só no `curso.dev` que essas coisas acontecem 😂 📸
 
-#### Instagram
+### Instagram
 
 Você topa me marcar lá no Instagram?
 O meu perfil é o [`@filipedeschamps`](https://www.instagram.com/filipedeschamps/) 😍
@@ -2451,7 +2451,7 @@ O meu perfil é o [`@filipedeschamps`](https://www.instagram.com/filipedeschamps
 
 E mesmo assim, peço que me avise pelos comentários que você publicou e me marcou no Instagram, pois as vezes ele não me notifica 🤝
 
-#### LinkedIn
+### LinkedIn
 
 Caso queira me marcar no LinkedIn, meu perfil é este: [https://www.linkedin.com/in/filipedeschamps/](https://www.linkedin.com/in/filipedeschamps/)
 
@@ -2465,13 +2465,13 @@ Caso você queira publicar a imagem nos comentários, você pode utilizar este s
 2. Após finalizar o upload, no canto superior direito da própria imagem, clique no botão `...` e escolha a opção `Get share links`.
 3. No momento que estou escrevendo estas instruções, **nenhum formato** disponibilizado é compatível com `Markdown`, porém o mais próximo é o que está dentro de `BBCode (Forums)`, e que será algo assim:
 
-   ```
+   ```md
    [img]https://i.imgur.com/UKRJMdy.jpeg[/img]
    ```
 
 4. Altere o formato acima para o `Markdown` abaixo:
 
-   ```
+   ```md
    ![](https://i.imgur.com/UKRJMdy.jpeg)
    ```
 
@@ -2483,7 +2483,7 @@ Não sei se você já esbarrou em alguma propaganda do `curso.dev` mas, se esbar
 
 O detalhe é que é só você quem está vivendo isso na posição de `aluno`, porque eu estou aqui do outro lado na posição de `instrutor`, então é realmente só você quem vai conseguir vivenciar a experiência `curso.dev` e talvez com isso arranjar as palavras certas para descrever o que tá acontecendo aqui dentro, ainda mais agora depois de completar `35 Dias` de material e encerrar a `Milestone Fundação` 🤝
 
-#### Tópicos que eu tenho curiosidade
+### Tópicos que eu tenho curiosidade
 
 1. Quais foram os impactos dos materiais na sua vida `pessoal` ou `profissional`?
 2. Você percebeu uma mudança na sua `postura` ou forma de encarar desafios após esses 35 Dias?

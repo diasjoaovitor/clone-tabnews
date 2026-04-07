@@ -4,7 +4,11 @@ import orchestrator from '@/tests/orchestrator'
 import { TApiResponse } from '@/types'
 import { isoStringFieldsToDate } from '@/utils'
 
-beforeAll(orchestrator.waitForAllServices)
+beforeAll(async () => {
+  await orchestrator.waitForAllServices()
+  await orchestrator.clearDatabase()
+  await orchestrator.runPendingMigrations()
+})
 
 describe('GET to /api/v1/status', () => {
   describe('Anonymous user', () => {
