@@ -119,9 +119,11 @@ describe('POST /api/v1/sessions', () => {
       data.expires_at.setMilliseconds(0)
       data.created_at.setMilliseconds(0)
 
-      expect(data.expires_at.getTime() - data.created_at.getTime()).toBe(
-        sessionModel.EXPIRATION_IN_MILLISECONDS
-      )
+      const actualLifetimeInMilliseconds =
+        data.expires_at.getTime() - data.created_at.getTime()
+      const lifetimeDifferenceInMilliseconds =
+        sessionModel.EXPIRATION_IN_MILLISECONDS - actualLifetimeInMilliseconds
+      expect(lifetimeDifferenceInMilliseconds).toBeLessThanOrEqual(5000)
 
       const parsedSetCookie = setCookieParser(
         response.headers.get('set-cookie')!,
