@@ -134,6 +134,7 @@ describe('POST /api/v1/sessions', () => {
         value: data.token,
         maxAge: sessionModel.EXPIRATION_IN_MILLISECONDS / 1000,
         path: '/',
+        sameSite: 'lax',
         httpOnly: true,
         expires: expect.any(Date)
       }

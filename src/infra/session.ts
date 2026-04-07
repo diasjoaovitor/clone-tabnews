@@ -13,7 +13,8 @@ const save = async (token: string): Promise<void> => {
     path: '/',
     maxAge: expiresAt,
     secure: process.env.NODE_ENV === 'production',
-    httpOnly: true
+    httpOnly: true,
+    sameSite: 'lax'
   })
 }
 
