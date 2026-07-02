@@ -1,9 +1,9 @@
+import { TUserFeatures } from '@/constants'
 import { TUserSession } from '@/infra'
-import { TFeature } from '@/repositories'
 
 const can = (
   user: TUserSession,
-  feature: TFeature,
+  feature: TUserFeatures,
   resource?: { id: string }
 ): boolean => {
   let authorized = false

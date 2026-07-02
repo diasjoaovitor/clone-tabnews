@@ -1,5 +1,6 @@
+import { TUserFeatures } from '@/constants'
 import { NotFoundError, ValidationError } from '@/infra'
-import { TFeature, TUser, userRepository } from '@/repositories'
+import { TUser, userRepository } from '@/repositories'
 
 import { passwordModel } from '../password-model'
 import { defaultFeatures } from './default-features'
@@ -135,7 +136,7 @@ const update = async (
 
 const setFeatures = async (
   id: string,
-  features: TFeature[]
+  features: TUserFeatures[]
 ): Promise<TUser> => {
   const user = await userRepository.setFeatures(id, features)
   return user
@@ -143,7 +144,7 @@ const setFeatures = async (
 
 const addFeatures = async (
   id: string,
-  features: TFeature[]
+  features: TUserFeatures[]
 ): Promise<TUser> => {
   const user = await userRepository.addFeatures(id, features)
   return user

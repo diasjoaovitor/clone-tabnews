@@ -1,3 +1,3 @@
-import { TFeature } from '@/repositories'
+import { TUserFeatures } from '@/constants'
 
-export const defaultFeatures: TFeature[] = ['read:activation_token']
+export const defaultFeatures: TUserFeatures[] = ['read:activation_token']

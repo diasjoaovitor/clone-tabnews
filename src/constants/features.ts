@@ -1,4 +1,4 @@
-export const features = [
+export const USER_FEATURES = [
   // USER
   'create:user',
   'read:user',
@@ -22,4 +22,4 @@ export const features = [
   'read:status:all'
 ] as const
 
-export type TFeature = (typeof features)[number]
+export type TUserFeatures = (typeof USER_FEATURES)[number]

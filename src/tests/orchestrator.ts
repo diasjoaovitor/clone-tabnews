@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker'
 import retry from 'async-retry'
 
-import { API_BASE_URL } from '@/constants'
+import { API_BASE_URL, TUserFeatures } from '@/constants'
 import { database } from '@/infra'
 import {
   activationModel,
@@ -10,7 +10,6 @@ import {
   TCreateUser,
   userModel
 } from '@/models'
-import { TFeature } from '@/repositories'
 import { formatUsername } from '@/utils'
 
 const emailHttpUrl = `http://${process.env.EMAIL_HTTP_HOST}:${process.env.EMAIL_HTTP_PORT}`
@@ -47,7 +46,7 @@ const createUser = async (userObject?: Partial<TCreateUser>) =>
     ...userObject
   })
 
-const addFeaturesToUser = async (userId: string, features: TFeature[]) => {
+const addFeaturesToUser = async (userId: string, features: TUserFeatures[]) => {
   const updatedUser = await userModel.addFeatures(userId, features)
   return updatedUser
 }

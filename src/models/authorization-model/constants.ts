@@ -1,6 +1,6 @@
-import { TFeature } from '@/repositories'
+import { TUserFeatures } from '@/constants'
 
-export const ANONYMOUS_FEATURES: TFeature[] = [
+export const ANONYMOUS_FEATURES: TUserFeatures[] = [
   'read:status',
   'read:activation_token',
   'create:session',

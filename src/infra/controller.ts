@@ -2,8 +2,8 @@ import { HTTP_METHOD, HTTP_METHODS } from 'next/dist/server/web/http'
 import { NextRequest, NextResponse } from 'next/server'
 import { z, ZodError } from 'zod'
 
+import { TUserFeatures } from '@/constants'
 import { authorizationModel } from '@/models'
-import { TFeature } from '@/repositories'
 
 import {
   ForbiddenError,
@@ -19,7 +19,7 @@ type TRequest = (request: NextRequest, context?: any) => Promise<NextResponse>
 
 type TRouteConfig = {
   handler: TRequest
-  feature?: TFeature
+  feature?: TUserFeatures
 }
 
 type TRequestsConfig = {
@@ -71,7 +71,7 @@ const onErrorHandler = async (error: any): Promise<NextResponse> => {
   })
 }
 
-const can = async (feature: TFeature | undefined): Promise<boolean> => {
+const can = async (feature: TUserFeatures | undefined): Promise<boolean> => {
   if (!feature) return true
   const user = await session.getUser()
   if (authorizationModel.can(user, feature)) return true
@@ -88,7 +88,7 @@ export const controller = (
   for (const method of HTTP_METHODS) {
     const routeDefinition = availableRequests[method]
     let fn: TRequest | undefined
-    let feature: TFeature | undefined
+    let feature: TUserFeatures | undefined
     if (typeof routeDefinition === 'function') {
       fn = routeDefinition
     } else {

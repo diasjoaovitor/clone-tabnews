@@ -3,13 +3,13 @@ import 'server-only'
 import { cookies } from 'next/headers'
 import { cache } from 'react'
 
+import { TUserFeatures } from '@/constants'
 import {
   ANONYMOUS_FEATURES,
   SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS,
   sessionModel,
   userModel
 } from '@/models'
-import { TFeature } from '@/repositories'
 
 const save = async (token: string): Promise<void> => {
   const expiresAt = SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS / 1000
@@ -34,7 +34,7 @@ const clear = async (): Promise<void> => {
 }
 
 export type TUserSession = {
-  features: TFeature[]
+  features: TUserFeatures[]
   id?: string
 }
 
