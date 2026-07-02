@@ -44,7 +44,7 @@ const findUniqueByUsername = async (
       `,
     [username]
   )
-  return user
+  return user || null
 }
 
 const findUniqueByEmail = async (email: string): Promise<TUser | null> => {
