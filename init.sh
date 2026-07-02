@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function cleanup {
-  npm run services:down
+  pnpm run services:down
   PID=$(lsof -t -i:3000)
   if [ -n "$PID" ]; then
     kill $PID
@@ -12,9 +12,9 @@ function cleanup {
 trap cleanup INT
 
 if [ "$1" != "test" ]; then
-  npm run services:up && npm run services:wait:database && npm run migrations:up && next dev
+  pnpm run services:up && pnpm run services:wait:database && pnpm run migrations:up && next dev
 else
   shift
-  npm run services:up && concurrently -n next,jest --hide next -k -s command-jest "next dev" "jest --runInBand --verbose $*"
+  pnpm run services:up && concurrently -n next,jest --hide next -k -s command-jest "next dev" "jest --runInBand --verbose $*"
   cleanup
 fi
