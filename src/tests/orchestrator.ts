@@ -10,7 +10,8 @@ import {
   TCreateUser,
   userModel
 } from '@/models'
-import { formatUsername } from '@/utils'
+
+import { formatUsername } from './_utils'
 
 const emailHttpUrl = `http://${process.env.EMAIL_HTTP_HOST}:${process.env.EMAIL_HTTP_PORT}`
 
