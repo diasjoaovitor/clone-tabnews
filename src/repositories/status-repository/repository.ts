@@ -23,7 +23,7 @@ const getMaxConnections = async (): Promise<number> => {
 }
 
 const getOpenedConnections = async (): Promise<number> => {
-  const databaseName = process.env.POSTGRES_DB as string
+  const databaseName = process.env.POSTGRES_DB
   const {
     rows: [{ count }]
   } = (await database.query({
