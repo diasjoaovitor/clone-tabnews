@@ -43,7 +43,6 @@ const getUser = cache(async (): Promise<TUserSession> => {
   const token = (await cookies()).get('session_id')?.value
   if (!token) return { features: ANONYMOUS_FEATURES }
   const session = await sessionModel.findUniqueValidByToken(token)
-  if (!session) return { features: ANONYMOUS_FEATURES }
   const user = await userModel.findUniqueById(session.user_id)
   return {
     id: user.id,

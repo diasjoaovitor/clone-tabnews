@@ -3,8 +3,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z, ZodError } from 'zod'
 
 import { TUserFeatures } from '@/constants'
-import { authorizationModel } from '@/models'
 
+import { can } from './authorization'
 import {
   ForbiddenError,
   InternalServerError,
@@ -73,16 +73,6 @@ const onErrorHandler = async (error: any): Promise<NextResponse> => {
   })
 }
 
-const can = async (feature: TUserFeatures | undefined): Promise<boolean> => {
-  if (!feature) return true
-  const user = await session.getUser()
-  if (authorizationModel.can(user, feature)) return true
-  throw new ForbiddenError({
-    message: 'Você não possui permissão para executar esta ação.',
-    action: `Verifique se o seu usuário possui a feature "${feature}"`
-  })
-}
-
 export const controller = (
   availableRequests: Partial<TRequestsConfig>
 ): TRequestsResult => {
@@ -102,7 +92,10 @@ export const controller = (
       context?: any
     ): Promise<NextResponse> => {
       try {
-        await can(feature)
+        if (feature) {
+          const user = await session.getUser()
+          can(user, feature)
+        }
         const response = await fn!(req, context)
         return response
       } catch (error) {
