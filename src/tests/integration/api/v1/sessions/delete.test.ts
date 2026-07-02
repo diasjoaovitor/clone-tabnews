@@ -4,7 +4,7 @@ import { version as uuidVersion } from 'uuid'
 import { API_BASE_URL } from '@/constants'
 import { TSessionDto } from '@/dtos'
 import { TErrorResponse } from '@/infra'
-import { sessionModel } from '@/models'
+import { SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS } from '@/models'
 import orchestrator from '@/tests/orchestrator'
 import { TApiResponse } from '@/types'
 import { isoStringFieldsToDate } from '@/utils'
@@ -41,7 +41,7 @@ describe('DELETE /api/v1/sessions', () => {
 
     test('With expired session', async () => {
       jest.useFakeTimers({
-        now: new Date(Date.now() - sessionModel.EXPIRATION_IN_MILLISECONDS)
+        now: new Date(Date.now() - SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS)
       })
 
       const createdUser = await orchestrator.createUser()

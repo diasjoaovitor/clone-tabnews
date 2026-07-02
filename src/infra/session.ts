@@ -3,11 +3,16 @@ import 'server-only'
 import { cookies } from 'next/headers'
 import { cache } from 'react'
 
-import { authorizationModel, sessionModel, userModel } from '@/models'
+import {
+  ANONYMOUS_FEATURES,
+  SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS,
+  sessionModel,
+  userModel
+} from '@/models'
 import { TFeature } from '@/repositories'
 
 const save = async (token: string): Promise<void> => {
-  const expiresAt = sessionModel.EXPIRATION_IN_MILLISECONDS / 1000
+  const expiresAt = SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS / 1000
   const store = await cookies()
   store.set('session_id', token, {
     path: '/',
@@ -34,11 +39,10 @@ export type TUserSession = {
 }
 
 const getUser = cache(async (): Promise<TUserSession> => {
-  const features = authorizationModel.getAnonymousFeatures()
   const token = (await cookies()).get('session_id')?.value
-  if (!token) return { features }
+  if (!token) return { features: ANONYMOUS_FEATURES }
   const session = await sessionModel.findUniqueValidByToken(token)
-  if (!session) return { features }
+  if (!session) return { features: ANONYMOUS_FEATURES }
   const user = await userModel.findUniqueById(session.user_id)
   return {
     id: user.id,

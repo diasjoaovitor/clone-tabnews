@@ -4,7 +4,7 @@ import { version as uuidVersion } from 'uuid'
 import { API_BASE_URL } from '@/constants'
 import { TSessionDto } from '@/dtos'
 import { TErrorResponse } from '@/infra'
-import { sessionModel } from '@/models'
+import { SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS } from '@/models'
 import orchestrator from '@/tests/orchestrator'
 import { TApiResponse } from '@/types'
 import { isoStringFieldsToDate } from '@/utils'
@@ -122,7 +122,7 @@ describe('POST /api/v1/sessions', () => {
       const actualLifetimeInMilliseconds =
         data.expires_at.getTime() - data.created_at.getTime()
       const lifetimeDifferenceInMilliseconds =
-        sessionModel.EXPIRATION_IN_MILLISECONDS - actualLifetimeInMilliseconds
+        SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS - actualLifetimeInMilliseconds
       expect(lifetimeDifferenceInMilliseconds).toBeLessThanOrEqual(5000)
 
       const parsedSetCookie = setCookieParser(
@@ -134,7 +134,7 @@ describe('POST /api/v1/sessions', () => {
       const expectedParsedSetCookie: Cookie = {
         name: 'session_id',
         value: data.token,
-        maxAge: sessionModel.EXPIRATION_IN_MILLISECONDS / 1000,
+        maxAge: SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS / 1000,
         path: '/',
         sameSite: 'lax',
         httpOnly: true,

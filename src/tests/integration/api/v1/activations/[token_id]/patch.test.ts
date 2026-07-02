@@ -3,7 +3,11 @@ import { version as uuidVersion } from 'uuid'
 import { API_BASE_URL } from '@/constants'
 import { TUserActivationTokenDto } from '@/dtos'
 import { TErrorResponse } from '@/infra'
-import { activationModel, userModel } from '@/models'
+import {
+  ACTIVATION_TOKEN_EXPIRATION_IN_MILLISECONDS,
+  activationModel,
+  userModel
+} from '@/models'
 import { TUserActivationToken } from '@/repositories'
 import orchestrator from '@/tests/orchestrator'
 import { TApiResponse } from '@/types'
@@ -39,7 +43,7 @@ describe('PATCH /api/v1/activations/[token_id]', () => {
 
     test('With expired token', async () => {
       jest.useFakeTimers({
-        now: new Date(Date.now() - activationModel.EXPIRATION_IN_MILLISECONDS)
+        now: new Date(Date.now() - ACTIVATION_TOKEN_EXPIRATION_IN_MILLISECONDS)
       })
 
       const createdUser = await orchestrator.createUser()
@@ -133,7 +137,7 @@ describe('PATCH /api/v1/activations/[token_id]', () => {
       data.created_at.setMilliseconds(0)
 
       expect(data.expires_at.getTime() - data.created_at.getTime()).toBe(
-        activationModel.EXPIRATION_IN_MILLISECONDS
+        ACTIVATION_TOKEN_EXPIRATION_IN_MILLISECONDS
       )
 
       const activatedUser = await userModel.findUniqueById(data.user_id)
