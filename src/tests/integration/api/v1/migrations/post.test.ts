@@ -17,6 +17,7 @@ describe('POST to /api/v1/migrations', () => {
         })
         expect(response.status).toBe(403)
 
+        const responseBody = await response.json()
         const expectedData: TErrorResponse = {
           name: 'ForbiddenError',
           message: 'Você não possui permissão para executar esta ação.',
@@ -24,7 +25,7 @@ describe('POST to /api/v1/migrations', () => {
             'Verifique se o seu usuário possui a feature "create:migration"',
           status_code: 403
         }
-        expect(expectedData).toEqual(expectedData)
+        expect(responseBody).toEqual(expectedData)
       })
     })
   })
