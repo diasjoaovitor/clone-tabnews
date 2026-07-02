@@ -38,5 +38,5 @@ const deleteHandler = async (request: NextRequest) => {
 
 export const { POST, DELETE, GET, HEAD, OPTIONS, PATCH, PUT } = controller({
   POST: { handler: postHandler, feature: 'create:session' },
-  DELETE: deleteHandler
+  DELETE: { handler: deleteHandler, feature: 'read:session' }
 })
