@@ -1,3 +1,3 @@
 export * from './features'
+export * from './repository'
 export * from './types'
-export * from './user.repository'
