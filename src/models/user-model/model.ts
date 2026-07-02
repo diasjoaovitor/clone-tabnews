@@ -123,12 +123,12 @@ const update = async (
     await validateUniqueEmail({ email, id: foundUserByUsername.id })
   }
   if (password) {
-    data.password = await passwordModel.hash(password)
+    validData.password = await passwordModel.hash(password)
   }
 
   const user = await userRepository.update(foundUserByUsername.id, {
     ...foundUserByUsername,
-    ...data
+    ...validData
   })
 
   return user
