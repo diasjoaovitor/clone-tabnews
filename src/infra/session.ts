@@ -29,7 +29,8 @@ const clear = async (): Promise<void> => {
     path: '/',
     maxAge: -1,
     secure: process.env.NODE_ENV === 'production',
-    httpOnly: true
+    httpOnly: true,
+    sameSite: 'lax'
   })
 }
 

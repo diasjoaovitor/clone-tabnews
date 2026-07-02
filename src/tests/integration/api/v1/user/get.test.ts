@@ -193,6 +193,7 @@ describe('GET /api/v1/user', () => {
         value: 'invalid',
         maxAge: -1,
         path: '/',
+        sameSite: 'lax',
         httpOnly: true,
         expires: expect.any(Date)
       }
@@ -239,6 +240,7 @@ describe('GET /api/v1/user', () => {
         value: 'invalid',
         maxAge: -1,
         path: '/',
+        sameSite: 'lax',
         httpOnly: true,
         expires: expect.any(Date)
       }

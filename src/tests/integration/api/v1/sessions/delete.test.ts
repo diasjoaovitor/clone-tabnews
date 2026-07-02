@@ -109,6 +109,7 @@ describe('DELETE /api/v1/sessions', () => {
         value: 'invalid',
         maxAge: -1,
         path: '/',
+        sameSite: 'lax',
         httpOnly: true,
         expires: expect.any(Date)
       }
