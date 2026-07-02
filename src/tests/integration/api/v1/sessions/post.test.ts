@@ -107,7 +107,6 @@ describe('POST /api/v1/sessions', () => {
       const data: TSessionDto = isoStringFieldsToDate(responseBody)
       const expectedData: TApiResponse<TSessionDto> = {
         id: expect.any(String),
-        token: expect.any(String),
         user_id: createdUser.id,
         expires_at: expect.any(Date),
         created_at: expect.any(Date),
@@ -131,9 +130,10 @@ describe('POST /api/v1/sessions', () => {
           map: true
         }
       )
+      expect(parsedSetCookie.session_id.value).toMatch(/^[0-9a-f]{96}$/)
       const expectedParsedSetCookie: Cookie = {
         name: 'session_id',
-        value: data.token,
+        value: parsedSetCookie.session_id.value,
         maxAge: SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS / 1000,
         path: '/',
         sameSite: 'lax',

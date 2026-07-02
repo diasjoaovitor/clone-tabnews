@@ -2,7 +2,7 @@ import { ForbiddenError, InternalServerError } from '@/infra'
 import { TSession } from '@/repositories'
 import { TGetDto } from '@/types'
 
-export type TSessionDto = TSession
+export type TSessionDto = Omit<TSession, 'token'>
 
 export const getSessionDto: TGetDto<TSession, TSessionDto> = (
   user,
@@ -24,7 +24,6 @@ export const getSessionDto: TGetDto<TSession, TSessionDto> = (
 
   return {
     id: session.id,
-    token: session.token,
     user_id: session.user_id,
     created_at: session.created_at,
     updated_at: session.updated_at,

@@ -83,7 +83,6 @@ describe('DELETE /api/v1/sessions', () => {
       const data: TSessionDto = isoStringFieldsToDate(responseBody)
       const expectedData: TSessionDto = {
         id: expect.any(String),
-        token: sessionObject.token,
         user_id: sessionObject.user_id,
         expires_at: expect.any(Date),
         created_at: expect.any(Date),

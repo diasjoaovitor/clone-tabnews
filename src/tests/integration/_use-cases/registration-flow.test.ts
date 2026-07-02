@@ -1,3 +1,5 @@
+import setCookieParser from 'set-cookie-parser'
+
 import { API_BASE_URL, APP_BASE_URL } from '@/constants'
 import { TSessionDto, TUserDto } from '@/dtos'
 import { activationModel, userModel } from '@/models'
@@ -16,6 +18,7 @@ describe('Use case: Registration Flow (all successful)', () => {
   let createUserResponseBody: TApiResponse<TUserDto>
   let activationTokenId: string
   let createSessionsResponseBody: TApiResponse<TSessionDto>
+  let sessionToken: string
 
   test('Create user account', async () => {
     const createUserResponse = await fetch(`${API_BASE_URL}/users`, {
@@ -96,6 +99,10 @@ describe('Use case: Registration Flow (all successful)', () => {
     expect(createSessionsResponse.status).toBe(201)
 
     createSessionsResponseBody = await createSessionsResponse.json()
+    sessionToken = setCookieParser(
+      createSessionsResponse.headers.get('set-cookie')!,
+      { map: true }
+    ).session_id.value
 
     expect(createSessionsResponseBody.user_id).toBe(createUserResponseBody.id)
   })
@@ -103,7 +110,7 @@ describe('Use case: Registration Flow (all successful)', () => {
   test('Get user information', async () => {
     const userResponse = await fetch(`${API_BASE_URL}/user`, {
       headers: {
-        cookie: `session_id=${createSessionsResponseBody.token}`
+        cookie: `session_id=${sessionToken}`
       }
     })
 
