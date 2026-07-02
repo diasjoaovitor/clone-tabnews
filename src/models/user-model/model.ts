@@ -3,7 +3,7 @@ import { NotFoundError, ValidationError } from '@/infra'
 import { TUser, userRepository } from '@/repositories'
 
 import { passwordModel } from '../password-model'
-import { defaultFeatures } from './default-features'
+import { DEFAULT_USER_FEATURES } from './constants'
 import {
   createUserSchema,
   TCreateUser,
@@ -58,7 +58,7 @@ const create = async (data: TCreateUser): Promise<TUser> => {
     username,
     email,
     password: passwordHash,
-    features: defaultFeatures
+    features: DEFAULT_USER_FEATURES
   })
 
   return user
