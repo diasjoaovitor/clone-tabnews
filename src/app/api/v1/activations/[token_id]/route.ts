@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
 
 import { getActivationDto } from '@/dtos'
 import { controller } from '@/infra'
@@ -9,6 +10,7 @@ const patchHandler = async (
   context: RouteContext<'/api/v1/activations/[token_id]'>
 ) => {
   const { token_id } = await context.params
+  z.uuid().parse(token_id)
 
   const validActivationToken =
     await activationModel.findUniqueValidById(token_id)
