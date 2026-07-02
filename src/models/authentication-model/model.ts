@@ -1,15 +1,11 @@
 import { UnauthorizedError } from '@/infra'
 import { TUser } from '@/repositories'
 
+import { credentialsSchema, TCredentials } from './schema'
 import { findUserByEmail, validatePassword } from './utils'
 
-const getAuthenticatedUser = async ({
-  email,
-  password
-}: {
-  email: string
-  password: string
-}): Promise<TUser> => {
+const getAuthenticatedUser = async (data: TCredentials): Promise<TUser> => {
+  const { email, password } = credentialsSchema.parse(data)
   try {
     const user = await findUserByEmail(email)
     await validatePassword({ password, storedPassword: user.password })
