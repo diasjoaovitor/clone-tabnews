@@ -12,14 +12,9 @@ const can = (
     authorized = true
   }
 
-  if (feature === 'update:user' && resource) {
-    authorized = false
-
+  if (authorized && feature === 'update:user' && resource) {
     const isOwner = user?.id === resource.id
-
-    if (isOwner || can(user, 'update:user:others')) {
-      authorized = true
-    }
+    authorized = isOwner || can(user, 'update:user:others')
   }
 
   return authorized
