@@ -10,6 +10,7 @@ import {
   InternalServerError,
   MethodNotAllowedError,
   NotFoundError,
+  ServiceError,
   UnauthorizedError,
   ValidationError
 } from './errors'
@@ -48,7 +49,8 @@ const onErrorHandler = async (error: any): Promise<NextResponse> => {
   if (
     error instanceof ValidationError ||
     error instanceof NotFoundError ||
-    error instanceof ForbiddenError
+    error instanceof ForbiddenError ||
+    error instanceof ServiceError
   ) {
     return NextResponse.json(error, {
       status: error.statusCode
