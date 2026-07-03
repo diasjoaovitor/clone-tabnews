@@ -6,7 +6,7 @@ import orchestrator from '@/tests/orchestrator'
 
 beforeAll(orchestrator.waitForAllServices)
 
-describe('Not allowed methods to /api/v1/users', () => {
+describe('Not allowed methods to /api/v1/users/[username]', () => {
   test('should return 405 and the response error', async () => {
     const url = `${API_BASE_URL}/users/username`
     const notAllowedMethods = HTTP_METHODS.filter(
