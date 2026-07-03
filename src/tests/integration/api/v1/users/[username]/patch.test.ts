@@ -340,6 +340,39 @@ describe('PATCH /api/v1/users/[username]', () => {
       expect(data).toEqual(expectedData)
     })
 
+    test("With another user's 'username'", async () => {
+      const createdUser1 = await orchestrator.createUser()
+      const activatedUser1 = await orchestrator.activateUser(createdUser1.id)
+      const sessionObject1 = await orchestrator.createSession(activatedUser1.id)
+
+      const createdUser2 = await orchestrator.createUser()
+      await orchestrator.activateUser(createdUser2.id)
+
+      const response = await fetch(
+        `${API_BASE_URL}/users/${createdUser2.username}`,
+        {
+          method: 'PATCH',
+          headers: {
+            Cookie: `session_id=${sessionObject1.token}`
+          },
+          body: JSON.stringify({
+            username: 'uniqueUser3'
+          })
+        }
+      )
+      expect(response.status).toBe(403)
+
+      const responseBody = await response.json()
+      const expectedData: TErrorResponse = {
+        name: 'ForbiddenError',
+        message: 'Você não possui permissão para atualizar outro usuário.',
+        action:
+          'Verifique se você possui a feature necessária para atualizar outro usuário.',
+        status_code: 403
+      }
+      expect(responseBody).toEqual(expectedData)
+    })
+
     test("With own 'email' with a different case", async () => {
       const createdUser = await orchestrator.createUser({
         email: 'OwnEmail@curso.dev'
@@ -369,6 +402,45 @@ describe('PATCH /api/v1/users/[username]', () => {
         email: 'OWNEMAIL@curso.dev',
         features: activatedUser.features,
         created_at: createdUser.created_at,
+        updated_at: data.updated_at
+      }
+      expect(data).toEqual(expectedData)
+    })
+  })
+
+  describe('Privileged user', () => {
+    test("With `update:user:others`, updating another user's 'username'", async () => {
+      const createdUser1 = await orchestrator.createUser()
+      const activatedUser1 = await orchestrator.activateUser(createdUser1.id)
+      await orchestrator.addFeaturesToUser(activatedUser1.id, [
+        'update:user:others'
+      ])
+      const sessionObject1 = await orchestrator.createSession(activatedUser1.id)
+
+      const createdUser2 = await orchestrator.createUser()
+      const activatedUser2 = await orchestrator.activateUser(createdUser2.id)
+
+      const response = await fetch(
+        `${API_BASE_URL}/users/${createdUser2.username}`,
+        {
+          method: 'PATCH',
+          headers: {
+            Cookie: `session_id=${sessionObject1.token}`
+          },
+          body: JSON.stringify({
+            username: 'uniqueUser4'
+          })
+        }
+      )
+      expect(response.status).toBe(200)
+
+      const responseBody: TApiResponse<TUserDto> = await response.json()
+      const data: TUserDto = isoStringFieldsToDate(responseBody)
+      const expectedData: TUserDto = {
+        id: createdUser2.id,
+        username: 'uniqueUser4',
+        features: activatedUser2.features,
+        created_at: createdUser2.created_at,
         updated_at: data.updated_at
       }
       expect(data).toEqual(expectedData)
