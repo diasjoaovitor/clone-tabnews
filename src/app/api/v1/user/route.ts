@@ -1,20 +1,17 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 
 import { getUserDto } from '@/dtos'
 import { controller, session } from '@/infra'
 import { sessionModel, userModel } from '@/models'
 
-const getHandler = async (request: NextRequest) => {
-  const sessionToken = request.cookies.get('session_id')?.value
+const getHandler = async () => {
+  const sessionUser = await session.getUser()
 
-  const sessionObject = await sessionModel.findUniqueValidByToken(
-    sessionToken ?? ''
-  )
-  const renewedSessionObject = await sessionModel.renew(sessionObject.id)
+  const renewedSessionObject = await sessionModel.renew(sessionUser.sessionId!)
 
   await session.save(renewedSessionObject.token)
 
-  const userFound = await userModel.findUniqueById(sessionObject.user_id)
+  const userFound = await userModel.findUniqueById(sessionUser.id!)
 
   const headers = new Headers()
   headers.set('Cache-Control', 'no-store, no-cache, max-age=0, must-revalidate')

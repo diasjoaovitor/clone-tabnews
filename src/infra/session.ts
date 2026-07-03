@@ -37,6 +37,7 @@ const clear = async (): Promise<void> => {
 export type TUserSession = {
   features: TUserFeatures[]
   id?: string
+  sessionId?: string
 }
 
 const getUser = cache(async (): Promise<TUserSession> => {
@@ -46,6 +47,7 @@ const getUser = cache(async (): Promise<TUserSession> => {
   const user = await userModel.findUniqueById(session.user_id)
   return {
     id: user.id,
+    sessionId: session.id,
     features: user.features
   }
 })
