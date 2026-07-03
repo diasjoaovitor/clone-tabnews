@@ -1,1 +1,4 @@
 *.hbs
+pnpm-lock.yaml
+.next
+tsconfig.tsbuildinfo
