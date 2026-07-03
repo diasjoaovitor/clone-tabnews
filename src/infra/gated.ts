@@ -5,7 +5,7 @@ import { can } from './authorization'
 import { UnauthorizedError } from './errors'
 import { session, TUserSession } from './session'
 
-export const action = <Args extends unknown[], T>(
+export const gated = <Args extends unknown[], T>(
   handler: (user: TUserSession, ...args: Args) => Promise<T>,
   feature?: TUserFeatures
 ) => {
