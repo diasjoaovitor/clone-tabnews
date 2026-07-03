@@ -37,11 +37,10 @@ describe('GET /api/v1/user', () => {
 
   describe('Default user', () => {
     test('With valid session', async () => {
-      const createdUser = await orchestrator.createUser({
-        username: 'UserWithValidSession'
-      })
-      const activatedUser = await orchestrator.activateUser(createdUser.id)
-      const sessionObject = await orchestrator.createSession(createdUser.id)
+      const { createdUser, activatedUser, sessionObject } =
+        await orchestrator.createActivatedUserWithSession({
+          username: 'UserWithValidSession'
+        })
 
       const response = await fetch(`${API_BASE_URL}/user`, {
         headers: {
@@ -103,11 +102,10 @@ describe('GET /api/v1/user', () => {
         now: new Date(Date.now() - SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS / 2)
       })
 
-      const createdUser = await orchestrator.createUser({
-        username: 'UserWithHalfwayExpiredSession'
-      })
-      const activatedUser = await orchestrator.activateUser(createdUser.id)
-      const sessionObject = await orchestrator.createSession(createdUser.id)
+      const { createdUser, activatedUser, sessionObject } =
+        await orchestrator.createActivatedUserWithSession({
+          username: 'UserWithHalfwayExpiredSession'
+        })
 
       jest.useRealTimers()
 

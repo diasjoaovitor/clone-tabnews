@@ -60,6 +60,19 @@ const activateUser = async (userId: string) => {
 const createSession = async (user_id: string) =>
   await sessionModel.create(user_id)
 
+const createActivatedUserWithSession = async (
+  userObject?: Partial<TCreateUser>,
+  features?: TUserFeatures[]
+) => {
+  const createdUser = await createUser(userObject)
+  let activatedUser = await activateUser(createdUser.id)
+  if (features) {
+    activatedUser = await addFeaturesToUser(activatedUser.id, features)
+  }
+  const sessionObject = await createSession(activatedUser.id)
+  return { createdUser, activatedUser, sessionObject }
+}
+
 const deleteAllEmails = async () => {
   await fetch(`${emailHttpUrl}/messages`, {
     method: 'DELETE'
@@ -100,6 +113,7 @@ const orchestrator = {
   addFeaturesToUser,
   activateUser,
   createSession,
+  createActivatedUserWithSession,
   deleteAllEmails,
   getLastEmail,
   extractUUID

@@ -187,9 +187,8 @@ describe('POST /api/v1/users', () => {
 
   describe('Default user', () => {
     test('With unique and valid data', async () => {
-      const user1 = await orchestrator.createUser()
-      await orchestrator.activateUser(user1.id)
-      const user1SessionObject = await orchestrator.createSession(user1.id)
+      const { sessionObject: user1SessionObject } =
+        await orchestrator.createActivatedUserWithSession()
 
       const user2Response = await fetch(`${API_BASE_URL}/users`, {
         method: 'POST',

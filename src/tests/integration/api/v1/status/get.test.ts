@@ -33,20 +33,14 @@ describe('GET to /api/v1/status', () => {
 
   describe('Privileged user', () => {
     test('Retrieving current system status', async () => {
-      const privilegedUser = await orchestrator.createUser()
-      const activatedPrivilegedUser = await orchestrator.activateUser(
-        privilegedUser.id
-      )
-      await orchestrator.addFeaturesToUser(privilegedUser.id, [
-        'read:status:all'
-      ])
-      const privilegedUserSession = await orchestrator.createSession(
-        activatedPrivilegedUser.id
-      )
+      const { sessionObject } =
+        await orchestrator.createActivatedUserWithSession(undefined, [
+          'read:status:all'
+        ])
 
       const response = await fetch(`${API_BASE_URL}/status`, {
         headers: {
-          cookie: `session_id=${privilegedUserSession.token}`
+          cookie: `session_id=${sessionObject.token}`
         }
       })
       expect(response.status).toBe(200)

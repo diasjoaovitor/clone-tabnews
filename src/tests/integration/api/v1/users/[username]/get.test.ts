@@ -74,9 +74,11 @@ describe('GET /api/v1/users/[username]', () => {
 
   describe('Default user', () => {
     test('With exact case match', async () => {
-      const user = await orchestrator.createUser()
-      const activatedUser = await orchestrator.activateUser(user.id)
-      const session = await orchestrator.createSession(user.id)
+      const {
+        createdUser: user,
+        activatedUser,
+        sessionObject: session
+      } = await orchestrator.createActivatedUserWithSession()
 
       const response = await fetch(`${API_BASE_URL}/users/${user.username}`, {
         headers: {
@@ -99,9 +101,8 @@ describe('GET /api/v1/users/[username]', () => {
     })
 
     test("With another user's username", async () => {
-      const sessionUser = await orchestrator.createUser()
-      await orchestrator.activateUser(sessionUser.id)
-      const session = await orchestrator.createSession(sessionUser.id)
+      const { sessionObject: session } =
+        await orchestrator.createActivatedUserWithSession()
 
       const targetUser = await orchestrator.createUser()
       await orchestrator.activateUser(targetUser.id)

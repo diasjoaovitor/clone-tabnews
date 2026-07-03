@@ -68,9 +68,8 @@ describe('DELETE /api/v1/sessions', () => {
     })
 
     test('With valid session', async () => {
-      const createdUser = await orchestrator.createUser()
-      await orchestrator.activateUser(createdUser.id)
-      const sessionObject = await orchestrator.createSession(createdUser.id)
+      const { sessionObject } =
+        await orchestrator.createActivatedUserWithSession()
 
       const response = await fetch(`${API_BASE_URL}/sessions`, {
         method: 'DELETE',
