@@ -97,5 +97,36 @@ describe('GET /api/v1/users/[username]', () => {
       }
       expect(data).toEqual(expectedData)
     })
+
+    test("With another user's username", async () => {
+      const sessionUser = await orchestrator.createUser()
+      await orchestrator.activateUser(sessionUser.id)
+      const session = await orchestrator.createSession(sessionUser.id)
+
+      const targetUser = await orchestrator.createUser()
+      await orchestrator.activateUser(targetUser.id)
+
+      const response = await fetch(
+        `${API_BASE_URL}/users/${targetUser.username}`,
+        {
+          headers: {
+            Cookie: `session_id=${session.token}`
+          }
+        }
+      )
+      expect(response.status).toBe(200)
+
+      const responseBody: TApiResponse<TUserDto> = await response.json()
+      const data: TUserDto = isoStringFieldsToDate(responseBody)
+      const expectedData: TUserDto = {
+        id: targetUser.id,
+        username: targetUser.username,
+        features: ['create:session', 'read:session', 'update:user'],
+        created_at: targetUser.created_at,
+        updated_at: data.updated_at
+      }
+      expect(data).toEqual(expectedData)
+      expect(data).not.toHaveProperty('email')
+    })
   })
 })
