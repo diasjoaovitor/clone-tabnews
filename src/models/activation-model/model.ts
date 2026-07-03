@@ -1,6 +1,7 @@
 import dedent from 'dedent'
 
-import { email, ForbiddenError, NotFoundError, webserver } from '@/infra'
+import { email, ForbiddenError, NotFoundError } from '@/infra'
+import { webserver } from '@/infra/webserver'
 import {
   ACTIVATION_TOKEN_EXPIRATION_IN_MILLISECONDS,
   authorizationModel,

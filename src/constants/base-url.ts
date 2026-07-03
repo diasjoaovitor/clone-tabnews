@@ -1,4 +1,4 @@
-import { webserver } from '@/infra'
+import { webserver } from '@/infra/webserver'
 
 export const APP_BASE_URL = webserver.origin
 
