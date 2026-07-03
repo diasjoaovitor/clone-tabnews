@@ -1,12 +1,13 @@
 import bcryptjs from 'bcryptjs'
 
+import { BCRYPT_ROUNDS } from './constants'
+
 const hash = async (password: string): Promise<string> => {
   const environment = process.env.NODE_ENV
-  const rounds = environment === 'production' ? 14 : 1
   const hash =
     environment !== 'test'
-      ? await bcryptjs.hash(password, rounds)
-      : bcryptjs.hashSync(password, rounds)
+      ? await bcryptjs.hash(password, BCRYPT_ROUNDS)
+      : bcryptjs.hashSync(password, BCRYPT_ROUNDS)
   return hash
 }
 

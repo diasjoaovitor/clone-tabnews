@@ -7,7 +7,7 @@ import { findUserByEmail, validatePassword } from './utils'
 const getAuthenticatedUser = async (data: TCredentials): Promise<TUser> => {
   const { email, password } = credentialsSchema.parse(data)
   try {
-    const user = await findUserByEmail(email)
+    const user = await findUserByEmail(email, password)
     await validatePassword({ password, storedPassword: user.password })
     return user
   } catch (error) {
