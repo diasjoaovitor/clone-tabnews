@@ -1,4 +1,4 @@
-import { TStringToDate } from '@/types'
+import { TStringToDate } from '@/tests/_types'
 
 export const formatUsername = (text: string): string =>
   text.normalize('NFD').replace(/[^a-zA-Z0-9]/g, '')

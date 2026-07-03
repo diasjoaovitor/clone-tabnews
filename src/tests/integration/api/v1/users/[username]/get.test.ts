@@ -3,9 +3,9 @@ import { version as uuidVersion } from 'uuid'
 import { API_BASE_URL } from '@/constants'
 import { TUserDto } from '@/dtos'
 import { TErrorResponse } from '@/infra'
+import { TApiResponse } from '@/tests/_types'
+import { isoStringFieldsToDate } from '@/tests/_utils'
 import orchestrator from '@/tests/orchestrator'
-import { TApiResponse } from '@/types'
-import { isoStringFieldsToDate } from '@/utils'
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices()
@@ -74,9 +74,11 @@ describe('GET /api/v1/users/[username]', () => {
 
   describe('Default user', () => {
     test('With exact case match', async () => {
-      const user = await orchestrator.createUser()
-      const activatedUser = await orchestrator.activateUser(user.id)
-      const session = await orchestrator.createSession(user.id)
+      const {
+        createdUser: user,
+        activatedUser,
+        sessionObject: session
+      } = await orchestrator.createActivatedUserWithSession()
 
       const response = await fetch(`${API_BASE_URL}/users/${user.username}`, {
         headers: {
@@ -96,6 +98,36 @@ describe('GET /api/v1/users/[username]', () => {
         updated_at: activatedUser.updated_at
       }
       expect(data).toEqual(expectedData)
+    })
+
+    test("With another user's username", async () => {
+      const { sessionObject: session } =
+        await orchestrator.createActivatedUserWithSession()
+
+      const targetUser = await orchestrator.createUser()
+      await orchestrator.activateUser(targetUser.id)
+
+      const response = await fetch(
+        `${API_BASE_URL}/users/${targetUser.username}`,
+        {
+          headers: {
+            Cookie: `session_id=${session.token}`
+          }
+        }
+      )
+      expect(response.status).toBe(200)
+
+      const responseBody: TApiResponse<TUserDto> = await response.json()
+      const data: TUserDto = isoStringFieldsToDate(responseBody)
+      const expectedData: TUserDto = {
+        id: targetUser.id,
+        username: targetUser.username,
+        features: ['create:session', 'read:session', 'update:user'],
+        created_at: targetUser.created_at,
+        updated_at: data.updated_at
+      }
+      expect(data).toEqual(expectedData)
+      expect(data).not.toHaveProperty('email')
     })
   })
 })

@@ -1,2 +1,2 @@
-export * from './session.repository'
+export * from './repository'
 export * from './types'

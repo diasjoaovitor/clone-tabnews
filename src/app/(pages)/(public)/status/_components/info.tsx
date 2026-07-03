@@ -1,6 +1,6 @@
 import { TStatusDto } from '@/dtos'
 
-import { getStatus } from './actions'
+import { getStatus } from './data'
 
 type TStatusKey = keyof TStatusDto['dependencies']['database']
 

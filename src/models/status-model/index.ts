@@ -1,2 +1,2 @@
-export * from './status.model'
+export * from './model'
 export * from './types'

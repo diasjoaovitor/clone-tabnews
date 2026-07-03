@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker'
 import retry from 'async-retry'
 
-import { API_BASE_URL } from '@/constants'
+import { API_BASE_URL, TUserFeatures } from '@/constants'
 import { database } from '@/infra'
 import {
   activationModel,
@@ -10,8 +10,8 @@ import {
   TCreateUser,
   userModel
 } from '@/models'
-import { TFeature } from '@/repositories'
-import { formatUsername } from '@/utils'
+
+import { formatUsername } from './_utils'
 
 const emailHttpUrl = `http://${process.env.EMAIL_HTTP_HOST}:${process.env.EMAIL_HTTP_PORT}`
 
@@ -47,7 +47,7 @@ const createUser = async (userObject?: Partial<TCreateUser>) =>
     ...userObject
   })
 
-const addFeaturesToUser = async (userId: string, features: TFeature[]) => {
+const addFeaturesToUser = async (userId: string, features: TUserFeatures[]) => {
   const updatedUser = await userModel.addFeatures(userId, features)
   return updatedUser
 }
@@ -59,6 +59,19 @@ const activateUser = async (userId: string) => {
 
 const createSession = async (user_id: string) =>
   await sessionModel.create(user_id)
+
+const createActivatedUserWithSession = async (
+  userObject?: Partial<TCreateUser>,
+  features?: TUserFeatures[]
+) => {
+  const createdUser = await createUser(userObject)
+  let activatedUser = await activateUser(createdUser.id)
+  if (features) {
+    activatedUser = await addFeaturesToUser(activatedUser.id, features)
+  }
+  const sessionObject = await createSession(activatedUser.id)
+  return { createdUser, activatedUser, sessionObject }
+}
 
 const deleteAllEmails = async () => {
   await fetch(`${emailHttpUrl}/messages`, {
@@ -100,6 +113,7 @@ const orchestrator = {
   addFeaturesToUser,
   activateUser,
   createSession,
+  createActivatedUserWithSession,
   deleteAllEmails,
   getLastEmail,
   extractUUID

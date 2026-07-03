@@ -4,10 +4,13 @@ import { version as uuidVersion } from 'uuid'
 import { API_BASE_URL } from '@/constants'
 import { TUserDto } from '@/dtos'
 import { TErrorResponse } from '@/infra'
-import { sessionModel } from '@/models'
+import {
+  SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS,
+  sessionModel
+} from '@/models'
+import { TApiResponse } from '@/tests/_types'
+import { isoStringFieldsToDate } from '@/tests/_utils'
 import orchestrator from '@/tests/orchestrator'
-import { TApiResponse } from '@/types'
-import { isoStringFieldsToDate } from '@/utils'
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices()
@@ -34,11 +37,10 @@ describe('GET /api/v1/user', () => {
 
   describe('Default user', () => {
     test('With valid session', async () => {
-      const createdUser = await orchestrator.createUser({
-        username: 'UserWithValidSession'
-      })
-      const activatedUser = await orchestrator.activateUser(createdUser.id)
-      const sessionObject = await orchestrator.createSession(createdUser.id)
+      const { createdUser, activatedUser, sessionObject } =
+        await orchestrator.createActivatedUserWithSession({
+          username: 'UserWithValidSession'
+        })
 
       const response = await fetch(`${API_BASE_URL}/user`, {
         headers: {
@@ -86,7 +88,7 @@ describe('GET /api/v1/user', () => {
       const expectedParsedSetCookie: Cookie = {
         name: 'session_id',
         value: sessionObject.token,
-        maxAge: sessionModel.EXPIRATION_IN_MILLISECONDS / 1000,
+        maxAge: SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS / 1000,
         path: '/',
         sameSite: 'lax',
         httpOnly: true,
@@ -97,14 +99,13 @@ describe('GET /api/v1/user', () => {
 
     test('With halfway-expired session', async () => {
       jest.useFakeTimers({
-        now: new Date(Date.now() - sessionModel.EXPIRATION_IN_MILLISECONDS / 2)
+        now: new Date(Date.now() - SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS / 2)
       })
 
-      const createdUser = await orchestrator.createUser({
-        username: 'UserWithHalfwayExpiredSession'
-      })
-      const activatedUser = await orchestrator.activateUser(createdUser.id)
-      const sessionObject = await orchestrator.createSession(createdUser.id)
+      const { createdUser, activatedUser, sessionObject } =
+        await orchestrator.createActivatedUserWithSession({
+          username: 'UserWithHalfwayExpiredSession'
+        })
 
       jest.useRealTimers()
 
@@ -149,7 +150,7 @@ describe('GET /api/v1/user', () => {
       const expectedParsedSetCookie: Cookie = {
         name: 'session_id',
         value: sessionObject.token,
-        maxAge: sessionModel.EXPIRATION_IN_MILLISECONDS / 1000,
+        maxAge: SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS / 1000,
         path: '/',
         sameSite: 'lax',
         httpOnly: true,
@@ -190,6 +191,7 @@ describe('GET /api/v1/user', () => {
         value: 'invalid',
         maxAge: -1,
         path: '/',
+        sameSite: 'lax',
         httpOnly: true,
         expires: expect.any(Date)
       }
@@ -198,7 +200,7 @@ describe('GET /api/v1/user', () => {
 
     test('With expired session', async () => {
       jest.useFakeTimers({
-        now: new Date(Date.now() - sessionModel.EXPIRATION_IN_MILLISECONDS)
+        now: new Date(Date.now() - SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS)
       })
 
       const createdUser = await orchestrator.createUser({
@@ -236,6 +238,7 @@ describe('GET /api/v1/user', () => {
         value: 'invalid',
         maxAge: -1,
         path: '/',
+        sameSite: 'lax',
         httpOnly: true,
         expires: expect.any(Date)
       }

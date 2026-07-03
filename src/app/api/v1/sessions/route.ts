@@ -23,13 +23,9 @@ const postHandler = async (request: NextRequest) => {
   })
 }
 
-const deleteHandler = async (request: NextRequest) => {
-  const sessionToken = request.cookies.get('session_id')?.value
-  const sessionObject = await sessionModel.findUniqueValidByToken(
-    sessionToken ?? ''
-  )
+const deleteHandler = async () => {
   const user = await session.getUser()
-  const expiredSession = await sessionModel.expires(sessionObject.id)
+  const expiredSession = await sessionModel.expires(user.sessionId!)
   await session.clear()
   return NextResponse.json(getSessionDto(user, expiredSession), {
     status: 200
@@ -38,5 +34,5 @@ const deleteHandler = async (request: NextRequest) => {
 
 export const { POST, DELETE, GET, HEAD, OPTIONS, PATCH, PUT } = controller({
   POST: { handler: postHandler, feature: 'create:session' },
-  DELETE: deleteHandler
+  DELETE: { handler: deleteHandler, feature: 'read:session' }
 })

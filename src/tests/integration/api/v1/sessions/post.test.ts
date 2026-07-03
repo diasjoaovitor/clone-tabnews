@@ -4,10 +4,10 @@ import { version as uuidVersion } from 'uuid'
 import { API_BASE_URL } from '@/constants'
 import { TSessionDto } from '@/dtos'
 import { TErrorResponse } from '@/infra'
-import { sessionModel } from '@/models'
+import { SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS } from '@/models'
+import { TApiResponse } from '@/tests/_types'
+import { isoStringFieldsToDate } from '@/tests/_utils'
 import orchestrator from '@/tests/orchestrator'
-import { TApiResponse } from '@/types'
-import { isoStringFieldsToDate } from '@/utils'
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices()
@@ -107,7 +107,6 @@ describe('POST /api/v1/sessions', () => {
       const data: TSessionDto = isoStringFieldsToDate(responseBody)
       const expectedData: TApiResponse<TSessionDto> = {
         id: expect.any(String),
-        token: expect.any(String),
         user_id: createdUser.id,
         expires_at: expect.any(Date),
         created_at: expect.any(Date),
@@ -122,7 +121,7 @@ describe('POST /api/v1/sessions', () => {
       const actualLifetimeInMilliseconds =
         data.expires_at.getTime() - data.created_at.getTime()
       const lifetimeDifferenceInMilliseconds =
-        sessionModel.EXPIRATION_IN_MILLISECONDS - actualLifetimeInMilliseconds
+        SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS - actualLifetimeInMilliseconds
       expect(lifetimeDifferenceInMilliseconds).toBeLessThanOrEqual(5000)
 
       const parsedSetCookie = setCookieParser(
@@ -131,10 +130,11 @@ describe('POST /api/v1/sessions', () => {
           map: true
         }
       )
+      expect(parsedSetCookie.session_id.value).toMatch(/^[0-9a-f]{96}$/)
       const expectedParsedSetCookie: Cookie = {
         name: 'session_id',
-        value: data.token,
-        maxAge: sessionModel.EXPIRATION_IN_MILLISECONDS / 1000,
+        value: parsedSetCookie.session_id.value,
+        maxAge: SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS / 1000,
         path: '/',
         sameSite: 'lax',
         httpOnly: true,

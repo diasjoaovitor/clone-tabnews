@@ -4,9 +4,9 @@ import { API_BASE_URL } from '@/constants'
 import { TUserDto } from '@/dtos'
 import { TErrorResponse } from '@/infra'
 import { passwordModel, userModel } from '@/models'
+import { TApiResponse } from '@/tests/_types'
+import { isoStringFieldsToDate } from '@/tests/_utils'
 import orchestrator from '@/tests/orchestrator'
-import { TApiResponse } from '@/types'
-import { isoStringFieldsToDate } from '@/utils'
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices()
@@ -187,9 +187,8 @@ describe('POST /api/v1/users', () => {
 
   describe('Default user', () => {
     test('With unique and valid data', async () => {
-      const user1 = await orchestrator.createUser()
-      await orchestrator.activateUser(user1.id)
-      const user1SessionObject = await orchestrator.createSession(user1.id)
+      const { sessionObject: user1SessionObject } =
+        await orchestrator.createActivatedUserWithSession()
 
       const user2Response = await fetch(`${API_BASE_URL}/users`, {
         method: 'POST',

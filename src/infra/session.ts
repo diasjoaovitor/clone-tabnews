@@ -3,11 +3,16 @@ import 'server-only'
 import { cookies } from 'next/headers'
 import { cache } from 'react'
 
-import { authorizationModel, sessionModel, userModel } from '@/models'
-import { TFeature } from '@/repositories'
+import { TUserFeatures } from '@/constants'
+import {
+  ANONYMOUS_FEATURES,
+  SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS,
+  sessionModel,
+  userModel
+} from '@/models'
 
 const save = async (token: string): Promise<void> => {
-  const expiresAt = sessionModel.EXPIRATION_IN_MILLISECONDS / 1000
+  const expiresAt = SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS / 1000
   const store = await cookies()
   store.set('session_id', token, {
     path: '/',
@@ -24,24 +29,25 @@ const clear = async (): Promise<void> => {
     path: '/',
     maxAge: -1,
     secure: process.env.NODE_ENV === 'production',
-    httpOnly: true
+    httpOnly: true,
+    sameSite: 'lax'
   })
 }
 
 export type TUserSession = {
-  features: TFeature[]
+  features: TUserFeatures[]
   id?: string
+  sessionId?: string
 }
 
 const getUser = cache(async (): Promise<TUserSession> => {
-  const features = authorizationModel.getAnonymousFeatures()
   const token = (await cookies()).get('session_id')?.value
-  if (!token) return { features }
+  if (!token) return { features: ANONYMOUS_FEATURES }
   const session = await sessionModel.findUniqueValidByToken(token)
-  if (!session) return { features }
   const user = await userModel.findUniqueById(session.user_id)
   return {
     id: user.id,
+    sessionId: session.id,
     features: user.features
   }
 })

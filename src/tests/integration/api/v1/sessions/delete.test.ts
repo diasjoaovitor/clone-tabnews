@@ -4,10 +4,10 @@ import { version as uuidVersion } from 'uuid'
 import { API_BASE_URL } from '@/constants'
 import { TSessionDto } from '@/dtos'
 import { TErrorResponse } from '@/infra'
-import { sessionModel } from '@/models'
+import { SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS } from '@/models'
+import { TApiResponse } from '@/tests/_types'
+import { isoStringFieldsToDate } from '@/tests/_utils'
 import orchestrator from '@/tests/orchestrator'
-import { TApiResponse } from '@/types'
-import { isoStringFieldsToDate } from '@/utils'
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices()
@@ -41,7 +41,7 @@ describe('DELETE /api/v1/sessions', () => {
 
     test('With expired session', async () => {
       jest.useFakeTimers({
-        now: new Date(Date.now() - sessionModel.EXPIRATION_IN_MILLISECONDS)
+        now: new Date(Date.now() - SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS)
       })
 
       const createdUser = await orchestrator.createUser()
@@ -68,8 +68,8 @@ describe('DELETE /api/v1/sessions', () => {
     })
 
     test('With valid session', async () => {
-      const createdUser = await orchestrator.createUser()
-      const sessionObject = await orchestrator.createSession(createdUser.id)
+      const { sessionObject } =
+        await orchestrator.createActivatedUserWithSession()
 
       const response = await fetch(`${API_BASE_URL}/sessions`, {
         method: 'DELETE',
@@ -83,7 +83,6 @@ describe('DELETE /api/v1/sessions', () => {
       const data: TSessionDto = isoStringFieldsToDate(responseBody)
       const expectedData: TSessionDto = {
         id: expect.any(String),
-        token: sessionObject.token,
         user_id: sessionObject.user_id,
         expires_at: expect.any(Date),
         created_at: expect.any(Date),
@@ -109,6 +108,7 @@ describe('DELETE /api/v1/sessions', () => {
         value: 'invalid',
         maxAge: -1,
         path: '/',
+        sameSite: 'lax',
         httpOnly: true,
         expires: expect.any(Date)
       }

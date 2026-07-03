@@ -1,7 +1,7 @@
+import { TUserFeatures } from '@/constants'
 import { database } from '@/infra'
 import { TDataInput } from '@/types'
 
-import { TFeature } from './features'
 import { TUser } from './types'
 
 const create = async (data: TDataInput<TUser>): Promise<TUser> => {
@@ -44,7 +44,7 @@ const findUniqueByUsername = async (
       `,
     [username]
   )
-  return user
+  return user || null
 }
 
 const findUniqueByEmail = async (email: string): Promise<TUser | null> => {
@@ -81,7 +81,7 @@ const update = async (id: string, data: TDataInput<TUser>): Promise<TUser> => {
 
 const setFeatures = async (
   id: string,
-  features: TFeature[]
+  features: TUserFeatures[]
 ): Promise<TUser> => {
   const {
     rows: [user]
@@ -101,7 +101,7 @@ const setFeatures = async (
 
 const addFeatures = async (
   id: string,
-  features: TFeature[]
+  features: TUserFeatures[]
 ): Promise<TUser> => {
   const {
     rows: [user]
