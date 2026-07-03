@@ -1,8 +1,6 @@
 export const USER_FEATURES = [
   // USER
   'create:user',
-  'read:user',
-  'read:user:self',
   'update:user',
   'update:user:others',
 
@@ -18,7 +16,6 @@ export const USER_FEATURES = [
   'read:migration',
 
   // STATUS
-  'read:status',
   'read:status:all'
 ] as const
 
