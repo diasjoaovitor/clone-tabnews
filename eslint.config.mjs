@@ -4,7 +4,6 @@ import { defineConfig, globalIgnores } from 'eslint/config'
 import nextVitals from 'eslint-config-next/core-web-vitals'
 import nextTs from 'eslint-config-next/typescript'
 import prettier from 'eslint-config-prettier/flat'
-import jest from 'eslint-plugin-jest'
 import preferArrowFunctions from 'eslint-plugin-prefer-arrow-functions'
 import pluginPromise from 'eslint-plugin-promise'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
@@ -49,10 +48,6 @@ const eslintConfig = defineConfig([
   {
     files: ['src/infra/scripts/**'],
     rules: { 'unicorn/no-process-exit': 'off' }
-  },
-  {
-    files: ['src/tests/**/*.test.ts'],
-    ...jest.configs['flat/recommended']
   },
   {
     plugins: { 'simple-import-sort': simpleImportSort },

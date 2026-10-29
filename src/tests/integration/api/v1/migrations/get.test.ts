@@ -1,9 +1,10 @@
+import { beforeAll, describe, expect, test } from 'vitest'
+
 import { API_BASE_URL } from '@/constants'
 import { TErrorResponse } from '@/infra'
 import orchestrator from '@/tests/orchestrator'
 
 beforeAll(async () => {
-  await orchestrator.waitForAllServices()
   await orchestrator.clearDatabase()
   await orchestrator.runPendingMigrations()
 })

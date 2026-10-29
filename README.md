@@ -13,7 +13,7 @@ pnpm install
 pnpm dev
 ```
 
-O `pnpm dev` sobe o Postgres e o MailCatcher, roda as migrations e inicia o servidor em [http://localhost:3000](http://localhost:3000). Os e-mails enviados aparecem em [http://localhost:1080](http://localhost:1080). Ao encerrar com `Ctrl+C`, os containers são removidos, então cada execução começa com o banco limpo.
+O `pnpm dev` sobe o Postgres e o Mailpit, roda as migrations e inicia o servidor em [http://localhost:3000](http://localhost:3000). Os e-mails enviados aparecem em [http://localhost:8025](http://localhost:8025). Ao encerrar com `Ctrl+C`, os containers são removidos, então cada execução começa com o banco limpo.
 
 ## Scripts
 
@@ -21,8 +21,9 @@ O `pnpm dev` sobe o Postgres e o MailCatcher, roda as migrations e inicia o serv
 | ------------------------------------------- | ------------------------------------------------------------ |
 | `pnpm dev`                                  | Sobe os serviços, roda as migrations e inicia o servidor     |
 | `pnpm build` / `pnpm start`                 | Gera e serve o build de produção                             |
-| `pnpm test`                                 | Sobe os serviços e o servidor e roda a suíte de testes       |
-| `pnpm test:watch`                           | Roda os testes em modo watch (precisa do `pnpm dev` rodando) |
+| `pnpm test` / `pnpm test:watch`             | Roda os testes unitários (uma vez ou em modo watch)          |
+| `pnpm test:integration`                     | Sobe os serviços e o servidor e roda os testes de integração |
+| `pnpm test:e2e` / `pnpm test:e2e:ui`        | Roda os testes end-to-end (ou na interface do Playwright)    |
 | `pnpm services:up` / `stop` / `down`        | Sobe, para ou remove os containers                           |
 | `pnpm migrations:create <nome>`             | Cria uma migration em `src/infra/migrations`                 |
 | `pnpm migrations:up`                        | Roda as migrations pendentes no banco local                  |
@@ -54,7 +55,7 @@ As convenções completas estão no [`AGENTS.md`](./AGENTS.md), e o fluxo do pla
 
 ### Testes
 
-- Jest. Os testes de integração ficam em `src/tests/integration`, espelhando as rotas de `src/app/api` e chamando a API por HTTP.
+- Vitest e Playwright. Os testes unitários ficam junto do código que testam, os de integração ficam em `src/tests/integration`, espelhando as rotas de `src/app/api` e chamando a API por HTTP, e os end-to-end ficam em `src/tests/e2e`.
 - Só testamos a lógica que escrevemos, não o comportamento de bibliotecas ou do framework.
 
 ### Git hooks e CI
@@ -62,11 +63,11 @@ As convenções completas estão no [`AGENTS.md`](./AGENTS.md), e o fluxo do pla
 - **Hooks do Husky:**
   - `pre-commit` roda o `lint-staged` (ESLint e Prettier nos arquivos staged).
   - `commit-msg` adiciona o emoji do prefixo e roda o `commitlint`.
-  - `pre-push` roda a suíte de testes.
+  - `pre-push` roda os testes unitários, de integração e end-to-end.
 - **Commits** em inglês, no imperativo e em minúsculas, com prefixo semântico, por exemplo `✨ feat: add login page`. Basta digitar `feat: ...`, já que o hook adiciona o emoji.
 - **Branches:** cada issue vai para uma branch nova chamada `<scope>/<title>#<issue>`, por exemplo `feat/login-page#53`. Nada de uma issue é commitado direto na `main`.
 - **Issues** são criadas pelo template **Tarefa** (`.github/ISSUE_TEMPLATE/task.md`). Marque cada item concluído antes de fechar a issue.
-- **GitHub Actions** (`.github/workflows/ci.yml`) roda em todo pull request: commitlint, Prettier, ESLint e testes.
+- **GitHub Actions** (`.github/workflows/ci.yml`) roda em todo pull request: commitlint, Prettier, ESLint e testes unitários e de integração.
 
 ### Assistente de IA
 

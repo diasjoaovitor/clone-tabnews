@@ -1,5 +1,6 @@
 import setCookieParser, { Cookie } from 'set-cookie-parser'
 import { version as uuidVersion } from 'uuid'
+import { beforeAll, describe, expect, test } from 'vitest'
 
 import { API_BASE_URL } from '@/constants'
 import { TSessionDto } from '@/dtos'
@@ -10,7 +11,6 @@ import { isoStringFieldsToDate } from '@/tests/_utils'
 import orchestrator from '@/tests/orchestrator'
 
 beforeAll(async () => {
-  await orchestrator.waitForAllServices()
   await orchestrator.clearDatabase()
   await orchestrator.runPendingMigrations()
 })

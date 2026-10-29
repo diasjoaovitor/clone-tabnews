@@ -1,4 +1,5 @@
 import setCookieParser from 'set-cookie-parser'
+import { beforeAll, describe, expect, test } from 'vitest'
 
 import { API_BASE_URL, APP_BASE_URL } from '@/constants'
 import { TSessionDto, TUserDto } from '@/dtos'
@@ -8,7 +9,6 @@ import { isoStringFieldsToDate } from '@/tests/_utils'
 import orchestrator from '@/tests/orchestrator'
 
 beforeAll(async () => {
-  await orchestrator.waitForAllServices()
   await orchestrator.clearDatabase()
   await orchestrator.runPendingMigrations()
   await orchestrator.deleteAllEmails()
@@ -46,8 +46,8 @@ describe('Use case: Registration Flow (all successful)', () => {
   test('Receive activation email', async () => {
     const lastEmail = await orchestrator.getLastEmail()
 
-    expect(lastEmail.sender).toBe('<contato@diasjoaovitor.com.br>')
-    expect(lastEmail.recipients[0]).toBe('<registration.flow@curso.dev>')
+    expect(lastEmail.sender).toBe('contato@diasjoaovitor.com.br')
+    expect(lastEmail.recipients[0]).toBe('registration.flow@curso.dev')
     expect(lastEmail.subject).toBe('Ative seu cadastro no Clone TabNews!')
     expect(lastEmail.text).toContain('RegistrationFlow')
 
