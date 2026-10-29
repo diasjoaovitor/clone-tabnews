@@ -40,6 +40,9 @@ const eslintConfig = defineConfig([
     }
   },
   {
+    rules: { '@typescript-eslint/no-explicit-any': 'off' }
+  },
+  {
     // node-pg-migrate records each file name in `pgmigrations`, so renaming an applied migration
     // makes it run again
     files: ['src/infra/migrations/**'],

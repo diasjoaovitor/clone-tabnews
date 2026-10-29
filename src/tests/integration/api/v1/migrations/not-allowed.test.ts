@@ -1,8 +1,8 @@
 import { HTTP_METHODS } from 'next/dist/server/web/http'
 import { describe, expect, test } from 'vitest'
 
-import { API_BASE_URL } from '@/constants'
-import { TErrorResponse } from '@/infra'
+import { API_BASE_URL } from '@/constants/base-url'
+import { ErrorResponse } from '@/infra/errors'
 
 describe('Not allowed methods to /api/v1/migrations', () => {
   test('should return 405 and the response error', async () => {
@@ -10,7 +10,7 @@ describe('Not allowed methods to /api/v1/migrations', () => {
     const notAllowedMethods = HTTP_METHODS.filter(
       (method) => method !== 'GET' && method !== `POST`
     )
-    const expectedData: TErrorResponse = {
+    const expectedData: ErrorResponse = {
       name: 'MethodNotAllowedError',
       message: 'Método não permitido para este endpoint.',
       action: 'Verifique se o método HTTP enviado é válido para este endpoint.',

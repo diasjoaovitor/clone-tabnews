@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 
-import { getActivationDto } from '@/dtos'
-import { controller } from '@/infra'
-import { activationModel } from '@/models'
+import { getActivationDto } from '@/dtos/activation-dto'
+import { controller } from '@/infra/controller'
+import { activationModel } from '@/models/activation-model/model'
 
 const patchHandler = async (
   _: NextRequest,

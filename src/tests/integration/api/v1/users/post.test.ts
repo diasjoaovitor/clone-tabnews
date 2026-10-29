@@ -1,12 +1,13 @@
 import { version as uuidVersion } from 'uuid'
 import { beforeAll, describe, expect, test } from 'vitest'
 
-import { API_BASE_URL } from '@/constants'
-import { TUserDto } from '@/dtos'
-import { TErrorResponse } from '@/infra'
-import { passwordModel, userModel } from '@/models'
-import { TApiResponse } from '@/tests/_types'
-import { isoStringFieldsToDate } from '@/tests/_utils'
+import { API_BASE_URL } from '@/constants/base-url'
+import { UserDto } from '@/dtos/user-dto'
+import { ErrorResponse } from '@/infra/errors'
+import { passwordModel } from '@/models/password-model/model'
+import { userModel } from '@/models/user-model/model'
+import { ApiResponse } from '@/tests/_types/generics'
+import { isoStringFieldsToDate } from '@/tests/_utils/formatters'
 import orchestrator from '@/tests/orchestrator'
 
 beforeAll(async () => {
@@ -27,9 +28,9 @@ describe('POST /api/v1/users', () => {
       })
       expect(response.status).toBe(201)
 
-      const responseBody: TApiResponse<TUserDto> = await response.json()
-      const data: TUserDto = isoStringFieldsToDate(responseBody)
-      const expectedData: TUserDto = {
+      const responseBody: ApiResponse<UserDto> = await response.json()
+      const data: UserDto = isoStringFieldsToDate(responseBody)
+      const expectedData: UserDto = {
         id: expect.any(String),
         username: 'filipedeschamps',
         email: 'contato@curso.dev',
@@ -64,7 +65,7 @@ describe('POST /api/v1/users', () => {
       expect(response.status).toBe(400)
 
       const responseBody = await response.json()
-      const expectedData: TErrorResponse = {
+      const expectedData: ErrorResponse = {
         name: 'ValidationError',
         message:
           '✖ O username é obrigatório.\n' +
@@ -89,7 +90,7 @@ describe('POST /api/v1/users', () => {
       expect(response.status).toBe(400)
 
       const responseBody = await response.json()
-      const expectedData: TErrorResponse = {
+      const expectedData: ErrorResponse = {
         name: 'ValidationError',
         message:
           '✖ O email informado não é válido.\n' +
@@ -113,7 +114,7 @@ describe('POST /api/v1/users', () => {
       expect(response.status).toBe(400)
 
       const responseBody = await response.json()
-      const expectedData: TErrorResponse = {
+      const expectedData: ErrorResponse = {
         name: 'ValidationError',
         message: '✖ A senha é obrigatória.\n  → at password',
         action: 'Ajuste os dados enviados e tente novamente.',
@@ -144,7 +145,7 @@ describe('POST /api/v1/users', () => {
       expect(response2.status).toBe(409)
 
       const response2Body = await response2.json()
-      const expectedData: TErrorResponse = {
+      const expectedData: ErrorResponse = {
         name: 'ValidationError',
         message: 'O email informado já está sendo utilizado.',
         action: 'Utilize outro email para realizar esta operação.',
@@ -175,7 +176,7 @@ describe('POST /api/v1/users', () => {
       expect(response2.status).toBe(409)
 
       const response2Body = await response2.json()
-      const expectedData: TErrorResponse = {
+      const expectedData: ErrorResponse = {
         name: 'ValidationError',
         message: 'O username informado já está sendo utilizado.',
         action: 'Utilize outro username para realizar esta operação.',
@@ -204,7 +205,7 @@ describe('POST /api/v1/users', () => {
       expect(user2Response.status).toBe(403)
 
       const user2ResponseBody = await user2Response.json()
-      const expectedData: TErrorResponse = {
+      const expectedData: ErrorResponse = {
         name: 'ForbiddenError',
         message: 'Você não possui permissão para executar esta ação.',
         action: 'Verifique se o seu usuário possui a feature "create:user"',

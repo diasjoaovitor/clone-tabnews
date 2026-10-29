@@ -1,4 +1,4 @@
-export type TSession = {
+export type Session = {
   id: string
   token: string
   user_id: string

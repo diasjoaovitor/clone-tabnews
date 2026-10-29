@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server'
 
-import { getUserDto } from '@/dtos'
-import { controller, session } from '@/infra'
-import { sessionModel, userModel } from '@/models'
+import { getUserDto } from '@/dtos/user-dto'
+import { controller } from '@/infra/controller'
+import { session } from '@/infra/session'
+import { sessionModel } from '@/models/session-model/model'
+import { userModel } from '@/models/user-model/model'
 
 const getHandler = async () => {
   const sessionUser = await session.getUser()

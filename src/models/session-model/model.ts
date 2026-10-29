@@ -1,11 +1,12 @@
 import crypto from 'node:crypto'
 
-import { UnauthorizedError } from '@/infra'
-import { sessionRepository, TSession } from '@/repositories'
+import { UnauthorizedError } from '@/infra/errors'
+import { sessionRepository } from '@/repositories/session-repository/repository'
+import { Session } from '@/repositories/session-repository/types'
 
 import { SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS } from './constants'
 
-const create = async (userId: string): Promise<TSession> => {
+const create = async (userId: string): Promise<Session> => {
   const token = crypto.randomBytes(48).toString('hex')
   const expiresAt = new Date(
     Date.now() + SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS
@@ -20,7 +21,7 @@ const create = async (userId: string): Promise<TSession> => {
   return newSession
 }
 
-const findUniqueValidByToken = async (token: string): Promise<TSession> => {
+const findUniqueValidByToken = async (token: string): Promise<Session> => {
   const sessionFound = await sessionRepository.findUniqueValidByToken(token)
 
   if (!sessionFound) {
@@ -33,7 +34,7 @@ const findUniqueValidByToken = async (token: string): Promise<TSession> => {
   return sessionFound
 }
 
-const renew = async (id: string): Promise<TSession> => {
+const renew = async (id: string): Promise<Session> => {
   const expiresAt = new Date(
     Date.now() + SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS
   )
@@ -41,7 +42,7 @@ const renew = async (id: string): Promise<TSession> => {
   return renewedSessionObject
 }
 
-const expires = async (id: string): Promise<TSession> => {
+const expires = async (id: string): Promise<Session> => {
   const expiredSessionObject = await sessionRepository.expires(id)
   return expiredSessionObject
 }

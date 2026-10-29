@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, test } from 'vitest'
 
-import { API_BASE_URL } from '@/constants'
-import { TErrorResponse } from '@/infra'
+import { API_BASE_URL } from '@/constants/base-url'
+import { ErrorResponse } from '@/infra/errors'
 import orchestrator from '@/tests/orchestrator'
 
 beforeAll(async () => {
@@ -16,7 +16,7 @@ describe('GET to /api/v1/migrations', () => {
       expect(response.status).toBe(403)
 
       const responseBody = await response.json()
-      const expectedData: TErrorResponse = {
+      const expectedData: ErrorResponse = {
         name: 'ForbiddenError',
         message: 'Você não possui permissão para executar esta ação.',
         action: 'Verifique se o seu usuário possui a feature "read:migration"',
@@ -39,7 +39,7 @@ describe('GET to /api/v1/migrations', () => {
       expect(response.status).toBe(403)
 
       const responseBody = await response.json()
-      const expectedData: TErrorResponse = {
+      const expectedData: ErrorResponse = {
         name: 'ForbiddenError',
         message: 'Você não possui permissão para executar esta ação.',
         action: 'Verifique se o seu usuário possui a feature "read:migration"',

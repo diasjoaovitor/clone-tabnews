@@ -19,4 +19,4 @@ export const USER_FEATURES = [
   'read:status:all'
 ] as const
 
-export type TUserFeatures = (typeof USER_FEATURES)[number]
+export type UserFeature = (typeof USER_FEATURES)[number]

@@ -1,3 +1,3 @@
 import { runner } from 'node-pg-migrate'
 
-export type TRunMigration = Awaited<ReturnType<typeof runner>>[number]
+export type Migration = Awaited<ReturnType<typeof runner>>[number]

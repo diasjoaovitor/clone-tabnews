@@ -1,3 +1,3 @@
-import { TUserFeatures } from '@/constants'
+import { UserFeature } from '@/constants/features'
 
-export const DEFAULT_USER_FEATURES: TUserFeatures[] = ['read:activation_token']
+export const DEFAULT_USER_FEATURES: UserFeature[] = ['read:activation_token']

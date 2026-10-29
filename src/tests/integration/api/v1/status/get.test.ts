@@ -1,9 +1,9 @@
 import { beforeAll, describe, expect, test } from 'vitest'
 
-import { API_BASE_URL } from '@/constants'
-import { TStatusDto } from '@/dtos'
-import { TApiResponse } from '@/tests/_types'
-import { isoStringFieldsToDate } from '@/tests/_utils'
+import { API_BASE_URL } from '@/constants/base-url'
+import { StatusDto } from '@/dtos/status-dto'
+import { ApiResponse } from '@/tests/_types/generics'
+import { isoStringFieldsToDate } from '@/tests/_utils/formatters'
 import orchestrator from '@/tests/orchestrator'
 
 beforeAll(async () => {
@@ -17,9 +17,9 @@ describe('GET to /api/v1/status', () => {
       const response = await fetch(`${API_BASE_URL}/status`)
       expect(response.status).toBe(200)
 
-      const responseBody: TApiResponse<TStatusDto> = await response.json()
-      const data: TStatusDto = isoStringFieldsToDate(responseBody)
-      const expectedData: TApiResponse<TStatusDto> = {
+      const responseBody: ApiResponse<StatusDto> = await response.json()
+      const data: StatusDto = isoStringFieldsToDate(responseBody)
+      const expectedData: ApiResponse<StatusDto> = {
         updated_at: expect.any(Date),
         dependencies: {
           database: {
@@ -46,9 +46,9 @@ describe('GET to /api/v1/status', () => {
       })
       expect(response.status).toBe(200)
 
-      const responseBody: TApiResponse<TStatusDto> = await response.json()
-      const data: TStatusDto = isoStringFieldsToDate(responseBody)
-      const expectedData: TApiResponse<TStatusDto> = {
+      const responseBody: ApiResponse<StatusDto> = await response.json()
+      const data: StatusDto = isoStringFieldsToDate(responseBody)
+      const expectedData: ApiResponse<StatusDto> = {
         updated_at: expect.any(Date),
         dependencies: {
           database: {

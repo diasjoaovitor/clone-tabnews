@@ -1,11 +1,11 @@
-import { TUserFeatures } from '@/constants'
+import { UserFeature } from '@/constants/features'
 
-export type TUser = {
+export type User = {
   id: string
   username: string
   email: string
   password: string
-  features: TUserFeatures[]
+  features: UserFeature[]
   created_at: Date
   updated_at: Date
 }

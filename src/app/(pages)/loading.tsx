@@ -1,4 +1,4 @@
-import { Loader } from '@/app/components'
+import { Loader } from '@/app/components/loader'
 
 const Loading = () => {
   return <Loader />

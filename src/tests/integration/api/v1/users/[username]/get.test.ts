@@ -1,11 +1,11 @@
 import { version as uuidVersion } from 'uuid'
 import { beforeAll, describe, expect, test } from 'vitest'
 
-import { API_BASE_URL } from '@/constants'
-import { TUserDto } from '@/dtos'
-import { TErrorResponse } from '@/infra'
-import { TApiResponse } from '@/tests/_types'
-import { isoStringFieldsToDate } from '@/tests/_utils'
+import { API_BASE_URL } from '@/constants/base-url'
+import { UserDto } from '@/dtos/user-dto'
+import { ErrorResponse } from '@/infra/errors'
+import { ApiResponse } from '@/tests/_types/generics'
+import { isoStringFieldsToDate } from '@/tests/_utils/formatters'
 import orchestrator from '@/tests/orchestrator'
 
 beforeAll(async () => {
@@ -23,9 +23,9 @@ describe('GET /api/v1/users/[username]', () => {
       const response = await fetch(`${API_BASE_URL}/users/MesmoCase`)
       expect(response.status).toBe(200)
 
-      const responseBody: TApiResponse<TUserDto> = await response.json()
-      const data: TUserDto = isoStringFieldsToDate(responseBody)
-      const expectedData: TUserDto = {
+      const responseBody: ApiResponse<UserDto> = await response.json()
+      const data: UserDto = isoStringFieldsToDate(responseBody)
+      const expectedData: UserDto = {
         id: expect.any(String),
         username: 'MesmoCase',
         features: ['read:activation_token'],
@@ -44,9 +44,9 @@ describe('GET /api/v1/users/[username]', () => {
       const response = await fetch(`${API_BASE_URL}/users/casediferente`)
       expect(response.status).toBe(200)
 
-      const responseBody: TApiResponse<TUserDto> = await response.json()
-      const data: TUserDto = isoStringFieldsToDate(responseBody)
-      const expectedData: TUserDto = {
+      const responseBody: ApiResponse<UserDto> = await response.json()
+      const data: UserDto = isoStringFieldsToDate(responseBody)
+      const expectedData: UserDto = {
         id: expect.any(String),
         username: 'CaseDiferente',
         features: ['read:activation_token'],
@@ -62,7 +62,7 @@ describe('GET /api/v1/users/[username]', () => {
       expect(response.status).toBe(404)
 
       const responseBody = await response.json()
-      const expectedData: TErrorResponse = {
+      const expectedData: ErrorResponse = {
         name: 'NotFoundError',
         message: 'O username informado não foi encontrado no sistema.',
         action: 'Verifique se o username está digitado corretamente.',
@@ -87,9 +87,9 @@ describe('GET /api/v1/users/[username]', () => {
       })
       expect(response.status).toBe(200)
 
-      const responseBody: TApiResponse<TUserDto> = await response.json()
-      const data: TUserDto = isoStringFieldsToDate(responseBody)
-      const expectedData: TUserDto = {
+      const responseBody: ApiResponse<UserDto> = await response.json()
+      const data: UserDto = isoStringFieldsToDate(responseBody)
+      const expectedData: UserDto = {
         id: user.id,
         username: user.username,
         email: user.email,
@@ -117,9 +117,9 @@ describe('GET /api/v1/users/[username]', () => {
       )
       expect(response.status).toBe(200)
 
-      const responseBody: TApiResponse<TUserDto> = await response.json()
-      const data: TUserDto = isoStringFieldsToDate(responseBody)
-      const expectedData: TUserDto = {
+      const responseBody: ApiResponse<UserDto> = await response.json()
+      const data: UserDto = isoStringFieldsToDate(responseBody)
+      const expectedData: UserDto = {
         id: targetUser.id,
         username: targetUser.username,
         features: ['create:session', 'read:session', 'update:user'],

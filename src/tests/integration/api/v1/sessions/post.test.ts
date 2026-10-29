@@ -2,12 +2,12 @@ import setCookieParser, { Cookie } from 'set-cookie-parser'
 import { version as uuidVersion } from 'uuid'
 import { beforeAll, describe, expect, test } from 'vitest'
 
-import { API_BASE_URL } from '@/constants'
-import { TSessionDto } from '@/dtos'
-import { TErrorResponse } from '@/infra'
-import { SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS } from '@/models'
-import { TApiResponse } from '@/tests/_types'
-import { isoStringFieldsToDate } from '@/tests/_utils'
+import { API_BASE_URL } from '@/constants/base-url'
+import { SessionDto } from '@/dtos/session-dto'
+import { ErrorResponse } from '@/infra/errors'
+import { SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS } from '@/models/session-model/constants'
+import { ApiResponse } from '@/tests/_types/generics'
+import { isoStringFieldsToDate } from '@/tests/_utils/formatters'
 import orchestrator from '@/tests/orchestrator'
 
 beforeAll(async () => {
@@ -32,7 +32,7 @@ describe('POST /api/v1/sessions', () => {
       expect(response.status).toBe(401)
 
       const responseBody = await response.json()
-      const expectedData: TErrorResponse = {
+      const expectedData: ErrorResponse = {
         name: 'UnauthorizedError',
         message: 'Dados de autenticação não conferem.',
         action: 'Verifique se os dados enviados estão corretos.',
@@ -56,7 +56,7 @@ describe('POST /api/v1/sessions', () => {
       expect(response.status).toBe(401)
 
       const responseBody = await response.json()
-      const expectedData: TErrorResponse = {
+      const expectedData: ErrorResponse = {
         name: 'UnauthorizedError',
         message: 'Dados de autenticação não conferem.',
         action: 'Verifique se os dados enviados estão corretos.',
@@ -78,7 +78,7 @@ describe('POST /api/v1/sessions', () => {
       expect(response.status).toBe(401)
 
       const responseBody = await response.json()
-      const expectedData: TErrorResponse = {
+      const expectedData: ErrorResponse = {
         name: 'UnauthorizedError',
         message: 'Dados de autenticação não conferem.',
         action: 'Verifique se os dados enviados estão corretos.',
@@ -103,9 +103,9 @@ describe('POST /api/v1/sessions', () => {
       })
       expect(response.status).toBe(201)
 
-      const responseBody: TApiResponse<TSessionDto> = await response.json()
-      const data: TSessionDto = isoStringFieldsToDate(responseBody)
-      const expectedData: TApiResponse<TSessionDto> = {
+      const responseBody: ApiResponse<SessionDto> = await response.json()
+      const data: SessionDto = isoStringFieldsToDate(responseBody)
+      const expectedData: ApiResponse<SessionDto> = {
         id: expect.any(String),
         user_id: createdUser.id,
         expires_at: expect.any(Date),

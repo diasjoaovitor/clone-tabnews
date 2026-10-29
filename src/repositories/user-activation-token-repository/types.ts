@@ -1,4 +1,4 @@
-export type TUserActivationToken = {
+export type UserActivationToken = {
   id: string
   used_at: Date | null
   user_id: string

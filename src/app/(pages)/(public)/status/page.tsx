@@ -1,8 +1,7 @@
 import { Suspense } from 'react'
 
-import { Loader } from '@/app/components'
-
-import { Info } from './_components'
+import { Info } from '@/app/(pages)/(public)/status/_components/info'
+import { Loader } from '@/app/components/loader'
 
 const Status = () => {
   return (

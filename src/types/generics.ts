@@ -1,9 +1,9 @@
-import { TUserSession } from '@/infra'
+import { UserSession } from '@/infra/session'
 
-type TAutomaticFields = 'id' | 'created_at' | 'updated_at'
+type AutomaticFields = 'id' | 'created_at' | 'updated_at'
 
-export type TDataInput<T> = T extends readonly (infer U)[]
-  ? Omit<U, TAutomaticFields>[]
-  : Omit<T, TAutomaticFields>
+export type DataInput<T> = T extends readonly (infer U)[]
+  ? Omit<U, AutomaticFields>[]
+  : Omit<T, AutomaticFields>
 
-export type TGetDto<T, R> = (user: TUserSession | null, data: T) => R
+export type DtoGetter<T, R> = (user: UserSession | null, data: T) => R

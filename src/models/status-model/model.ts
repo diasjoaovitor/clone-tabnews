@@ -1,8 +1,8 @@
-import { statusRepository } from '@/repositories'
+import { statusRepository } from '@/repositories/status-repository/repository'
 
-import { TStatus } from './types'
+import { Status } from './types'
 
-const check = async (): Promise<TStatus> => {
+const check = async (): Promise<Status> => {
   const updated_at = new Date()
 
   const [version, max_connections] = await Promise.all([

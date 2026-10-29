@@ -1,13 +1,13 @@
 import { version as uuidVersion } from 'uuid'
 import { beforeAll, describe, expect, test } from 'vitest'
 
-import { API_BASE_URL } from '@/constants'
-import { TUserDto } from '@/dtos'
-import { TErrorResponse } from '@/infra'
-import { passwordModel } from '@/models'
-import { userRepository } from '@/repositories'
-import { TApiResponse } from '@/tests/_types'
-import { isoStringFieldsToDate } from '@/tests/_utils'
+import { API_BASE_URL } from '@/constants/base-url'
+import { UserDto } from '@/dtos/user-dto'
+import { ErrorResponse } from '@/infra/errors'
+import { passwordModel } from '@/models/password-model/model'
+import { userRepository } from '@/repositories/user-repository/repository'
+import { ApiResponse } from '@/tests/_types/generics'
+import { isoStringFieldsToDate } from '@/tests/_utils/formatters'
 import orchestrator from '@/tests/orchestrator'
 
 beforeAll(async () => {
@@ -35,7 +35,7 @@ describe('PATCH /api/v1/users/[username]', () => {
       expect(response.status).toBe(403)
 
       const responseBody = await response.json()
-      const expectedData: TErrorResponse = {
+      const expectedData: ErrorResponse = {
         action: 'Verifique se o seu usuário possui a feature "update:user"',
         message: 'Você não possui permissão para executar esta ação.',
         name: 'ForbiddenError',
@@ -58,7 +58,7 @@ describe('PATCH /api/v1/users/[username]', () => {
       expect(response.status).toBe(404)
 
       const responseBody = await response.json()
-      const expectedData: TErrorResponse = {
+      const expectedData: ErrorResponse = {
         name: 'NotFoundError',
         message: 'O username informado não foi encontrado no sistema.',
         action: 'Verifique se o username está digitado corretamente.',
@@ -86,7 +86,7 @@ describe('PATCH /api/v1/users/[username]', () => {
       expect(response.status).toBe(400)
 
       const responseBody = await response.json()
-      const expectedData: TErrorResponse = {
+      const expectedData: ErrorResponse = {
         name: 'ValidationError',
         message: '✖ O email informado não é válido.\n  → at email',
         action: 'Ajuste os dados enviados e tente novamente.',
@@ -112,7 +112,7 @@ describe('PATCH /api/v1/users/[username]', () => {
       expect(response.status).toBe(400)
 
       const responseBody = await response.json()
-      const expectedData: TErrorResponse = {
+      const expectedData: ErrorResponse = {
         name: 'ValidationError',
         message: 'O corpo da requisição não é um JSON válido.',
         action: 'Ajuste os dados enviados e tente novamente.',
@@ -143,7 +143,7 @@ describe('PATCH /api/v1/users/[username]', () => {
       expect(response.status).toBe(409)
 
       const responseBody = await response.json()
-      const expectedData: TErrorResponse = {
+      const expectedData: ErrorResponse = {
         name: 'ValidationError',
         message: 'O username informado já está sendo utilizado.',
         action: 'Utilize outro username para realizar esta operação.',
@@ -177,7 +177,7 @@ describe('PATCH /api/v1/users/[username]', () => {
       expect(response.status).toBe(409)
 
       const responseBody = await response.json()
-      const expectedData: TErrorResponse = {
+      const expectedData: ErrorResponse = {
         name: 'ValidationError',
         message: 'O email informado já está sendo utilizado.',
         action: 'Utilize outro email para realizar esta operação.',
@@ -211,7 +211,7 @@ describe('PATCH /api/v1/users/[username]', () => {
       expect(response.status).toBe(409)
 
       const responseBody = await response.json()
-      const expectedData: TErrorResponse = {
+      const expectedData: ErrorResponse = {
         name: 'ValidationError',
         message: 'O username informado já está sendo utilizado.',
         action: 'Utilize outro username para realizar esta operação.',
@@ -238,9 +238,9 @@ describe('PATCH /api/v1/users/[username]', () => {
       )
       expect(response.status).toBe(200)
 
-      const responseBody: TApiResponse<TUserDto> = await response.json()
-      const data: TUserDto = isoStringFieldsToDate(responseBody)
-      const expectedData: TUserDto = {
+      const responseBody: ApiResponse<UserDto> = await response.json()
+      const data: UserDto = isoStringFieldsToDate(responseBody)
+      const expectedData: UserDto = {
         id: createdUser.id,
         username: 'uniqueUser2',
         features: ['create:session', 'read:session', 'update:user'],
@@ -273,9 +273,9 @@ describe('PATCH /api/v1/users/[username]', () => {
       )
       expect(response.status).toBe(200)
 
-      const responseBody: TApiResponse<TUserDto> = await response.json()
-      const data: TUserDto = isoStringFieldsToDate(responseBody)
-      const expectedData: TUserDto = {
+      const responseBody: ApiResponse<UserDto> = await response.json()
+      const data: UserDto = isoStringFieldsToDate(responseBody)
+      const expectedData: UserDto = {
         id: createdUser.id,
         username: createdUser.username,
         email: 'uniqueEmail2@curso.dev',
@@ -306,7 +306,7 @@ describe('PATCH /api/v1/users/[username]', () => {
       )
       expect(response.status).toBe(200)
 
-      const responseBody: TApiResponse<TUserDto> = await response.json()
+      const responseBody: ApiResponse<UserDto> = await response.json()
       expect(uuidVersion(responseBody.id)).toBe(4)
       expect(responseBody.updated_at > responseBody.created_at).toBe(true)
 
@@ -344,9 +344,9 @@ describe('PATCH /api/v1/users/[username]', () => {
       })
       expect(response.status).toBe(200)
 
-      const responseBody: TApiResponse<TUserDto> = await response.json()
-      const data: TUserDto = isoStringFieldsToDate(responseBody)
-      const expectedData: TUserDto = {
+      const responseBody: ApiResponse<UserDto> = await response.json()
+      const data: UserDto = isoStringFieldsToDate(responseBody)
+      const expectedData: UserDto = {
         id: createdUser.id,
         username: 'ownusername',
         email: createdUser.email,
@@ -379,7 +379,7 @@ describe('PATCH /api/v1/users/[username]', () => {
       expect(response.status).toBe(403)
 
       const responseBody = await response.json()
-      const expectedData: TErrorResponse = {
+      const expectedData: ErrorResponse = {
         name: 'ForbiddenError',
         message: 'Você não possui permissão para atualizar outro usuário.',
         action:
@@ -409,9 +409,9 @@ describe('PATCH /api/v1/users/[username]', () => {
       )
       expect(response.status).toBe(200)
 
-      const responseBody: TApiResponse<TUserDto> = await response.json()
-      const data: TUserDto = isoStringFieldsToDate(responseBody)
-      const expectedData: TUserDto = {
+      const responseBody: ApiResponse<UserDto> = await response.json()
+      const data: UserDto = isoStringFieldsToDate(responseBody)
+      const expectedData: UserDto = {
         id: createdUser.id,
         username: createdUser.username,
         email: 'OWNEMAIL@curso.dev',
@@ -447,9 +447,9 @@ describe('PATCH /api/v1/users/[username]', () => {
       )
       expect(response.status).toBe(200)
 
-      const responseBody: TApiResponse<TUserDto> = await response.json()
-      const data: TUserDto = isoStringFieldsToDate(responseBody)
-      const expectedData: TUserDto = {
+      const responseBody: ApiResponse<UserDto> = await response.json()
+      const data: UserDto = isoStringFieldsToDate(responseBody)
+      const expectedData: UserDto = {
         id: createdUser2.id,
         username: 'uniqueUser4',
         features: activatedUser2.features,

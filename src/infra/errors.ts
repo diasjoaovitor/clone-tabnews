@@ -1,4 +1,4 @@
-export type TErrorResponse = {
+export type ErrorResponse = {
   name: string
   message: string
   action: string
@@ -18,7 +18,7 @@ export class InternalServerError extends Error {
     this.statusCode = statusCode || 500
   }
 
-  toJSON(): TErrorResponse {
+  toJSON(): ErrorResponse {
     return {
       name: this.name,
       message: this.message,
@@ -48,7 +48,7 @@ export class ServiceError extends Error {
     this.context = context
   }
 
-  toJSON(): TErrorResponse {
+  toJSON(): ErrorResponse {
     return {
       name: this.name,
       message: this.message,
@@ -70,7 +70,7 @@ export class MethodNotAllowedError extends Error {
     this.statusCode = 405
   }
 
-  toJSON(): TErrorResponse {
+  toJSON(): ErrorResponse {
     return {
       name: this.name,
       message: this.message,
@@ -102,7 +102,7 @@ export class ValidationError extends Error {
     this.statusCode = statusCode || 400
   }
 
-  toJSON(): TErrorResponse {
+  toJSON(): ErrorResponse {
     return {
       name: this.name,
       message: this.message,
@@ -130,7 +130,7 @@ export class NotFoundError extends Error {
     this.statusCode = 404
   }
 
-  toJSON(): TErrorResponse {
+  toJSON(): ErrorResponse {
     return {
       name: this.name,
       message: this.message,
@@ -157,7 +157,7 @@ export class UnauthorizedError extends Error {
     this.statusCode = 401
   }
 
-  toJSON(): TErrorResponse {
+  toJSON(): ErrorResponse {
     return {
       name: this.name,
       message: this.message,
@@ -185,7 +185,7 @@ export class ForbiddenError extends Error {
     this.statusCode = 403
   }
 
-  toJSON(): TErrorResponse {
+  toJSON(): ErrorResponse {
     return {
       name: this.name,
       message: this.message,

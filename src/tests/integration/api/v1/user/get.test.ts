@@ -2,15 +2,13 @@ import setCookieParser, { Cookie } from 'set-cookie-parser'
 import { version as uuidVersion } from 'uuid'
 import { beforeAll, describe, expect, test, vi } from 'vitest'
 
-import { API_BASE_URL } from '@/constants'
-import { TUserDto } from '@/dtos'
-import { TErrorResponse } from '@/infra'
-import {
-  SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS,
-  sessionModel
-} from '@/models'
-import { TApiResponse } from '@/tests/_types'
-import { isoStringFieldsToDate } from '@/tests/_utils'
+import { API_BASE_URL } from '@/constants/base-url'
+import { UserDto } from '@/dtos/user-dto'
+import { ErrorResponse } from '@/infra/errors'
+import { SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS } from '@/models/session-model/constants'
+import { sessionModel } from '@/models/session-model/model'
+import { ApiResponse } from '@/tests/_types/generics'
+import { isoStringFieldsToDate } from '@/tests/_utils/formatters'
 import orchestrator from '@/tests/orchestrator'
 
 beforeAll(async () => {
@@ -25,7 +23,7 @@ describe('GET /api/v1/user', () => {
       expect(response.status).toBe(403)
 
       const responseBody = await response.json()
-      const expectedData: TErrorResponse = {
+      const expectedData: ErrorResponse = {
         name: 'ForbiddenError',
         message: 'Você não possui permissão para executar esta ação.',
         action: 'Verifique se o seu usuário possui a feature "read:session"',
@@ -54,9 +52,9 @@ describe('GET /api/v1/user', () => {
         'no-store, no-cache, max-age=0, must-revalidate'
       )
 
-      const responseBody: TApiResponse<TUserDto> = await response.json()
-      const data: TUserDto = isoStringFieldsToDate(responseBody)
-      const expectedData: TUserDto = {
+      const responseBody: ApiResponse<UserDto> = await response.json()
+      const data: UserDto = isoStringFieldsToDate(responseBody)
+      const expectedData: UserDto = {
         id: createdUser.id,
         username: 'UserWithValidSession',
         email: createdUser.email,
@@ -116,9 +114,9 @@ describe('GET /api/v1/user', () => {
       })
       expect(response.status).toBe(200)
 
-      const responseBody: TApiResponse<TUserDto> = await response.json()
-      const data: TUserDto = isoStringFieldsToDate(responseBody)
-      const expectedData: TUserDto = {
+      const responseBody: ApiResponse<UserDto> = await response.json()
+      const data: UserDto = isoStringFieldsToDate(responseBody)
+      const expectedData: UserDto = {
         id: createdUser.id,
         username: 'UserWithHalfwayExpiredSession',
         email: createdUser.email,
@@ -171,7 +169,7 @@ describe('GET /api/v1/user', () => {
       expect(response.status).toBe(401)
 
       const responseBody = await response.json()
-      const expectedData: TErrorResponse = {
+      const expectedData: ErrorResponse = {
         name: 'UnauthorizedError',
         message: 'Usuário não possui sessão ativa.',
         action: 'Verifique se este usuário está logado e tente novamente.',
@@ -218,7 +216,7 @@ describe('GET /api/v1/user', () => {
       expect(response.status).toBe(401)
 
       const responseBody = await response.json()
-      const expectedData: TErrorResponse = {
+      const expectedData: ErrorResponse = {
         name: 'UnauthorizedError',
         message: 'Usuário não possui sessão ativa.',
         action: 'Verifique se este usuário está logado e tente novamente.',

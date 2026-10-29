@@ -1,19 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-import { getUserDto } from '@/dtos'
-import { controller, ForbiddenError, readJsonBody, session } from '@/infra'
-import { authorizationModel, userModel } from '@/models'
+import { getUserDto } from '@/dtos/user-dto'
+import { controller } from '@/infra/controller'
+import { ForbiddenError } from '@/infra/errors'
+import { readJsonBody } from '@/infra/request'
+import { session } from '@/infra/session'
+import { authorizationModel } from '@/models/authorization-model/model'
+import { userModel } from '@/models/user-model/model'
 
-type TContext = RouteContext<'/api/v1/users/[username]'>
+type Context = RouteContext<'/api/v1/users/[username]'>
 
-const getHandler = async (_: NextRequest, context: TContext) => {
+const getHandler = async (_: NextRequest, context: Context) => {
   const { username } = await context.params
   const userFound = await userModel.findUniqueByUsername(username)
   const sessionUser = await session.getUser()
   return NextResponse.json(getUserDto(sessionUser, userFound))
 }
 
-const patchHandler = async (request: NextRequest, context: TContext) => {
+const patchHandler = async (request: NextRequest, context: Context) => {
   const params = await context.params
   const username = params.username
   const sessionUser = await session.getUser()

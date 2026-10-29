@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-import { getSessionDto } from '@/dtos'
-import { controller, ForbiddenError, readJsonBody, session } from '@/infra'
-import { authenticationModel, authorizationModel, sessionModel } from '@/models'
+import { getSessionDto } from '@/dtos/session-dto'
+import { controller } from '@/infra/controller'
+import { ForbiddenError } from '@/infra/errors'
+import { readJsonBody } from '@/infra/request'
+import { session } from '@/infra/session'
+import { authenticationModel } from '@/models/authentication-model/model'
+import { authorizationModel } from '@/models/authorization-model/model'
+import { sessionModel } from '@/models/session-model/model'
 
 const postHandler = async (request: NextRequest) => {
   const userInputValues = await readJsonBody(request)
