@@ -25,7 +25,10 @@ This is **clone-tabnews**, an implementation of [TabNews](https://www.tabnews.co
 - Versions are pinned exact (no `^`/`~`) only for `dependencies` and `devDependencies` in `package.json`, no exceptions there. Install new deps with `pnpm add -E <pkg>` (or `pnpm add -D -E <pkg>` for dev deps) — never hand-edit version strings.
 - `-E` only takes effect when no version is given. `pnpm add -E <pkg>@<version>` (or `@latest`) and packages already in `package.json` still get a `^`. In those cases, remove the carets right after (`sed -i -E 's/"\^([0-9])/"\1/' package.json`) and run `pnpm install`.
 - The exact-version rule does not apply to MCP servers (`.mcp.json`) or `package.json` scripts, which may use `@latest` (e.g. `pnpm dlx shadcn@latest`, `pnpm dlx @playwright/mcp@latest`). They must still run through pnpm, never `npx`.
-- Node version is pinned in `.nvmrc` (`lts/jod`).
+- Node version is pinned in `.nvmrc` (`lts/krypton`) for local use and in `engines.node` (`24.x`) in `package.json` for hosts that ignore `.nvmrc` (e.g. Vercel). Keep both on the same major.
+- On Vercel, set `ENABLE_EXPERIMENTAL_COREPACK=1` (Production and Preview) so the build uses the exact pnpm version from `packageManager`; without it Vercel picks pnpm from the lockfile version.
+- `minimumReleaseAge` in `pnpm-workspace.yaml` (7 days, in minutes) keeps pnpm from resolving a version published less than a week ago.
+- `uuid` (`11.1.0`), `node-pg-migrate` (`7.9.1`) and `@faker-js/faker` (`9.9.0`) stay on their last versions that ship CommonJS, since Jest can't load an ESM-only package. Don't bump them while the tests run on Jest.
 - `@/*` resolves to `src/*` (`tsconfig.json`).
 
 ### Project structure
@@ -38,6 +41,7 @@ This is **clone-tabnews**, an implementation of [TabNews](https://www.tabnews.co
   - DTOs are flat files in `src/dtos/<domain>-dto.ts` (not `<domain>/dto.ts`). Each one exports the `T<Domain>Dto` type and a `get<Domain>Dto(sessionUser, entity)` function that decides what is exposed to whoever is asking (e.g. `email` only for the owner of the profile, by comparing `id`, not by feature).
 - A layout lives in its own folder (`layouts/<name>/index.tsx`), with the parts only it uses in a private `_components/` folder next to it. Code outside the layout imports only `layouts/<name>`, never its `_components/`. The same goes for a route: parts used by a single page live in a `_components/` folder next to it. Parts shared only by the pages of one route group live in the group's own `_components/` (e.g. `(pages)/(auth)/_components/`) and are imported only by pages inside that group. A helper that isn't a component or a form's action sits at the root of the route or group it serves, not in `_components/` nor in `src/app/helpers`, which is for helpers shared across the app. Never import a page's `_components/` from another route tree (e.g. an API route).
 - `actions.ts`/`action.ts` with `'use server'` is only for mutations called from the client. A function a Server Component calls to read data is not a Server Action: name its file `data.ts` (e.g. `src/app/(pages)/(public)/status/_components/data.ts`).
+- React Compiler is enabled (`reactCompiler: true` in `next.config.ts`, `babel-plugin-react-compiler` devDependency).
 
 ### Database & local services
 
@@ -51,7 +55,7 @@ This is **clone-tabnews**, an implementation of [TabNews](https://www.tabnews.co
 
 ### API & route wrappers
 
-- `controller(config)` (`src/infra/controller.ts`) wraps every `src/app/api/**/route.ts`. Each HTTP method is either a plain handler or `{ handler, feature? }`: with a `feature`, it resolves the session and checks it with `can()` before the handler. Unlisted methods answer `405`, and `onErrorHandler` maps every error to its HTTP status in one place.
+- `controller(config)` (`src/infra/controller.ts`) wraps every `src/app/api/**/route.ts`. Each HTTP method is either a plain handler or `{ handler, feature? }`: with a `feature`, it resolves the session and checks it with `can()` before the handler. Unlisted methods answer `405`, and `onErrorHandler` maps every error to its HTTP status in one place. Handlers read the body with `readJsonBody(request)` (`src/infra/request.ts`), never `request.json()` directly: it turns a body that isn't valid JSON into a `400` `ValidationError` at the point where it's read, so a `SyntaxError` thrown anywhere else still answers `500`.
 - `gated(handler, feature?)` (`src/infra/gated.ts`) wraps Server Components and Server Actions. It resolves the session resiliently (an `UnauthorizedError` falls back to the anonymous user instead of throwing), checks `can()` and passes the resolved user as the handler's first argument. It is not a Server Action itself, and serves reads (e.g. `getStatus` in a Server Component) as well as mutations.
 - `can(user, feature)` in `src/infra/authorization.ts` is shared by both wrappers, so the check isn't duplicated.
 - `session.getUser()` uses `React.cache()`: memoized per request, Route Handlers included, never a process-wide cache.
@@ -71,8 +75,11 @@ This is **clone-tabnews**, an implementation of [TabNews](https://www.tabnews.co
 
 ### Linting & formatting
 
-- ESLint uses native flat config (`eslint.config.mjs`), extending the `core-web-vitals`/`typescript` configs from `eslint-config-next`, plus `eslint-plugin-simple-import-sort`, `eslint-plugin-jest` (for `src/tests/**/*.test.ts`), `eslint-config-prettier`, and `@eslint/json`/`@eslint/markdown` for JSON/Markdown files.
+- ESLint uses native flat config (`eslint.config.mjs`), extending the `core-web-vitals`/`typescript` configs from `eslint-config-next`, plus `eslint-plugin-unicorn`, `eslint-plugin-simple-import-sort`, `eslint-plugin-promise`, `eslint-plugin-prefer-arrow-functions`, `eslint-plugin-jest` (for `src/tests/**/*.test.ts`), `eslint-config-prettier`, and `@eslint/json`/`@eslint/markdown` for JSON/Markdown files. Markdown files use the `gfm` language with `frontmatter: 'yaml'`, so the frontmatter of issue templates (or any Markdown content) isn't parsed as Markdown.
+- `unicorn/filename-case` is off for `src/infra/migrations/`: `node-pg-migrate` records each file name in `pgmigrations`, so renaming an applied migration makes it run again. Dynamic segments follow kebab case too (`[token-id]`, read as `params['token-id']`).
+- `eslint-plugin-unicorn@74` declares a peer of `eslint >=10.4`, but the project stays on ESLint 9 (`9.39.5`). The peer is unmet (`pnpm peers check` reports it, and depending on the pnpm version install warns `Issues with peer dependencies found`), but `pnpm eslint:check` passes. Don't bump one without validating the other.
 - `next lint` no longer exists (removed in Next.js 16). Use `pnpm eslint:check` / `pnpm eslint:fix` and `pnpm prettier:check` / `pnpm prettier:fix`.
+- `pnpm type-check` runs `next typegen` first: globals such as `RouteContext` are generated into `.next/types`, so a clean checkout (CI, fresh clone) fails `tsc --noEmit` without it.
 - The `review-copy` skill (`.claude/skills/review-copy/`) reviews the text in the code (naming, comments, test descriptions, UI copy, docs); use it on a diff before opening a pull request.
 - Prettier style: single quotes, no semicolons, no trailing commas (`.prettierrc`).
 - Base indentation/whitespace rules (2 spaces, LF, trim trailing whitespace, final newline) are enforced editor-side via `.editorconfig`.
@@ -94,7 +101,7 @@ This is **clone-tabnews**, an implementation of [TabNews](https://www.tabnews.co
 
 - **Jest** (`jest.config.js` through `next/jest`, `jsdom` environment, `jest.setup.ts`). Integration tests live in `src/tests/integration/`: `api/` mirrors the routes of `src/app/api/` and calls the API over HTTP, since the public API is part of the product, `_use-cases/` covers flows across routes (e.g. the registration flow) and `infra/` the infrastructure (e.g. email); component tests live in `src/tests/interface/`.
 - `pnpm test` runs `init.sh test`: it starts the services, `next dev` and Jest together with `concurrently`, and stops them when Jest ends. `pnpm test:watch` runs Jest in watch mode and needs `pnpm dev` running (`orchestrator.waitForAllServices()` polls `/api/v1/status`).
-- Paths with brackets (`[username]`, `[token_id]`) are read by Jest as globs. To run only those files, use `pnpm exec jest --runInBand -t "<test name pattern>" <parent folder without brackets>`.
+- Paths with brackets (`[username]`, `[token-id]`) are read by Jest as globs. To run only those files, use `pnpm exec jest --runInBand -t "<test name pattern>" <parent folder without brackets>`.
 - Jest doesn't support top-level `await` in a module, even in this ESM project: use `hashSync` or another synchronous equivalent there.
 - `src/tests/orchestrator.ts` centralizes the test setup: `createUser`, `activateUser`, `createSession`, `addFeaturesToUser` and `createActivatedUserWithSession(userObject?, features?)`, which covers create → activate → (extra features) → session and returns `{ createdUser, activatedUser, sessionObject }`. Use it whenever a test needs an activated user with a session; build the sequence by hand only when the test needs one step less (e.g. a session without activation) or tests the activation or sign-in flow itself.
 - `src/tests/_utils/` and `src/tests/_types/` hold helpers and types used only by tests (e.g. `formatUsername`, `isoStringFieldsToDate`), never `src/utils`/`src/types`, which are for application code.

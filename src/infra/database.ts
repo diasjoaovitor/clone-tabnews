@@ -18,8 +18,8 @@ const getNewClient = async (): Promise<Client> => {
 }
 
 const query = async (
-  query: string | { text: string; values: any[] },
-  values?: any[]
+  query: string | { text: string; values: unknown[] },
+  values?: unknown[]
 ): Promise<QueryResult> => {
   let client: Client | undefined
   try {

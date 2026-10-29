@@ -1,7 +1,7 @@
 import { TStringToDate } from '@/tests/_types'
 
 export const formatUsername = (text: string): string =>
-  text.normalize('NFD').replace(/[^a-zA-Z0-9]/g, '')
+  text.normalize('NFD').replaceAll(/[^a-zA-Z0-9]/g, '')
 
 type TIsoStringFields = {
   created_at?: string

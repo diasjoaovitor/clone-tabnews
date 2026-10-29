@@ -5,9 +5,7 @@ import { TSession } from './types'
 
 const create = async (data: TDataInput<TSession>): Promise<TSession> => {
   const { expires_at, token, user_id } = data
-  const {
-    rows: [session]
-  } = await database.query(
+  const { rows } = await database.query(
     `
         INSERT INTO
           sessions (token, user_id, expires_at)
@@ -18,15 +16,14 @@ const create = async (data: TDataInput<TSession>): Promise<TSession> => {
       `,
     [token, user_id, expires_at]
   )
+  const [session] = rows
   return session
 }
 
 const findUniqueValidByToken = async (
   token: string
 ): Promise<TSession | null> => {
-  const {
-    rows: [session]
-  } = await database.query(
+  const { rows } = await database.query(
     `
         SELECT
           *
@@ -40,13 +37,12 @@ const findUniqueValidByToken = async (
       `,
     [token]
   )
+  const [session] = rows
   return session || null
 }
 
 const renew = async (id: string, expires_at: Date): Promise<TSession> => {
-  const {
-    rows: [session]
-  } = await database.query(
+  const { rows } = await database.query(
     `UPDATE
         sessions
       SET
@@ -57,13 +53,12 @@ const renew = async (id: string, expires_at: Date): Promise<TSession> => {
       RETURNING *`,
     [id, expires_at]
   )
+  const [session] = rows
   return session
 }
 
 const expires = async (id: string): Promise<TSession> => {
-  const {
-    rows: [session]
-  } = await database.query(
+  const { rows } = await database.query(
     `UPDATE
         sessions
       SET
@@ -76,6 +71,7 @@ const expires = async (id: string): Promise<TSession> => {
       `,
     [id]
   )
+  const [session] = rows
   return session
 }
 

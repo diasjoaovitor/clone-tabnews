@@ -1,18 +1,19 @@
-import { resolve } from 'node:path'
+import path from 'node:path'
 
 import { RunnerOption } from 'node-pg-migrate'
-import { RunMigration } from 'node-pg-migrate/dist/migration'
 import { ClientBase } from 'pg'
 
 import { database, ServiceError } from '@/infra'
 
+import { TRunMigration } from './types'
+
 export const handler = async (
-  fn: (dbClient: ClientBase) => Promise<RunMigration[]>
-): Promise<RunMigration[]> => {
-  let dbClient
+  operation: (client: ClientBase) => Promise<TRunMigration[]>
+): Promise<TRunMigration[]> => {
+  let client
   try {
-    dbClient = await database.getNewClient()
-    return await fn(dbClient)
+    client = await database.getNewClient()
+    return await operation(client)
   } catch (error) {
     const serviceErrorObject = new ServiceError({
       message: 'Erro ao realizar operações de migração.',
@@ -20,7 +21,7 @@ export const handler = async (
     })
     throw serviceErrorObject
   } finally {
-    await dbClient?.end()
+    await client?.end()
   }
 }
 
@@ -32,7 +33,7 @@ export const getDefaultMigrationOptions = ({
   dryRun: boolean
 }): RunnerOption => {
   const options: RunnerOption = {
-    dir: resolve('src', 'infra', 'migrations'),
+    dir: path.resolve('src', 'infra', 'migrations'),
     direction: 'up',
     verbose: true,
     migrationsTable: 'pgmigrations',

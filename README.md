@@ -6,7 +6,7 @@ As funcionalidades seguem as [issues do curso](https://github.com/filipedeschamp
 
 ## Como rodar
 
-Pré-requisitos: Node (versão no `.nvmrc`), pnpm e Docker.
+Pré-requisitos: Node 24 (versão no `.nvmrc`), pnpm (versão no `packageManager` do `package.json`) e Docker.
 
 ```bash
 pnpm install
@@ -29,6 +29,7 @@ O `pnpm dev` sobe o Postgres e o MailCatcher, roda as migrations e inicia o serv
 | `pnpm migrations:up:dry` / `:deploy`        | Simula ou roda as migrations no banco do `.env`              |
 | `pnpm eslint:check` / `pnpm eslint:fix`     | Verifica (e corrige) com ESLint                              |
 | `pnpm prettier:check` / `pnpm prettier:fix` | Verifica (e reescreve) a formatação                          |
+| `pnpm type-check`                           | Gera os tipos das rotas e roda o `tsc --noEmit`              |
 
 ## Convenções do projeto
 
@@ -43,7 +44,7 @@ As convenções completas estão no [`AGENTS.md`](./AGENTS.md), e o fluxo do pla
 
 - O código do servidor é dividido em camadas, e os imports só descem: `app` → `dtos`/`models` → `repositories` → `infra`, com `constants` disponível para todas.
 - `models/` guarda as regras de negócio de cada domínio, `repositories/` as queries SQL, `dtos/` o que cada rota pode expor conforme quem pede, e `infra/` as peças técnicas (banco, sessão, e-mail, erros e os wrappers de rota).
-- As rotas da API passam pelo `controller()`, e as Server Components e Server Actions pelo `gated()`. Os dois checam as features do usuário com o mesmo `can()`.
+- As rotas da API passam pelo `controller()`, e as Server Components e Server Actions pelo `gated()`. Os dois checam as features do usuário com o mesmo `can()`. As rotas leem o body com o `readJsonBody()`, que responde `400` quando ele não é um JSON válido.
 - `action.ts` com `'use server'` é só para mutações chamadas pelo cliente; dados lidos por uma Server Component vêm de um `data.ts`.
 
 ### Banco de dados

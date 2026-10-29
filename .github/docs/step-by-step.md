@@ -881,9 +881,9 @@ A aula de hoje tem muito mais conteúdos sobre API e HTTP, mas ela um objetivo m
 
 #### Let's code
 
-| Observação
-|:------------|
-O curso não utiliza `TypeScript`, dessa forma, vou mostrar algumas configurações que utilizo nos meus projetos pessoais
+| Observação                                                                                                              |
+| :---------------------------------------------------------------------------------------------------------------------- |
+| O curso não utiliza `TypeScript`, dessa forma, vou mostrar algumas configurações que utilizo nos meus projetos pessoais |
 
 Devido a compatibilidade entre as bibliotecas, atualize todas as dependências do projeto que foram instaladas numa versão específica:
 
@@ -1325,10 +1325,10 @@ execute o _client_:
 psql --host=localhost --username=local_user --db=local_db --port=5432
 ```
 
-| Observação
-|:------------|
-| Após alterar o arquivo `compose.yml` é necessário recriar a imagem, o que poder ser feito de duas formas: `docker compose down && docker compose up -d` ou `docker compose up -d --force-recreate`
-| Para sair da conexão do `psql` basta digitar o comando `\q`
+| Observação                                                                                                                                                                                         |
+| :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Após alterar o arquivo `compose.yml` é necessário recriar a imagem, o que poder ser feito de duas formas: `docker compose down && docker compose up -d` ou `docker compose up -d --force-recreate` |
+| Para sair da conexão do `psql` basta digitar o comando `\q`                                                                                                                                        |
 
 ## Dia 19
 

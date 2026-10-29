@@ -41,7 +41,8 @@ export type TUserSession = {
 }
 
 const getUser = cache(async (): Promise<TUserSession> => {
-  const token = (await cookies()).get('session_id')?.value
+  const store = await cookies()
+  const token = store.get('session_id')?.value
   if (!token) return { features: ANONYMOUS_FEATURES }
   const session = await sessionModel.findUniqueValidByToken(token)
   const user = await userModel.findUniqueById(session.user_id)

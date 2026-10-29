@@ -6,11 +6,7 @@ const can = (
   feature: TUserFeatures,
   resource?: { id: string }
 ): boolean => {
-  let authorized = false
-
-  if (user?.features.includes(feature)) {
-    authorized = true
-  }
+  let authorized = Boolean(user?.features.includes(feature))
 
   if (authorized && feature === 'update:user' && resource) {
     const isOwner = user?.id === resource.id

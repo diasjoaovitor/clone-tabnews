@@ -1,5 +1,3 @@
-import css from '@eslint/css'
-import js from '@eslint/js'
 import json from '@eslint/json'
 import markdown from '@eslint/markdown'
 import { defineConfig, globalIgnores } from 'eslint/config'
@@ -7,71 +5,91 @@ import nextVitals from 'eslint-config-next/core-web-vitals'
 import nextTs from 'eslint-config-next/typescript'
 import prettier from 'eslint-config-prettier/flat'
 import jest from 'eslint-plugin-jest'
+import preferArrowFunctions from 'eslint-plugin-prefer-arrow-functions'
+import pluginPromise from 'eslint-plugin-promise'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
-import globals from 'globals'
+import unicorn from 'eslint-plugin-unicorn'
 
 const eslintConfig = defineConfig([
-  {
-    files: ['**/*.{js,mjs,cjs,jsx}'],
-    plugins: { js },
-    extends: ['js/recommended'],
-    languageOptions: { globals: { ...globals.browser, ...globals.node } }
-  },
   ...nextVitals,
   ...nextTs,
+  pluginPromise.configs['flat/recommended'],
+  prettier,
+  preferArrowFunctions.configs.all,
+  {
+    files: ['**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+    plugins: {
+      unicorn
+    },
+    extends: ['unicorn/recommended'],
+    rules: {
+      'unicorn/consistent-boolean-name': 'off',
+      'unicorn/default-export-style': ['error', { functions: 'separate' }],
+      'unicorn/logical-assignment-operators': 'off',
+      'unicorn/no-null': 'off',
+      'unicorn/name-replacements': [
+        'error',
+        {
+          replacements: {
+            params: false,
+            props: false,
+            repository: false,
+            utils: false
+          }
+        }
+      ]
+    }
+  },
+  {
+    // node-pg-migrate records each file name in `pgmigrations`, so renaming an applied migration
+    // makes it run again
+    files: ['src/infra/migrations/**'],
+    rules: { 'unicorn/filename-case': 'off' }
+  },
+  {
+    files: ['src/infra/scripts/**'],
+    rules: { 'unicorn/no-process-exit': 'off' }
+  },
   {
     files: ['src/tests/**/*.test.ts'],
     ...jest.configs['flat/recommended']
   },
-  { plugins: { 'simple-import-sort': simpleImportSort } },
+  {
+    plugins: { 'simple-import-sort': simpleImportSort },
+    rules: {
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
+      'import/no-anonymous-default-export': 'off'
+    }
+  },
   {
     files: ['**/*.json'],
     plugins: { json },
     language: 'json/json',
-    extends: ['json/recommended'],
-    ignores: ['package-lock.json']
-  },
-  {
-    files: ['**/*.jsonc'],
-    plugins: { json },
-    language: 'json/jsonc',
-    extends: ['json/recommended']
-  },
-  {
-    files: ['**/*.json5'],
-    plugins: { json },
-    language: 'json/json5',
     extends: ['json/recommended']
   },
   {
     files: ['**/*.md'],
     plugins: { markdown },
     language: 'markdown/gfm',
-    extends: ['markdown/recommended']
-  },
-  {
-    files: ['**/*.css'],
-    plugins: { css },
-    language: 'css/css',
-    extends: ['css/recommended']
-  },
-  prettier,
-  {
+    languageOptions: { frontmatter: 'yaml' },
+    extends: ['markdown/recommended'],
+    // These rules crash ESLint on GFM text nodes without a position (e.g. `[text][https://...]`)
+    // instead of reporting: https://github.com/eslint/markdown/issues/619
     rules: {
-      '@typescript-eslint/no-explicit-any': 'off',
-      'import/no-anonymous-default-export': 'off',
-      'simple-import-sort/imports': 'error',
-      'simple-import-sort/exports': 'error'
+      'markdown/no-invalid-label-refs': 'off',
+      'markdown/no-missing-label-refs': 'off',
+      'markdown/no-reference-like-urls': 'off',
+      'markdown/no-space-in-emphasis': 'off'
     }
   },
-  {
-    rules: {
-      '@typescript-eslint/explicit-function-return-type': 'error'
-    },
-    files: ['src/**/*.ts'],
-    ignores: ['src/tests/**/*.ts', '**/route.ts']
-  },
-  globalIgnores(['.next/**', 'out/**', 'build/**', 'next-env.d.ts'])
+  globalIgnores([
+    '.next/**',
+    'out/**',
+    'build/**',
+    'next-env.d.ts',
+    '.claude/**'
+  ])
 ])
 
 export default eslintConfig

@@ -95,6 +95,32 @@ describe('PATCH /api/v1/users/[username]', () => {
       expect(responseBody).toEqual(expectedData)
     })
 
+    test('With invalid JSON', async () => {
+      const { createdUser, sessionObject } =
+        await orchestrator.createActivatedUserWithSession()
+
+      const response = await fetch(
+        `${API_BASE_URL}/users/${createdUser.username}`,
+        {
+          method: 'PATCH',
+          headers: {
+            Cookie: `session_id=${sessionObject.token}`
+          },
+          body: '{'
+        }
+      )
+      expect(response.status).toBe(400)
+
+      const responseBody = await response.json()
+      const expectedData: TErrorResponse = {
+        name: 'ValidationError',
+        message: 'O corpo da requisição não é um JSON válido.',
+        action: 'Ajuste os dados enviados e tente novamente.',
+        status_code: 400
+      }
+      expect(responseBody).toEqual(expectedData)
+    })
+
     test("With duplicated 'username'", async () => {
       const { sessionObject: sessionObject1 } =
         await orchestrator.createActivatedUserWithSession({
