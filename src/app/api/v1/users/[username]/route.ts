@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 import { getUserDto } from '@/dtos'
-import { controller, ForbiddenError, session } from '@/infra'
+import { controller, ForbiddenError, readJsonBody, session } from '@/infra'
 import { authorizationModel, userModel } from '@/models'
 
 type TContext = RouteContext<'/api/v1/users/[username]'>
@@ -16,13 +16,6 @@ const getHandler = async (_: NextRequest, context: TContext) => {
 const patchHandler = async (request: NextRequest, context: TContext) => {
   const params = await context.params
   const username = params.username
-  let userInputValues
-  try {
-    userInputValues = await request.json()
-  } catch {
-    userInputValues = {}
-  }
-
   const sessionUser = await session.getUser()
   const targetUser = await userModel.findUniqueByUsername(username)
 
@@ -34,6 +27,7 @@ const patchHandler = async (request: NextRequest, context: TContext) => {
     })
   }
 
+  const userInputValues = await readJsonBody(request)
   const updatedUser = await userModel.update(userInputValues, username)
 
   return NextResponse.json(getUserDto(sessionUser, updatedUser), {

@@ -55,7 +55,7 @@ This is **clone-tabnews**, an implementation of [TabNews](https://www.tabnews.co
 
 ### API & route wrappers
 
-- `controller(config)` (`src/infra/controller.ts`) wraps every `src/app/api/**/route.ts`. Each HTTP method is either a plain handler or `{ handler, feature? }`: with a `feature`, it resolves the session and checks it with `can()` before the handler. Unlisted methods answer `405`, and `onErrorHandler` maps every error to its HTTP status in one place.
+- `controller(config)` (`src/infra/controller.ts`) wraps every `src/app/api/**/route.ts`. Each HTTP method is either a plain handler or `{ handler, feature? }`: with a `feature`, it resolves the session and checks it with `can()` before the handler. Unlisted methods answer `405`, and `onErrorHandler` maps every error to its HTTP status in one place. Handlers read the body with `readJsonBody(request)` (`src/infra/request.ts`), never `request.json()` directly: it turns a body that isn't valid JSON into a `400` `ValidationError` at the point where it's read, so a `SyntaxError` thrown anywhere else still answers `500`.
 - `gated(handler, feature?)` (`src/infra/gated.ts`) wraps Server Components and Server Actions. It resolves the session resiliently (an `UnauthorizedError` falls back to the anonymous user instead of throwing), checks `can()` and passes the resolved user as the handler's first argument. It is not a Server Action itself, and serves reads (e.g. `getStatus` in a Server Component) as well as mutations.
 - `can(user, feature)` in `src/infra/authorization.ts` is shared by both wrappers, so the check isn't duplicated.
 - `session.getUser()` uses `React.cache()`: memoized per request, Route Handlers included, never a process-wide cache.
