@@ -1,6 +1,6 @@
 import { QueryResult, QueryResultRow } from 'pg'
 
-import { database } from '@/infra'
+import { database } from '@/infra/database'
 
 const getServerVersion = async (): Promise<string> => {
   const { rows } = (await database.query(

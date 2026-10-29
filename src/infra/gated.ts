@@ -1,16 +1,16 @@
-import { TUserFeatures } from '@/constants'
-import { ANONYMOUS_FEATURES } from '@/models'
+import { UserFeature } from '@/constants/features'
+import { ANONYMOUS_FEATURES } from '@/models/authorization-model/constants'
 
 import { can } from './authorization'
 import { UnauthorizedError } from './errors'
-import { session, TUserSession } from './session'
+import { session, UserSession } from './session'
 
 export const gated = <Params extends unknown[], T>(
-  handler: (user: TUserSession, ...params: Params) => Promise<T>,
-  feature?: TUserFeatures
+  handler: (user: UserSession, ...params: Params) => Promise<T>,
+  feature?: UserFeature
 ) => {
   return async (...params: Params): Promise<T> => {
-    let user: TUserSession
+    let user: UserSession
     try {
       user = await session.getUser()
     } catch (error) {

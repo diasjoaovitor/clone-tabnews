@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-import { getUserDto } from '@/dtos'
-import { controller, readJsonBody } from '@/infra'
-import { activationModel, userModel } from '@/models'
+import { getUserDto } from '@/dtos/user-dto'
+import { controller } from '@/infra/controller'
+import { readJsonBody } from '@/infra/request'
+import { activationModel } from '@/models/activation-model/model'
+import { userModel } from '@/models/user-model/model'
 
 const postHandler = async (request: NextRequest) => {
   const userInputValues = await readJsonBody(request)

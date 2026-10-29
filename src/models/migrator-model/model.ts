@@ -1,12 +1,12 @@
 import { runner } from 'node-pg-migrate'
 import { ClientBase } from 'pg'
 
-import { TRunMigration } from './types'
+import { Migration } from './types'
 import { getDefaultMigrationOptions, handler } from './utils'
 
 const listPendingMigrations = async (
   client: ClientBase
-): Promise<TRunMigration[]> => {
+): Promise<Migration[]> => {
   const defaultMigrationOptions = getDefaultMigrationOptions({
     dbClient: client,
     dryRun: true
@@ -17,7 +17,7 @@ const listPendingMigrations = async (
 
 const runPendingMigrations = async (
   client: ClientBase
-): Promise<TRunMigration[]> => {
+): Promise<Migration[]> => {
   const defaultMigrationOptions = getDefaultMigrationOptions({
     dbClient: client,
     dryRun: false
@@ -27,8 +27,8 @@ const runPendingMigrations = async (
 }
 
 export const migratorModel = {
-  listPendingMigrations: (): Promise<TRunMigration[]> =>
+  listPendingMigrations: (): Promise<Migration[]> =>
     handler(listPendingMigrations),
-  runPendingMigrations: (): Promise<TRunMigration[]> =>
+  runPendingMigrations: (): Promise<Migration[]> =>
     handler(runPendingMigrations)
 }

@@ -1,13 +1,14 @@
-import { TUserFeatures } from '@/constants'
-import { NotFoundError, ValidationError } from '@/infra'
-import { TUser, userRepository } from '@/repositories'
+import { UserFeature } from '@/constants/features'
+import { NotFoundError, ValidationError } from '@/infra/errors'
+import { passwordModel } from '@/models/password-model/model'
+import { userRepository } from '@/repositories/user-repository/repository'
+import { User } from '@/repositories/user-repository/types'
 
-import { passwordModel } from '../password-model'
 import { DEFAULT_USER_FEATURES } from './constants'
 import {
+  CreateUserInput,
   createUserSchema,
-  TCreateUser,
-  TUpdateUser,
+  UpdateUserInput,
   updateUserSchema
 } from './schema'
 
@@ -46,7 +47,7 @@ const validateUniqueEmail = async ({
   }
 }
 
-const create = async (data: TCreateUser): Promise<TUser> => {
+const create = async (data: CreateUserInput): Promise<User> => {
   const validData = createUserSchema.parse(data)
   const { username, email, password } = validData
 
@@ -64,7 +65,7 @@ const create = async (data: TCreateUser): Promise<TUser> => {
   return user
 }
 
-const findUniqueById = async (id: string): Promise<TUser> => {
+const findUniqueById = async (id: string): Promise<User> => {
   const user = await userRepository.findUniqueById(id)
   if (!user) {
     throw new NotFoundError({
@@ -75,7 +76,7 @@ const findUniqueById = async (id: string): Promise<TUser> => {
   return user
 }
 
-const findUniqueByUsername = async (username: string): Promise<TUser> => {
+const findUniqueByUsername = async (username: string): Promise<User> => {
   const user = await userRepository.findUniqueByUsername(username)
   if (!user) {
     throw new NotFoundError({
@@ -86,7 +87,7 @@ const findUniqueByUsername = async (username: string): Promise<TUser> => {
   return user
 }
 
-const findUniqueByEmail = async (email: string): Promise<TUser> => {
+const findUniqueByEmail = async (email: string): Promise<User> => {
   const user = await userRepository.findUniqueByEmail(email)
   if (!user) {
     throw new NotFoundError({
@@ -98,9 +99,9 @@ const findUniqueByEmail = async (email: string): Promise<TUser> => {
 }
 
 const update = async (
-  data: TUpdateUser,
+  data: UpdateUserInput,
   currentUsername: string
-): Promise<TUser> => {
+): Promise<User> => {
   const validData = updateUserSchema.parse(data)
   const { username, email, password } = validData
 
@@ -136,16 +137,16 @@ const update = async (
 
 const setFeatures = async (
   id: string,
-  features: TUserFeatures[]
-): Promise<TUser> => {
+  features: UserFeature[]
+): Promise<User> => {
   const user = await userRepository.setFeatures(id, features)
   return user
 }
 
 const addFeatures = async (
   id: string,
-  features: TUserFeatures[]
-): Promise<TUser> => {
+  features: UserFeature[]
+): Promise<User> => {
   const user = await userRepository.addFeatures(id, features)
   return user
 }

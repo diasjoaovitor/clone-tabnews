@@ -1,11 +1,11 @@
-import { TStatusDto } from '@/dtos'
+import { StatusDto } from '@/dtos/status-dto'
 
 import { getStatus } from './data'
 
-type TStatusKey = keyof TStatusDto['dependencies']['database']
+type StatusKey = keyof StatusDto['dependencies']['database']
 
-type TStatusHtml = Record<
-  TStatusKey,
+type StatusHtml = Record<
+  StatusKey,
   { label: string; value: string | number | undefined }
 >
 
@@ -15,7 +15,7 @@ export const Info = async () => {
     updated_at
   } = await getStatus()
 
-  const status: TStatusHtml = {
+  const status: StatusHtml = {
     version: {
       label: 'Versão',
       value: database.version
@@ -30,7 +30,7 @@ export const Info = async () => {
     }
   }
 
-  const databaseKeys = Object.keys(database) as TStatusKey[]
+  const databaseKeys = Object.keys(database) as StatusKey[]
 
   return (
     <>

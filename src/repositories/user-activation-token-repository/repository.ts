@@ -1,11 +1,11 @@
-import { database } from '@/infra'
-import { TDataInput } from '@/types'
+import { database } from '@/infra/database'
+import { DataInput } from '@/types/generics'
 
-import { TUserActivationToken } from './types'
+import { UserActivationToken } from './types'
 
 const create = async (
-  data: TDataInput<Omit<TUserActivationToken, 'used_at'>>
-): Promise<TUserActivationToken> => {
+  data: DataInput<Omit<UserActivationToken, 'used_at'>>
+): Promise<UserActivationToken> => {
   const results = await database.query(
     `
       INSERT INTO
@@ -22,7 +22,7 @@ const create = async (
 
 const findUniqueValidById = async (
   id: string
-): Promise<TUserActivationToken> => {
+): Promise<UserActivationToken> => {
   const results = await database.query(
     `
       SELECT
@@ -42,7 +42,7 @@ const findUniqueValidById = async (
   return results.rows[0] || null
 }
 
-const markAsUsed = async (id: string): Promise<TUserActivationToken> => {
+const markAsUsed = async (id: string): Promise<UserActivationToken> => {
   const results = await database.query(
     `
       UPDATE

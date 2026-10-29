@@ -1,21 +1,18 @@
 import dedent from 'dedent'
 
-import { email, ForbiddenError, NotFoundError } from '@/infra'
+import { email } from '@/infra/email'
+import { ForbiddenError, NotFoundError } from '@/infra/errors'
 import { webserver } from '@/infra/webserver'
-import {
-  ACTIVATION_TOKEN_EXPIRATION_IN_MILLISECONDS,
-  authorizationModel,
-  userModel
-} from '@/models'
-import {
-  TUser,
-  TUserActivationToken,
-  userActivationTokenRepository
-} from '@/repositories'
+import { ACTIVATION_TOKEN_EXPIRATION_IN_MILLISECONDS } from '@/models/activation-model/constants'
+import { authorizationModel } from '@/models/authorization-model/model'
+import { userModel } from '@/models/user-model/model'
+import { userActivationTokenRepository } from '@/repositories/user-activation-token-repository/repository'
+import { UserActivationToken } from '@/repositories/user-activation-token-repository/types'
+import { User } from '@/repositories/user-repository/types'
 
 const findUniqueValidById = async (
   id: string
-): Promise<TUserActivationToken> => {
+): Promise<UserActivationToken> => {
   const result = await userActivationTokenRepository.findUniqueValidById(id)
   if (!result) {
     throw new NotFoundError({
@@ -27,7 +24,7 @@ const findUniqueValidById = async (
   return result
 }
 
-const create = async (userId: string): Promise<TUserActivationToken> => {
+const create = async (userId: string): Promise<UserActivationToken> => {
   const expiresAt = new Date(
     Date.now() + ACTIVATION_TOKEN_EXPIRATION_IN_MILLISECONDS
   )
@@ -38,12 +35,12 @@ const create = async (userId: string): Promise<TUserActivationToken> => {
   return result
 }
 
-const markTokenAsUsed = async (id: string): Promise<TUserActivationToken> => {
+const markTokenAsUsed = async (id: string): Promise<UserActivationToken> => {
   const result = await userActivationTokenRepository.markAsUsed(id)
   return result
 }
 
-const activateUserByUserId = async (id: string): Promise<TUser> => {
+const activateUserByUserId = async (id: string): Promise<User> => {
   const user = await userModel.findUniqueById(id)
 
   if (!authorizationModel.can(user, 'read:activation_token')) {
@@ -62,7 +59,7 @@ const activateUserByUserId = async (id: string): Promise<TUser> => {
 }
 
 const sendEmailToUser = async (
-  user: Pick<TUser, 'username' | 'email'>,
+  user: Pick<User, 'username' | 'email'>,
   activationTokenId: string
 ): Promise<void> => {
   await email.send({

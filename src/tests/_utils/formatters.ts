@@ -1,19 +1,19 @@
-import { TStringToDate } from '@/tests/_types'
+import { StringToDate } from '@/tests/_types/generics'
 
 export const formatUsername = (text: string): string =>
   text.normalize('NFD').replaceAll(/[^a-zA-Z0-9]/g, '')
 
-type TIsoStringFields = {
+type IsoStringFields = {
   created_at?: string
   updated_at?: string
   expires_at?: string
   used_at?: string | null
 }
 
-export const isoStringFieldsToDate = <T extends TIsoStringFields>(
+export const isoStringFieldsToDate = <T extends IsoStringFields>(
   object: T
-): T & TStringToDate<TIsoStringFields> => {
-  const dateObject: TStringToDate<TIsoStringFields> = {}
+): T & StringToDate<IsoStringFields> => {
+  const dateObject: StringToDate<IsoStringFields> = {}
   if (object.created_at) {
     dateObject.created_at = new Date(object.created_at)
   }

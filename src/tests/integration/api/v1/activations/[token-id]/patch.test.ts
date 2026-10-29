@@ -1,17 +1,15 @@
 import { version as uuidVersion } from 'uuid'
 import { beforeAll, describe, expect, test, vi } from 'vitest'
 
-import { API_BASE_URL } from '@/constants'
-import { TUserActivationTokenDto } from '@/dtos'
-import { TErrorResponse } from '@/infra'
-import {
-  ACTIVATION_TOKEN_EXPIRATION_IN_MILLISECONDS,
-  activationModel,
-  userModel
-} from '@/models'
-import { TUserActivationToken } from '@/repositories'
-import { TApiResponse } from '@/tests/_types'
-import { isoStringFieldsToDate } from '@/tests/_utils'
+import { API_BASE_URL } from '@/constants/base-url'
+import { UserActivationTokenDto } from '@/dtos/activation-dto'
+import { ErrorResponse } from '@/infra/errors'
+import { ACTIVATION_TOKEN_EXPIRATION_IN_MILLISECONDS } from '@/models/activation-model/constants'
+import { activationModel } from '@/models/activation-model/model'
+import { userModel } from '@/models/user-model/model'
+import { UserActivationToken } from '@/repositories/user-activation-token-repository/types'
+import { ApiResponse } from '@/tests/_types/generics'
+import { isoStringFieldsToDate } from '@/tests/_utils/formatters'
 import orchestrator from '@/tests/orchestrator'
 
 beforeAll(async () => {
@@ -31,7 +29,7 @@ describe('PATCH /api/v1/activations/[token-id]', () => {
       expect(response.status).toBe(404)
 
       const responseBody = await response.json()
-      const expectedData: TErrorResponse = {
+      const expectedData: ErrorResponse = {
         name: 'NotFoundError',
         message:
           'O token de ativação utilizado não foi encontrado no sistema ou expirou.',
@@ -62,7 +60,7 @@ describe('PATCH /api/v1/activations/[token-id]', () => {
       expect(response.status).toBe(404)
 
       const responseBody = await response.json()
-      const expectedData: TErrorResponse = {
+      const expectedData: ErrorResponse = {
         name: 'NotFoundError',
         message:
           'O token de ativação utilizado não foi encontrado no sistema ou expirou.',
@@ -93,7 +91,7 @@ describe('PATCH /api/v1/activations/[token-id]', () => {
       expect(response2.status).toBe(404)
 
       const response2Body = await response2.json()
-      const expectedData: TErrorResponse = {
+      const expectedData: ErrorResponse = {
         name: 'NotFoundError',
         message:
           'O token de ativação utilizado não foi encontrado no sistema ou expirou.',
@@ -115,10 +113,10 @@ describe('PATCH /api/v1/activations/[token-id]', () => {
       )
       expect(response.status).toBe(200)
 
-      const responseBody: TApiResponse<TUserActivationTokenDto> =
+      const responseBody: ApiResponse<UserActivationTokenDto> =
         await response.json()
-      const data: TUserActivationToken = isoStringFieldsToDate(responseBody)
-      const expectedData: TUserActivationTokenDto = {
+      const data: UserActivationToken = isoStringFieldsToDate(responseBody)
+      const expectedData: UserActivationTokenDto = {
         id: activationToken.id,
         used_at: data.used_at,
         user_id: createdUser.id,
@@ -162,7 +160,7 @@ describe('PATCH /api/v1/activations/[token-id]', () => {
       expect(response.status).toBe(403)
 
       const responseBody = await response.json()
-      const expectedData: TErrorResponse = {
+      const expectedData: ErrorResponse = {
         name: 'ForbiddenError',
         message: 'Você não pode mais utilizar tokens de ativação.',
         action: 'Entre em contato com o suporte.',
@@ -193,7 +191,7 @@ describe('PATCH /api/v1/activations/[token-id]', () => {
       expect(response.status).toBe(403)
 
       const responseBody = await response.json()
-      const expectedData: TErrorResponse = {
+      const expectedData: ErrorResponse = {
         name: 'ForbiddenError',
         message: 'Você não possui permissão para executar esta ação.',
         action:

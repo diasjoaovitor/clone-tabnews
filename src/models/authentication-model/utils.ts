@@ -1,6 +1,7 @@
-import { NotFoundError, UnauthorizedError } from '@/infra'
-import { passwordModel, userModel } from '@/models'
-import { TUser } from '@/repositories'
+import { NotFoundError, UnauthorizedError } from '@/infra/errors'
+import { passwordModel } from '@/models/password-model/model'
+import { userModel } from '@/models/user-model/model'
+import { User } from '@/repositories/user-repository/types'
 
 import { DUMMY_PASSWORD_HASH } from './constants'
 
@@ -13,7 +14,7 @@ export const compareToDummyPassword = async (
 export const findUserByEmail = async (
   email: string,
   password: string
-): Promise<TUser> => {
+): Promise<User> => {
   try {
     const user = await userModel.findUniqueByEmail(email)
     return user

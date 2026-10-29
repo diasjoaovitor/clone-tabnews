@@ -3,13 +3,11 @@ import 'server-only'
 import { cookies } from 'next/headers'
 import { cache } from 'react'
 
-import { TUserFeatures } from '@/constants'
-import {
-  ANONYMOUS_FEATURES,
-  SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS,
-  sessionModel,
-  userModel
-} from '@/models'
+import { UserFeature } from '@/constants/features'
+import { ANONYMOUS_FEATURES } from '@/models/authorization-model/constants'
+import { SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS } from '@/models/session-model/constants'
+import { sessionModel } from '@/models/session-model/model'
+import { userModel } from '@/models/user-model/model'
 
 const save = async (token: string): Promise<void> => {
   const expiresAt = SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS / 1000
@@ -34,13 +32,13 @@ const clear = async (): Promise<void> => {
   })
 }
 
-export type TUserSession = {
-  features: TUserFeatures[]
+export type UserSession = {
+  features: UserFeature[]
   id?: string
   sessionId?: string
 }
 
-const getUser = cache(async (): Promise<TUserSession> => {
+const getUser = cache(async (): Promise<UserSession> => {
   const store = await cookies()
   const token = store.get('session_id')?.value
   if (!token) return { features: ANONYMOUS_FEATURES }

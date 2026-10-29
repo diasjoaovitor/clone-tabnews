@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from 'vitest'
 
-import { email } from '@/infra'
+import { email } from '@/infra/email'
 import orchestrator from '@/tests/orchestrator'
 
 beforeEach(async () => {

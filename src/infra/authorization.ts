@@ -1,12 +1,12 @@
-import { TUserFeatures } from '@/constants'
-import { authorizationModel } from '@/models'
+import { UserFeature } from '@/constants/features'
+import { authorizationModel } from '@/models/authorization-model/model'
 
 import { ForbiddenError } from './errors'
-import { TUserSession } from './session'
+import { UserSession } from './session'
 
 export const can = (
-  user: TUserSession,
-  feature: TUserFeatures | undefined
+  user: UserSession,
+  feature: UserFeature | undefined
 ): void => {
   if (!feature) return
   if (authorizationModel.can(user, feature)) return

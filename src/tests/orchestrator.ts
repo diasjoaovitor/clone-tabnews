@@ -1,16 +1,13 @@
 import { faker } from '@faker-js/faker'
 
-import { TUserFeatures } from '@/constants'
-import { database } from '@/infra'
-import {
-  activationModel,
-  migratorModel,
-  sessionModel,
-  TCreateUser,
-  userModel
-} from '@/models'
-
-import { formatUsername } from './_utils'
+import { UserFeature } from '@/constants/features'
+import { database } from '@/infra/database'
+import { activationModel } from '@/models/activation-model/model'
+import { migratorModel } from '@/models/migrator-model/model'
+import { sessionModel } from '@/models/session-model/model'
+import { userModel } from '@/models/user-model/model'
+import { CreateUserInput } from '@/models/user-model/schema'
+import { formatUsername } from '@/tests/_utils/formatters'
 
 const emailHttpUrl = `http://${process.env.EMAIL_HTTP_HOST}:${process.env.EMAIL_HTTP_PORT}`
 
@@ -22,7 +19,7 @@ const runPendingMigrations = async () => {
   await migratorModel.runPendingMigrations()
 }
 
-const createUser = async (userObject?: Partial<TCreateUser>) =>
+const createUser = async (userObject?: Partial<CreateUserInput>) =>
   await userModel.create({
     username: formatUsername(faker.internet.username()),
     email: faker.internet.email(),
@@ -30,7 +27,7 @@ const createUser = async (userObject?: Partial<TCreateUser>) =>
     ...userObject
   })
 
-const addFeaturesToUser = async (userId: string, features: TUserFeatures[]) => {
+const addFeaturesToUser = async (userId: string, features: UserFeature[]) => {
   const updatedUser = await userModel.addFeatures(userId, features)
   return updatedUser
 }
@@ -44,8 +41,8 @@ const createSession = async (user_id: string) =>
   await sessionModel.create(user_id)
 
 const createActivatedUserWithSession = async (
-  userObject?: Partial<TCreateUser>,
-  features?: TUserFeatures[]
+  userObject?: Partial<CreateUserInput>,
+  features?: UserFeature[]
 ) => {
   const createdUser = await createUser(userObject)
   let activatedUser = await activateUser(createdUser.id)
@@ -62,18 +59,18 @@ const deleteAllEmails = async () => {
   })
 }
 
-type TLastEmail = {
+type LastEmail = {
   sender: string
   recipients: string[]
   subject: string
   text: string
 }
 
-type TMailpitAddress = {
+type MailpitAddress = {
   Address: string
 }
 
-const getLastEmail = async (): Promise<TLastEmail> => {
+const getLastEmail = async (): Promise<LastEmail> => {
   const emailListResponse = await fetch(`${emailHttpUrl}/api/v1/messages`)
   const emailListBody: { messages: { ID: string }[] } =
     await emailListResponse.json()
@@ -83,8 +80,8 @@ const getLastEmail = async (): Promise<TLastEmail> => {
     `${emailHttpUrl}/api/v1/message/${lastEmailItem.ID}`
   )
   const emailBody: {
-    From: TMailpitAddress
-    To: TMailpitAddress[]
+    From: MailpitAddress
+    To: MailpitAddress[]
     Subject: string
     Text: string
   } = await emailResponse.json()

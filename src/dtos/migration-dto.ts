@@ -1,9 +1,9 @@
-import { TRunMigration } from '@/models'
-import { TGetDto } from '@/types'
+import { Migration } from '@/models/migrator-model/types'
+import { DtoGetter } from '@/types/generics'
 
-export type TMigrationDto = TRunMigration[]
+export type MigrationDto = Migration[]
 
-export const getMigrationDto: TGetDto<TRunMigration[], TMigrationDto> = (
+export const getMigrationDto: DtoGetter<Migration[], MigrationDto> = (
   _,
   migrations
 ) => {

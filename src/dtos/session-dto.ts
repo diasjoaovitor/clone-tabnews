@@ -1,10 +1,10 @@
-import { ForbiddenError, InternalServerError } from '@/infra'
-import { TSession } from '@/repositories'
-import { TGetDto } from '@/types'
+import { ForbiddenError, InternalServerError } from '@/infra/errors'
+import { Session } from '@/repositories/session-repository/types'
+import { DtoGetter } from '@/types/generics'
 
-export type TSessionDto = Omit<TSession, 'token'>
+export type SessionDto = Omit<Session, 'token'>
 
-export const getSessionDto: TGetDto<TSession, TSessionDto> = (
+export const getSessionDto: DtoGetter<Session, SessionDto> = (
   user,
   session
 ) => {

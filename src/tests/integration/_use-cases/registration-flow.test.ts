@@ -1,11 +1,13 @@
 import setCookieParser from 'set-cookie-parser'
 import { beforeAll, describe, expect, test } from 'vitest'
 
-import { API_BASE_URL, APP_BASE_URL } from '@/constants'
-import { TSessionDto, TUserDto } from '@/dtos'
-import { activationModel, userModel } from '@/models'
-import { TApiResponse } from '@/tests/_types'
-import { isoStringFieldsToDate } from '@/tests/_utils'
+import { API_BASE_URL, APP_BASE_URL } from '@/constants/base-url'
+import { SessionDto } from '@/dtos/session-dto'
+import { UserDto } from '@/dtos/user-dto'
+import { activationModel } from '@/models/activation-model/model'
+import { userModel } from '@/models/user-model/model'
+import { ApiResponse } from '@/tests/_types/generics'
+import { isoStringFieldsToDate } from '@/tests/_utils/formatters'
 import orchestrator from '@/tests/orchestrator'
 
 beforeAll(async () => {
@@ -15,9 +17,9 @@ beforeAll(async () => {
 })
 
 describe('Use case: Registration Flow (all successful)', () => {
-  let createUserResponseBody: TApiResponse<TUserDto>
+  let createUserResponseBody: ApiResponse<UserDto>
   let activationTokenId: string
-  let createSessionsResponseBody: TApiResponse<TSessionDto>
+  let createSessionsResponseBody: ApiResponse<SessionDto>
   let sessionToken: string
 
   test('Create user account', async () => {
@@ -32,7 +34,7 @@ describe('Use case: Registration Flow (all successful)', () => {
     expect(createUserResponse.status).toBe(201)
 
     createUserResponseBody = await createUserResponse.json()
-    const expectedData: TApiResponse<TUserDto> = {
+    const expectedData: ApiResponse<UserDto> = {
       id: expect.any(String),
       username: 'RegistrationFlow',
       email: 'registration.flow@curso.dev',

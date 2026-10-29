@@ -1,6 +1,6 @@
-import { TUserFeatures } from '@/constants'
+import { UserFeature } from '@/constants/features'
 
-export const ANONYMOUS_FEATURES: TUserFeatures[] = [
+export const ANONYMOUS_FEATURES: UserFeature[] = [
   'read:activation_token',
   'create:session',
   'create:user'

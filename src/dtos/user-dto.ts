@@ -1,15 +1,15 @@
-import { InternalServerError } from '@/infra'
-import { TUser } from '@/repositories'
-import { TGetDto } from '@/types'
+import { InternalServerError } from '@/infra/errors'
+import { User } from '@/repositories/user-repository/types'
+import { DtoGetter } from '@/types/generics'
 
-export type TUserDto = Pick<
-  TUser,
+export type UserDto = Pick<
+  User,
   'id' | 'username' | 'created_at' | 'updated_at' | 'features'
 > & {
   email?: string
 }
 
-export const getUserDto: TGetDto<TUser, TUserDto> = (sessionUser, user) => {
+export const getUserDto: DtoGetter<User, UserDto> = (sessionUser, user) => {
   if (!sessionUser) {
     throw new InternalServerError({
       cause:

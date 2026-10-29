@@ -3,13 +3,14 @@ import path from 'node:path'
 import { RunnerOption } from 'node-pg-migrate'
 import { ClientBase } from 'pg'
 
-import { database, ServiceError } from '@/infra'
+import { database } from '@/infra/database'
+import { ServiceError } from '@/infra/errors'
 
-import { TRunMigration } from './types'
+import { Migration } from './types'
 
 export const handler = async (
-  operation: (client: ClientBase) => Promise<TRunMigration[]>
-): Promise<TRunMigration[]> => {
+  operation: (client: ClientBase) => Promise<Migration[]>
+): Promise<Migration[]> => {
   let client
   try {
     client = await database.getNewClient()

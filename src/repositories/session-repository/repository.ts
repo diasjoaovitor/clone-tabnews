@@ -1,9 +1,9 @@
-import { database } from '@/infra'
-import { TDataInput } from '@/types'
+import { database } from '@/infra/database'
+import { DataInput } from '@/types/generics'
 
-import { TSession } from './types'
+import { Session } from './types'
 
-const create = async (data: TDataInput<TSession>): Promise<TSession> => {
+const create = async (data: DataInput<Session>): Promise<Session> => {
   const { expires_at, token, user_id } = data
   const { rows } = await database.query(
     `
@@ -22,7 +22,7 @@ const create = async (data: TDataInput<TSession>): Promise<TSession> => {
 
 const findUniqueValidByToken = async (
   token: string
-): Promise<TSession | null> => {
+): Promise<Session | null> => {
   const { rows } = await database.query(
     `
         SELECT
@@ -41,7 +41,7 @@ const findUniqueValidByToken = async (
   return session || null
 }
 
-const renew = async (id: string, expires_at: Date): Promise<TSession> => {
+const renew = async (id: string, expires_at: Date): Promise<Session> => {
   const { rows } = await database.query(
     `UPDATE
         sessions
@@ -57,7 +57,7 @@ const renew = async (id: string, expires_at: Date): Promise<TSession> => {
   return session
 }
 
-const expires = async (id: string): Promise<TSession> => {
+const expires = async (id: string): Promise<Session> => {
   const { rows } = await database.query(
     `UPDATE
         sessions

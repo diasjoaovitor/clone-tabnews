@@ -2,7 +2,7 @@ import { HTTP_METHOD, HTTP_METHODS } from 'next/dist/server/web/http'
 import { NextRequest, NextResponse } from 'next/server'
 import { z, ZodError } from 'zod'
 
-import { TUserFeatures } from '@/constants'
+import { UserFeature } from '@/constants/features'
 
 import { can } from './authorization'
 import {
@@ -18,19 +18,21 @@ import { session } from './session'
 
 // Each route types its own context (`RouteContext<'/api/v1/...'>`), and such a handler isn't assignable
 // to one whose context is `unknown`
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type TRequest = (request: NextRequest, context?: any) => Promise<NextResponse>
+type RouteHandler = (
+  request: NextRequest,
+  context?: any
+) => Promise<NextResponse>
 
-type TRouteConfig = {
-  handler: TRequest
-  feature?: TUserFeatures
+type RouteConfig = {
+  handler: RouteHandler
+  feature?: UserFeature
 }
 
-type TRequestsConfig = {
-  [key in HTTP_METHOD]?: TRequest | TRouteConfig
+type RequestsConfig = {
+  [key in HTTP_METHOD]?: RouteHandler | RouteConfig
 }
 
-type TRequestsResult = Record<HTTP_METHOD, TRequest>
+type RequestsResult = Record<HTTP_METHOD, RouteHandler>
 
 const onNoMatchHandler = async (): Promise<NextResponse> => {
   const publicErrorObject = new MethodNotAllowedError()
@@ -77,13 +79,13 @@ const onErrorHandler = async (error: unknown): Promise<NextResponse> => {
 }
 
 export const controller = (
-  availableRequests: Partial<TRequestsConfig>
-): TRequestsResult => {
-  const requests: Partial<TRequestsResult> = {}
+  availableRequests: Partial<RequestsConfig>
+): RequestsResult => {
+  const requests: Partial<RequestsResult> = {}
   for (const method of HTTP_METHODS) {
     const routeDefinition = availableRequests[method]
-    let routeHandler: TRequest | undefined
-    let feature: TUserFeatures | undefined
+    let routeHandler: RouteHandler | undefined
+    let feature: UserFeature | undefined
     if (typeof routeDefinition === 'function') {
       routeHandler = routeDefinition
     } else {
@@ -92,7 +94,7 @@ export const controller = (
     }
     const handler = async (
       request: NextRequest,
-      context?: Parameters<TRequest>[1]
+      context?: Parameters<RouteHandler>[1]
     ): Promise<NextResponse> => {
       try {
         if (feature) {
@@ -107,5 +109,5 @@ export const controller = (
     }
     requests[method] = routeHandler ? handler : onNoMatchHandler
   }
-  return requests as TRequestsResult
+  return requests as RequestsResult
 }

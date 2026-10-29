@@ -1,4 +1,4 @@
-export type TStatus = {
+export type Status = {
   updated_at: Date
   dependencies: {
     database: {

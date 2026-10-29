@@ -1,8 +1,9 @@
-import { InternalServerError } from '@/infra'
-import { authorizationModel, TStatus } from '@/models'
-import { TGetDto } from '@/types'
+import { InternalServerError } from '@/infra/errors'
+import { authorizationModel } from '@/models/authorization-model/model'
+import { Status } from '@/models/status-model/types'
+import { DtoGetter } from '@/types/generics'
 
-export type TStatusDto = {
+export type StatusDto = {
   updated_at: Date
   dependencies: {
     database: {
@@ -13,7 +14,7 @@ export type TStatusDto = {
   }
 }
 
-export const getStatusDto: TGetDto<TStatus, TStatusDto> = (user, status) => {
+export const getStatusDto: DtoGetter<Status, StatusDto> = (user, status) => {
   if (!user)
     throw new InternalServerError({
       cause:
