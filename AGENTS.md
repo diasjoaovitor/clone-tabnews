@@ -91,9 +91,9 @@ This is **clone-tabnews**, an implementation of [TabNews](https://www.tabnews.co
 
 ### Git hooks (husky)
 
-- `pre-commit`: runs `lint-staged` (`lint-staged.config.js`), which runs `pnpm eslint:fix` and `pnpm prettier:fix` on the staged files.
+- `pre-commit`: runs `lint-staged` (`lint-staged.config.js`), which runs ESLint, Prettier and `vitest related --project unit --passWithNoTests` on the staged files, by type, through `pnpm exec`. Only the unit tests run there, so a commit never needs the services.
 - `commit-msg`: auto-prepends the emoji prefix from the Commit Rules below based on the leading word (e.g. `feat: ...` → `✨ feat: ...`), then runs `commitlint` (`commitlint-config-emoji-convention`). You can type the plain word and let the hook add the emoji.
-- `pre-push`: runs `pnpm test`, `pnpm test:integration` and `pnpm test:e2e` (every suite, see Testing).
+- `pre-push`: runs `pnpm type-check`, `pnpm test:integration` and `pnpm test:e2e`. The unit tests already run on `pre-commit` (see Testing).
 - The `commit-msg` hook's `sed` matches `fixup!` as `fix` and produces an invalid type, so `git commit --fixup`/`--autosquash` don't work. To fix a commit that isn't `HEAD` without an interactive rebase, use a temporary branch, `git commit --amend --no-edit` and `git rebase --onto <new-base> <old-base> <branch>`. To fix the commit you just made in the same task, prefer `--amend` over stacking a fix-up commit.
 
 ### Testing
@@ -108,7 +108,7 @@ This is **clone-tabnews**, an implementation of [TabNews](https://www.tabnews.co
 - Assertions check real behavior, not the incidental state of the fixture (e.g. `expect(Array.isArray(x)).toBe(true)` rather than comparing an array with itself).
 - Only test logic we wrote (the API's contract, a model's rules and error mapping, lookups, mappings, transforms). Don't test library or framework behavior (e.g. a component that only passes props or HTML through, a Zod schema's `min`/`max` and the messages we hand it, `Link` routing), and drop a test whose main cost is a mock needed only to render. Prefer a unit or integration test; add an e2e test only for what they can't cover.
 - Older issues may ask for tests that break the rule above. Skip them without asking, and list them as dropped in the closing comment.
-- CI (`.github/workflows/ci.yml`, triggered on `pull_request`) runs, in order: `commitlint` over the PR's commit range, `pnpm prettier:check`, `pnpm eslint:check`, `pnpm test` and `pnpm test:integration`.
+- CI (`.github/workflows/ci.yml`, triggered on `pull_request`) runs, in order: `commitlint` over the PR's commit range, `pnpm type-check`, `pnpm eslint:check`, `pnpm prettier:check`, `pnpm test`, `pnpm test:integration`, then installs Chromium (`pnpm exec playwright install --with-deps chromium`) and runs `pnpm test:e2e`.
 
 ### Styling & UI
 
