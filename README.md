@@ -31,6 +31,7 @@ O `pnpm dev` sobe o Postgres e o Mailpit, roda as migrations e inicia o servidor
 | `pnpm eslint:check` / `pnpm eslint:fix`     | Verifica (e corrige) com ESLint                              |
 | `pnpm prettier:check` / `pnpm prettier:fix` | Verifica (e reescreve) a formatação                          |
 | `pnpm type-check`                           | Gera os tipos das rotas e roda o `tsc --noEmit`              |
+| `pnpm shadcn:add <componente>`              | Adiciona um componente do shadcn/ui                          |
 
 ## Convenções do projeto
 
@@ -47,6 +48,12 @@ As convenções completas estão no [`AGENTS.md`](./AGENTS.md), e o fluxo do pla
 - `models/` guarda as regras de negócio de cada domínio, `repositories/` as queries SQL, `dtos/` o que cada rota pode expor conforme quem pede, e `infra/` as peças técnicas (banco, sessão, e-mail, erros e os wrappers de rota).
 - As rotas da API passam pelo `controller()`, e as Server Components e Server Actions pelo `gated()`. Os dois checam as features do usuário com o mesmo `can()`. As rotas leem o body com o `readJsonBody()`, que responde `400` quando ele não é um JSON válido.
 - `action.ts` com `'use server'` é só para mutações chamadas pelo cliente; dados lidos por uma Server Component vêm de um `data.ts`.
+
+### Interface
+
+- shadcn/ui (sobre Base UI) e Tailwind CSS v4, com o tema do shadcn e a paleta do Tailwind como vêm. Componentes novos entram com `pnpm shadcn:add <componente>`.
+- O dark mode segue a preferência do sistema (`prefers-color-scheme`).
+- Toda página usa o layout padrão (`src/app/components/layouts/default`), com o cabeçalho; uma página só precisa definir o próprio `title`, que o layout raiz completa com ` | Clone TabNews`.
 
 ### Banco de dados
 

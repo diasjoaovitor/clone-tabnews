@@ -7,6 +7,7 @@ import prettier from 'eslint-config-prettier/flat'
 import preferArrowFunctions from 'eslint-plugin-prefer-arrow-functions'
 import pluginPromise from 'eslint-plugin-promise'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
+import eslintPluginTailwindcss from 'eslint-plugin-tailwindcss'
 import unicorn from 'eslint-plugin-unicorn'
 
 const eslintConfig = defineConfig([
@@ -15,6 +16,15 @@ const eslintConfig = defineConfig([
   pluginPromise.configs['flat/recommended'],
   prettier,
   preferArrowFunctions.configs.all,
+  {
+    extends: [eslintPluginTailwindcss.configs.recommended],
+    settings: {
+      tailwindcss: {
+        cssConfigPath: './src/app/styles/globals.css',
+        parseKeyFunctions: ['classnames', 'classNames']
+      }
+    }
+  },
   {
     files: ['**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     plugins: {
