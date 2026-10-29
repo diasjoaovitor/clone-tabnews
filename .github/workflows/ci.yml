@@ -24,14 +24,23 @@ jobs:
       - name: Commitlint
         run: pnpm exec commitlint --from ${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }} --to ${{ github.event.pull_request.head.sha }} --verbose
 
-      - name: Prettier
-        run: pnpm prettier:check
+      - name: Type-check
+        run: pnpm type-check
 
       - name: Eslint
         run: pnpm eslint:check
+
+      - name: Prettier
+        run: pnpm prettier:check
 
       - name: Unit tests
         run: pnpm test
 
       - name: Integration tests
         run: pnpm test:integration
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: E2E tests
+        run: pnpm test:e2e

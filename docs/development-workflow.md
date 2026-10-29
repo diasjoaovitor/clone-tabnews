@@ -66,7 +66,7 @@ git switch -c 'feat(home)/hero#7'
 Check locally before committing:
 
 ```bash
-pnpm eslint:check && pnpm prettier:check && pnpm test && pnpm test:integration && pnpm test:e2e
+pnpm type-check && pnpm eslint:check && pnpm prettier:check && pnpm test && pnpm test:integration && pnpm test:e2e
 ```
 
 ## 6. Commit
@@ -75,7 +75,7 @@ Follow the Commit Rules in [`AGENTS.md`](../AGENTS.md): English, imperative, low
 
 - Keep each commit a single logical change.
 - Body lines are limited to 100 characters by `commitlint`; a longer line rejects the commit.
-- `pre-commit` runs `lint-staged` (ESLint and Prettier) on the staged files.
+- `pre-commit` runs `lint-staged` (ESLint, Prettier and the unit tests related to the staged files).
 - Stage only the files that belong to the change.
 
 ## 7. Push
@@ -84,7 +84,7 @@ Follow the Commit Rules in [`AGENTS.md`](../AGENTS.md): English, imperative, low
 git push -u origin 'feat(home)/hero#7'
 ```
 
-`pre-push` runs the unit, integration and end-to-end tests. The push is rejected if any of them fails.
+`pre-push` runs `pnpm type-check` and the integration and end-to-end tests. The push is rejected if any of them fails.
 
 ## 8. Open the pull request
 
@@ -92,7 +92,7 @@ Open a pull request against `main` (`gh pr create` or the GitHub UI):
 
 - **Title:** a short summary of the change.
 - **Body:** a `Summary` (what changed and why), a `Test plan` (what was checked) and `Closes #<issue>` so that merging closes the issue.
-- **CI** (`.github/workflows/ci.yml`) runs commitlint over the PR's commits, Prettier, ESLint, the unit tests and the integration tests. Everything must be green.
+- **CI** (`.github/workflows/ci.yml`) runs commitlint over the PR's commits, type-check, ESLint, Prettier and the unit, integration and end-to-end tests. Everything must be green.
 
 ## 9. Merge and close
 

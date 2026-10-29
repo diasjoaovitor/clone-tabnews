@@ -61,13 +61,13 @@ As convenções completas estão no [`AGENTS.md`](./AGENTS.md), e o fluxo do pla
 ### Git hooks e CI
 
 - **Hooks do Husky:**
-  - `pre-commit` roda o `lint-staged` (ESLint e Prettier nos arquivos staged).
+  - `pre-commit` roda o `lint-staged` (ESLint, Prettier e os testes unitários relacionados aos arquivos staged).
   - `commit-msg` adiciona o emoji do prefixo e roda o `commitlint`.
-  - `pre-push` roda os testes unitários, de integração e end-to-end.
+  - `pre-push` roda o type-check e os testes de integração e end-to-end.
 - **Commits** em inglês, no imperativo e em minúsculas, com prefixo semântico, por exemplo `✨ feat: add login page`. Basta digitar `feat: ...`, já que o hook adiciona o emoji.
 - **Branches:** cada issue vai para uma branch nova chamada `<scope>/<title>#<issue>`, por exemplo `feat/login-page#53`. Nada de uma issue é commitado direto na `main`.
 - **Issues** são criadas pelo template **Tarefa** (`.github/ISSUE_TEMPLATE/task.md`). Marque cada item concluído antes de fechar a issue.
-- **GitHub Actions** (`.github/workflows/ci.yml`) roda em todo pull request: commitlint, Prettier, ESLint e testes unitários e de integração.
+- **GitHub Actions** (`.github/workflows/ci.yml`) roda em todo pull request: commitlint, type-check, ESLint, Prettier e os testes unitários, de integração e end-to-end.
 
 ### Assistente de IA
 
