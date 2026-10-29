@@ -196,6 +196,42 @@ describe('GET /api/v1/user', () => {
       expect(parsedSetCookie.session_id).toEqual(expectedParsedSetCookie)
     })
 
+    test('With malformed session token', async () => {
+      const response = await fetch(`${API_BASE_URL}/user`, {
+        headers: {
+          cookie: "session_id=' OR 1=1 --"
+        }
+      })
+      expect(response.status).toBe(401)
+
+      const responseBody = await response.json()
+      const expectedData: ErrorResponse = {
+        name: 'UnauthorizedError',
+        message: 'Usuário não possui sessão ativa.',
+        action: 'Verifique se este usuário está logado e tente novamente.',
+        status_code: 401
+      }
+      expect(responseBody).toEqual(expectedData)
+
+      // Set-Cookie assertions
+      const parsedSetCookie = setCookieParser(
+        response.headers.get('Set-Cookie')!,
+        {
+          map: true
+        }
+      )
+      const expectedParsedSetCookie: Cookie = {
+        name: 'session_id',
+        value: 'invalid',
+        maxAge: -1,
+        path: '/',
+        sameSite: 'lax',
+        httpOnly: true,
+        expires: expect.any(Date)
+      }
+      expect(parsedSetCookie.session_id).toEqual(expectedParsedSetCookie)
+    })
+
     test('With expired session', async () => {
       vi.setSystemTime(
         new Date(Date.now() - SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS)

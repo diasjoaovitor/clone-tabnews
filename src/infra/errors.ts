@@ -1,8 +1,11 @@
+import { z } from 'zod'
+
 export type ErrorResponse = {
   name: string
   message: string
   action: string
   status_code: number
+  fields?: Record<string, string>
 }
 
 type AppErrorOptions = ErrorOptions & {
@@ -86,12 +89,31 @@ export class MethodNotAllowedError extends AppError {
 }
 
 export class ValidationError extends AppError {
+  static fromZodError(error: z.ZodError): ValidationError {
+    const fields = Object.fromEntries(
+      Object.entries(z.flattenError(error).fieldErrors).map(
+        ([field, messages]) => [field, (messages as string[])[0]]
+      )
+    )
+    return new ValidationError({
+      cause: error,
+      message: error.issues[0]?.message,
+      fields: Object.keys(fields).length > 0 ? fields : undefined
+    })
+  }
+
+  public fields?: Record<string, string>
+
   constructor({
     cause,
     message,
     action,
-    statusCode
-  }: AppErrorOptions & { statusCode?: number } = {}) {
+    statusCode,
+    fields
+  }: AppErrorOptions & {
+    statusCode?: number
+    fields?: Record<string, string>
+  } = {}) {
     super({
       cause,
       message: message || 'Um erro de validação ocorreu.',
@@ -99,6 +121,13 @@ export class ValidationError extends AppError {
       statusCode: statusCode || 400
     })
     this.name = 'ValidationError'
+    this.fields = fields
+  }
+
+  toJSON(): ErrorResponse {
+    return this.fields
+      ? { ...super.toJSON(), fields: this.fields }
+      : super.toJSON()
   }
 }
 

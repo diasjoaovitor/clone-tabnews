@@ -1,7 +1,7 @@
 import { unstable_rethrow } from 'next/navigation'
 import { z } from 'zod'
 
-import { AppError } from '@/infra/errors'
+import { AppError, ValidationError } from '@/infra/errors'
 
 type FieldValues<TValues> = Partial<Record<keyof TValues & string, string>>
 
@@ -49,13 +49,6 @@ const valuesOf = (input: Record<string, FormDataEntryValue>) =>
     )
   ) as Record<string, string>
 
-const fieldErrorsOf = (error: z.ZodError) =>
-  Object.fromEntries(
-    Object.entries(z.flattenError(error).fieldErrors).map(
-      ([field, messages]) => [field, (messages as string[])[0]]
-    )
-  ) as Record<string, string>
-
 export const formAction = async <TValues>(
   formData: FormData,
   handler: (
@@ -83,7 +76,7 @@ export const formAction = async <TValues>(
     // redirect() and notFound() work by throwing
     unstable_rethrow(error_)
     if (error_ instanceof z.ZodError) {
-      return errorState({ errors: fieldErrorsOf(error_) })
+      return errorState({ errors: ValidationError.fromZodError(error_).fields })
     }
     if (error_ instanceof AppError) {
       // A failure on our side (e.g. the database is down) still needs a trace in the logs

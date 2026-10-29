@@ -88,9 +88,12 @@ describe('PATCH /api/v1/users/[username]', () => {
       const responseBody = await response.json()
       const expectedData: ErrorResponse = {
         name: 'ValidationError',
-        message: '✖ O email informado não é válido.\n  → at email',
+        message: 'O email informado não é válido.',
         action: 'Ajuste os dados enviados e tente novamente.',
-        status_code: 400
+        status_code: 400,
+        fields: {
+          email: 'O email informado não é válido.'
+        }
       }
       expect(responseBody).toEqual(expectedData)
     })
