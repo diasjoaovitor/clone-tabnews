@@ -48,10 +48,12 @@ As convenções completas estão no [`AGENTS.md`](./AGENTS.md), e o fluxo do pla
 - `models/` guarda as regras de negócio de cada domínio, `repositories/` as queries SQL, `dtos/` o que cada rota pode expor conforme quem pede, e `infra/` as peças técnicas (banco, sessão, e-mail, erros e os wrappers de rota).
 - As rotas da API passam pelo `controller()`, e as Server Components e Server Actions pelo `gated()`. Os dois checam as features do usuário com o mesmo `can()`. As rotas leem o body com o `readJsonBody()`, que responde `400` quando ele não é um JSON válido.
 - `action.ts` com `'use server'` é só para mutações chamadas pelo cliente; dados lidos por uma Server Component vêm de um `data.ts`.
+- Os formulários usam TanStack Form com o schema Zod do model para validar no cliente e enviam para Server Actions envolvidas pelo `formAction()`, que converte os erros em mensagens no formulário. Eles funcionam sem JavaScript.
 
 ### Interface
 
 - shadcn/ui (sobre Base UI) e Tailwind CSS v4, com o tema do shadcn e a paleta do Tailwind como vêm. Componentes novos entram com `pnpm shadcn:add <componente>`.
+- Componentes compartilhados ficam em `src/app/components`, e hooks compartilhados do cliente em `src/app/hooks`.
 - O dark mode segue a preferência do sistema (`prefers-color-scheme`).
 - Toda página usa o layout padrão (`src/app/components/layouts/default`), com o cabeçalho; uma página só precisa definir o próprio `title`, que o layout raiz completa com ` | Clone TabNews`.
 
