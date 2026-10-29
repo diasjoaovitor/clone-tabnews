@@ -5,82 +5,14 @@ export type ErrorResponse = {
   status_code: number
 }
 
-export class InternalServerError extends Error {
-  public action: string
-  public statusCode: number
-
-  constructor({ cause, statusCode }: ErrorOptions & { statusCode?: number }) {
-    super('Um erro interno não esperado aconteceu', {
-      cause
-    })
-    this.name = 'InternalServerError'
-    this.action = 'Entre em contato com o suporte.'
-    this.statusCode = statusCode || 500
-  }
-
-  toJSON(): ErrorResponse {
-    return {
-      name: this.name,
-      message: this.message,
-      action: this.action,
-      status_code: this.statusCode
-    }
-  }
+type AppErrorOptions = ErrorOptions & {
+  message?: string
+  action?: string
 }
 
-export class ServiceError extends Error {
-  public action: string
-  public statusCode: number
-  public context?: unknown
-
-  constructor({
-    cause,
-    message,
-    action,
-    context
-  }: ErrorOptions & { message?: string; action?: string; context?: unknown }) {
-    super(message || 'Serviço indisponível no momento.', {
-      cause
-    })
-    this.name = 'ServiceError'
-    this.action = action || 'Verifique se o serviço está disponível.'
-    this.statusCode = 503
-    this.context = context
-  }
-
-  toJSON(): ErrorResponse {
-    return {
-      name: this.name,
-      message: this.message,
-      action: this.action,
-      status_code: this.statusCode
-    }
-  }
-}
-
-export class MethodNotAllowedError extends Error {
-  public action: string
-  public statusCode: number
-
-  constructor() {
-    super('Método não permitido para este endpoint.')
-    this.name = 'MethodNotAllowedError'
-    this.action =
-      'Verifique se o método HTTP enviado é válido para este endpoint.'
-    this.statusCode = 405
-  }
-
-  toJSON(): ErrorResponse {
-    return {
-      name: this.name,
-      message: this.message,
-      action: this.action,
-      status_code: this.statusCode
-    }
-  }
-}
-
-export class ValidationError extends Error {
+// `message` and `action` reach the user as they are (API body or form message), so they're written
+// in pt-BR
+export abstract class AppError extends Error {
   public action: string
   public statusCode: number
 
@@ -89,108 +21,121 @@ export class ValidationError extends Error {
     message,
     action,
     statusCode
-  }: ErrorOptions & {
-    message?: string
-    action?: string
-    statusCode?: number
+  }: {
+    cause?: unknown
+    message: string
+    action: string
+    statusCode: number
   }) {
-    super(message || 'Um erro de validação ocorreu.', {
-      cause
+    super(message, { cause })
+    this.action = action
+    this.statusCode = statusCode
+  }
+
+  toJSON(): ErrorResponse {
+    return {
+      name: this.name,
+      message: this.message,
+      action: this.action,
+      status_code: this.statusCode
+    }
+  }
+}
+
+export class InternalServerError extends AppError {
+  constructor({ cause, statusCode }: ErrorOptions & { statusCode?: number }) {
+    super({
+      cause,
+      message: 'Um erro interno não esperado aconteceu',
+      action: 'Entre em contato com o suporte.',
+      statusCode: statusCode || 500
+    })
+    this.name = 'InternalServerError'
+  }
+}
+
+export class ServiceError extends AppError {
+  public context?: unknown
+
+  constructor({
+    cause,
+    message,
+    action,
+    context
+  }: AppErrorOptions & { context?: unknown }) {
+    super({
+      cause,
+      message: message || 'Serviço indisponível no momento.',
+      action: action || 'Verifique se o serviço está disponível.',
+      statusCode: 503
+    })
+    this.name = 'ServiceError'
+    this.context = context
+  }
+}
+
+export class MethodNotAllowedError extends AppError {
+  constructor() {
+    super({
+      message: 'Método não permitido para este endpoint.',
+      action: 'Verifique se o método HTTP enviado é válido para este endpoint.',
+      statusCode: 405
+    })
+    this.name = 'MethodNotAllowedError'
+  }
+}
+
+export class ValidationError extends AppError {
+  constructor({
+    cause,
+    message,
+    action,
+    statusCode
+  }: AppErrorOptions & { statusCode?: number } = {}) {
+    super({
+      cause,
+      message: message || 'Um erro de validação ocorreu.',
+      action: action || 'Ajuste os dados enviados e tente novamente.',
+      statusCode: statusCode || 400
     })
     this.name = 'ValidationError'
-    this.action = action || 'Ajuste os dados enviados e tente novamente.'
-    this.statusCode = statusCode || 400
-  }
-
-  toJSON(): ErrorResponse {
-    return {
-      name: this.name,
-      message: this.message,
-      action: this.action,
-      status_code: this.statusCode
-    }
   }
 }
 
-export class NotFoundError extends Error {
-  public action: string
-  public statusCode: number
-
-  constructor({
-    cause,
-    message,
-    action
-  }: ErrorOptions & { message?: string; action?: string }) {
-    super(message || 'Não foi possível encontrar este recurso no sistema.', {
-      cause
+export class NotFoundError extends AppError {
+  constructor({ cause, message, action }: AppErrorOptions = {}) {
+    super({
+      cause,
+      message: message || 'Não foi possível encontrar este recurso no sistema.',
+      action:
+        action ||
+        'Verifique se os parâmetros enviados na consulta estão certos.',
+      statusCode: 404
     })
     this.name = 'NotFoundError'
-    this.action =
-      action || 'Verifique se os parâmetros enviados na consulta estão certos.'
-    this.statusCode = 404
-  }
-
-  toJSON(): ErrorResponse {
-    return {
-      name: this.name,
-      message: this.message,
-      action: this.action,
-      status_code: this.statusCode
-    }
   }
 }
 
-export class UnauthorizedError extends Error {
-  public action: string
-  public statusCode: number
-
-  constructor({
-    cause,
-    message,
-    action
-  }: ErrorOptions & { message?: string; action?: string }) {
-    super(message || 'Usuário não autenticado.', {
-      cause
+export class UnauthorizedError extends AppError {
+  constructor({ cause, message, action }: AppErrorOptions = {}) {
+    super({
+      cause,
+      message: message || 'Usuário não autenticado.',
+      action: action || 'Faça novamente o login para continuar.',
+      statusCode: 401
     })
     this.name = 'UnauthorizedError'
-    this.action = action || 'Faça novamente o login para continuar.'
-    this.statusCode = 401
-  }
-
-  toJSON(): ErrorResponse {
-    return {
-      name: this.name,
-      message: this.message,
-      action: this.action,
-      status_code: this.statusCode
-    }
   }
 }
 
-export class ForbiddenError extends Error {
-  public action: string
-  public statusCode: number
-
-  constructor({
-    cause,
-    message,
-    action
-  }: ErrorOptions & { message?: string; action?: string }) {
-    super(message || 'Acesso negado.', {
-      cause
+export class ForbiddenError extends AppError {
+  constructor({ cause, message, action }: AppErrorOptions = {}) {
+    super({
+      cause,
+      message: message || 'Acesso negado.',
+      action: action || 'Verifique as features necessárias antes de continuar.',
+      statusCode: 403
     })
     this.name = 'ForbiddenError'
-    this.action =
-      action || 'Verifique as features necessárias antes de continuar.'
-    this.statusCode = 403
-  }
-
-  toJSON(): ErrorResponse {
-    return {
-      name: this.name,
-      message: this.message,
-      action: this.action,
-      status_code: this.statusCode
-    }
   }
 }
