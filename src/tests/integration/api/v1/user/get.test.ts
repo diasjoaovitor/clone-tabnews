@@ -1,5 +1,6 @@
 import setCookieParser, { Cookie } from 'set-cookie-parser'
 import { version as uuidVersion } from 'uuid'
+import { beforeAll, describe, expect, test, vi } from 'vitest'
 
 import { API_BASE_URL } from '@/constants'
 import { TUserDto } from '@/dtos'
@@ -13,7 +14,6 @@ import { isoStringFieldsToDate } from '@/tests/_utils'
 import orchestrator from '@/tests/orchestrator'
 
 beforeAll(async () => {
-  await orchestrator.waitForAllServices()
   await orchestrator.clearDatabase()
   await orchestrator.runPendingMigrations()
 })
@@ -98,16 +98,16 @@ describe('GET /api/v1/user', () => {
     })
 
     test('With halfway-expired session', async () => {
-      jest.useFakeTimers({
-        now: new Date(Date.now() - SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS / 2)
-      })
+      vi.setSystemTime(
+        new Date(Date.now() - SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS / 2)
+      )
 
       const { createdUser, activatedUser, sessionObject } =
         await orchestrator.createActivatedUserWithSession({
           username: 'UserWithHalfwayExpiredSession'
         })
 
-      jest.useRealTimers()
+      vi.useRealTimers()
 
       const response = await fetch(`${API_BASE_URL}/user`, {
         headers: {
@@ -199,16 +199,16 @@ describe('GET /api/v1/user', () => {
     })
 
     test('With expired session', async () => {
-      jest.useFakeTimers({
-        now: new Date(Date.now() - SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS)
-      })
+      vi.setSystemTime(
+        new Date(Date.now() - SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS)
+      )
 
       const createdUser = await orchestrator.createUser({
         username: 'UserWithExpiredSession'
       })
       const sessionObject = await orchestrator.createSession(createdUser.id)
 
-      jest.useRealTimers()
+      vi.useRealTimers()
 
       const response = await fetch(`${API_BASE_URL}/user`, {
         headers: {

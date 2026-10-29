@@ -1,4 +1,5 @@
 import { version as uuidVersion } from 'uuid'
+import { beforeAll, describe, expect, test, vi } from 'vitest'
 
 import { API_BASE_URL } from '@/constants'
 import { TUserActivationTokenDto } from '@/dtos'
@@ -14,7 +15,6 @@ import { isoStringFieldsToDate } from '@/tests/_utils'
 import orchestrator from '@/tests/orchestrator'
 
 beforeAll(async () => {
-  await orchestrator.waitForAllServices()
   await orchestrator.clearDatabase()
   await orchestrator.runPendingMigrations()
 })
@@ -42,16 +42,16 @@ describe('PATCH /api/v1/activations/[token-id]', () => {
     })
 
     test('With expired token', async () => {
-      jest.useFakeTimers({
-        now: new Date(Date.now() - ACTIVATION_TOKEN_EXPIRATION_IN_MILLISECONDS)
-      })
+      vi.setSystemTime(
+        new Date(Date.now() - ACTIVATION_TOKEN_EXPIRATION_IN_MILLISECONDS)
+      )
 
       const createdUser = await orchestrator.createUser()
       const expiredActivationToken = await activationModel.create(
         createdUser.id
       )
 
-      jest.useRealTimers()
+      vi.useRealTimers()
 
       const response = await fetch(
         `${API_BASE_URL}/activations/${expiredActivationToken.id}`,

@@ -28,7 +28,6 @@ This is **clone-tabnews**, an implementation of [TabNews](https://www.tabnews.co
 - Node version is pinned in `.nvmrc` (`lts/krypton`) for local use and in `engines.node` (`24.x`) in `package.json` for hosts that ignore `.nvmrc` (e.g. Vercel). Keep both on the same major.
 - On Vercel, set `ENABLE_EXPERIMENTAL_COREPACK=1` (Production and Preview) so the build uses the exact pnpm version from `packageManager`; without it Vercel picks pnpm from the lockfile version.
 - `minimumReleaseAge` in `pnpm-workspace.yaml` (7 days, in minutes) keeps pnpm from resolving a version published less than a week ago.
-- `uuid` (`11.1.0`), `node-pg-migrate` (`7.9.1`) and `@faker-js/faker` (`9.9.0`) stay on their last versions that ship CommonJS, since Jest can't load an ESM-only package. Don't bump them while the tests run on Jest.
 - `@/*` resolves to `src/*` (`tsconfig.json`).
 
 ### Project structure
@@ -45,8 +44,8 @@ This is **clone-tabnews**, an implementation of [TabNews](https://www.tabnews.co
 
 ### Database & local services
 
-- `src/infra/compose.yml` declares the local services (Docker Compose): `database` (Postgres) and `mailcatcher` (SMTP on `1025`, UI and API on `1080`). `src/infra/scripts/wait-for-postgres.js` waits for the database to accept connections.
-- `pnpm dev` runs `init.sh`: `services:up` → `services:wait:database` → `migrations:up` → `next dev`. Ctrl+C runs `services:down`, which removes the containers on purpose, so every `pnpm dev` starts with a clean database.
+- `src/infra/compose.yml` declares the local services (Docker Compose): `database` (Postgres) and `mail` (Mailpit: SMTP on `1025`, UI and API on `8025`). `src/infra/scripts/wait-for-postgres.js` waits for the database to accept connections.
+- `pnpm dev` chains `services:up` → `services:wait:database` → `migrations:up` → `next dev`. Ctrl+C runs `services:down` (a `trap` in the script), which removes the containers on purpose, so every `pnpm dev` starts with a clean database. The `trap 'exit 130' INT TERM` is what makes the shell run the `EXIT` trap on Ctrl+C: don't drop it.
 - Local settings live in the committed `.env.development` (local-only values, never a hosted secret). The git-ignored `.env` holds the hosted database URL for `migrations:up:dry` and `migrations:up:deploy`.
 - Migrations live in `src/infra/migrations/` and are created with `pnpm migrations:create <name>`. The template comes out in CommonJS: rewrite it in ESM like the existing files (`export const shorthands/up/down`).
 - Every migration is irreversible on purpose: `export const down = false` (not `() => false`). Fixes go forward in a new migration.
@@ -75,7 +74,7 @@ This is **clone-tabnews**, an implementation of [TabNews](https://www.tabnews.co
 
 ### Linting & formatting
 
-- ESLint uses native flat config (`eslint.config.mjs`), extending the `core-web-vitals`/`typescript` configs from `eslint-config-next`, plus `eslint-plugin-unicorn`, `eslint-plugin-simple-import-sort`, `eslint-plugin-promise`, `eslint-plugin-prefer-arrow-functions`, `eslint-plugin-jest` (for `src/tests/**/*.test.ts`), `eslint-config-prettier`, and `@eslint/json`/`@eslint/markdown` for JSON/Markdown files. Markdown files use the `gfm` language with `frontmatter: 'yaml'`, so the frontmatter of issue templates (or any Markdown content) isn't parsed as Markdown.
+- ESLint uses native flat config (`eslint.config.mjs`), extending the `core-web-vitals`/`typescript` configs from `eslint-config-next`, plus `eslint-plugin-unicorn`, `eslint-plugin-simple-import-sort`, `eslint-plugin-promise`, `eslint-plugin-prefer-arrow-functions`, `eslint-config-prettier`, and `@eslint/json`/`@eslint/markdown` for JSON/Markdown files. Markdown files use the `gfm` language with `frontmatter: 'yaml'`, so the frontmatter of issue templates (or any Markdown content) isn't parsed as Markdown.
 - `unicorn/filename-case` is off for `src/infra/migrations/`: `node-pg-migrate` records each file name in `pgmigrations`, so renaming an applied migration makes it run again. Dynamic segments follow kebab case too (`[token-id]`, read as `params['token-id']`).
 - `eslint-plugin-unicorn@74` declares a peer of `eslint >=10.4`, but the project stays on ESLint 9 (`9.39.5`). The peer is unmet (`pnpm peers check` reports it, and depending on the pnpm version install warns `Issues with peer dependencies found`), but `pnpm eslint:check` passes. Don't bump one without validating the other.
 - `next lint` no longer exists (removed in Next.js 16). Use `pnpm eslint:check` / `pnpm eslint:fix` and `pnpm prettier:check` / `pnpm prettier:fix`.
@@ -94,21 +93,22 @@ This is **clone-tabnews**, an implementation of [TabNews](https://www.tabnews.co
 
 - `pre-commit`: runs `lint-staged` (`lint-staged.config.js`), which runs `pnpm eslint:fix` and `pnpm prettier:fix` on the staged files.
 - `commit-msg`: auto-prepends the emoji prefix from the Commit Rules below based on the leading word (e.g. `feat: ...` → `✨ feat: ...`), then runs `commitlint` (`commitlint-config-emoji-convention`). You can type the plain word and let the hook add the emoji.
-- `pre-push`: runs `pnpm test` (the full suite, see Testing).
+- `pre-push`: runs `pnpm test`, `pnpm test:integration` and `pnpm test:e2e` (every suite, see Testing).
 - The `commit-msg` hook's `sed` matches `fixup!` as `fix` and produces an invalid type, so `git commit --fixup`/`--autosquash` don't work. To fix a commit that isn't `HEAD` without an interactive rebase, use a temporary branch, `git commit --amend --no-edit` and `git rebase --onto <new-base> <old-base> <branch>`. To fix the commit you just made in the same task, prefer `--amend` over stacking a fix-up commit.
 
 ### Testing
 
-- **Jest** (`jest.config.js` through `next/jest`, `jsdom` environment, `jest.setup.ts`). Integration tests live in `src/tests/integration/`: `api/` mirrors the routes of `src/app/api/` and calls the API over HTTP, since the public API is part of the product, `_use-cases/` covers flows across routes (e.g. the registration flow) and `infra/` the infrastructure (e.g. email); component tests live in `src/tests/interface/`.
-- `pnpm test` runs `init.sh test`: it starts the services, `next dev` and Jest together with `concurrently`, and stops them when Jest ends. `pnpm test:watch` runs Jest in watch mode and needs `pnpm dev` running (`orchestrator.waitForAllServices()` polls `/api/v1/status`).
-- Paths with brackets (`[username]`, `[token-id]`) are read by Jest as globs. To run only those files, use `pnpm exec jest --runInBand -t "<test name pattern>" <parent folder without brackets>`.
-- Jest doesn't support top-level `await` in a module, even in this ESM project: use `hashSync` or another synchronous equivalent there.
+- Unit tests: **Vitest** (`vitest.config.mts`, project `unit`), `jsdom` environment, native Vite `resolve.tsconfigPaths`. Picks up `src/**/*.test.{ts,tsx}` outside `src/tests`, next to the code they test (e.g. `src/app/(pages)/page.test.tsx`). Component tests use `@testing-library/react` / `@testing-library/dom`. `vitest.setup.ts` runs Testing Library's `cleanup` after every test. Test files import `describe`/`test`/`expect`/`vi` from `vitest` (no globals).
+- Integration tests: Vitest project `integration` (`node` environment, files run one at a time, `.env.development` loaded into `env`), in `src/tests/integration/`: `api/` mirrors the routes of `src/app/api/` and calls the API over HTTP, since the public API is part of the product (unlike projects that call the models directly), `_use-cases/` covers flows across routes (e.g. the registration flow) and `infra/` the infrastructure (e.g. email). `src/tests/integration/global-setup.ts` reuses a server already answering `/api/v1/status` (e.g. `pnpm dev`); otherwise it starts the services, runs the migrations and starts `next dev`, and on teardown stops that server and removes the containers only if it started them. `server-only` is aliased to Next.js's empty module in `vitest.config.mts`, as `next/jest` did.
+- E2E tests: **Playwright** (`playwright.config.ts`), tests live in `src/tests/e2e`, single `chromium` project, `webServer` starts `pnpm dev` (or reuses a running one outside CI) against `http://localhost:3000` and stops it with `SIGINT`, so the `trap` removes the containers. Failure artifacts go to `test-results/` (git-ignored). Assertions wait up to 15s (`expect.timeout`), since `pnpm dev` compiles each route on its first request; don't lower it to the default 5s.
+- Scripts: `pnpm test` (unit, run once) / `pnpm test:watch` (unit, watch mode) / `pnpm test:integration` (integration) / `pnpm test:e2e` (e2e) / `pnpm test:e2e:ui` (e2e, Playwright UI mode). To run a single file, pass part of its path (e.g. `pnpm test:integration users/[username]/patch`), which Vitest matches as a substring.
+- Fake the clock with `vi.setSystemTime(date)` and restore it with `vi.useRealTimers()`: without `vi.useFakeTimers()` it fakes only `Date`, so the database client's timers keep running.
 - `src/tests/orchestrator.ts` centralizes the test setup: `createUser`, `activateUser`, `createSession`, `addFeaturesToUser` and `createActivatedUserWithSession(userObject?, features?)`, which covers create → activate → (extra features) → session and returns `{ createdUser, activatedUser, sessionObject }`. Use it whenever a test needs an activated user with a session; build the sequence by hand only when the test needs one step less (e.g. a session without activation) or tests the activation or sign-in flow itself.
 - `src/tests/_utils/` and `src/tests/_types/` hold helpers and types used only by tests (e.g. `formatUsername`, `isoStringFieldsToDate`), never `src/utils`/`src/types`, which are for application code.
 - Assertions check real behavior, not the incidental state of the fixture (e.g. `expect(Array.isArray(x)).toBe(true)` rather than comparing an array with itself).
-- Only test logic we wrote (the API's contract, a model's rules and error mapping, lookups, mappings, transforms). Don't test library or framework behavior (e.g. a component that only passes props or HTML through, a Zod schema's `min`/`max` and the messages we hand it, `Link` routing), and drop a test whose main cost is a mock needed only to render.
+- Only test logic we wrote (the API's contract, a model's rules and error mapping, lookups, mappings, transforms). Don't test library or framework behavior (e.g. a component that only passes props or HTML through, a Zod schema's `min`/`max` and the messages we hand it, `Link` routing), and drop a test whose main cost is a mock needed only to render. Prefer a unit or integration test; add an e2e test only for what they can't cover.
 - Older issues may ask for tests that break the rule above. Skip them without asking, and list them as dropped in the closing comment.
-- CI (`.github/workflows/ci.yml`, triggered on `pull_request`) runs, in order: `commitlint` over the PR's commit range, `pnpm prettier:check`, `pnpm eslint:check` and `pnpm test`.
+- CI (`.github/workflows/ci.yml`, triggered on `pull_request`) runs, in order: `commitlint` over the PR's commit range, `pnpm prettier:check`, `pnpm eslint:check`, `pnpm test` and `pnpm test:integration`.
 
 ### Styling & UI
 

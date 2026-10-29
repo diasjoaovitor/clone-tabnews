@@ -1,5 +1,6 @@
 import setCookieParser, { Cookie } from 'set-cookie-parser'
 import { version as uuidVersion } from 'uuid'
+import { beforeAll, describe, expect, test, vi } from 'vitest'
 
 import { API_BASE_URL } from '@/constants'
 import { TSessionDto } from '@/dtos'
@@ -10,7 +11,6 @@ import { isoStringFieldsToDate } from '@/tests/_utils'
 import orchestrator from '@/tests/orchestrator'
 
 beforeAll(async () => {
-  await orchestrator.waitForAllServices()
   await orchestrator.clearDatabase()
   await orchestrator.runPendingMigrations()
 })
@@ -40,14 +40,14 @@ describe('DELETE /api/v1/sessions', () => {
     })
 
     test('With expired session', async () => {
-      jest.useFakeTimers({
-        now: new Date(Date.now() - SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS)
-      })
+      vi.setSystemTime(
+        new Date(Date.now() - SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS)
+      )
 
       const createdUser = await orchestrator.createUser()
       const sessionObject = await orchestrator.createSession(createdUser.id)
 
-      jest.useRealTimers()
+      vi.useRealTimers()
 
       const response = await fetch(`${API_BASE_URL}/sessions`, {
         method: 'DELETE',

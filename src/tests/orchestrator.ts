@@ -1,7 +1,6 @@
 import { faker } from '@faker-js/faker'
-import retry from 'async-retry'
 
-import { API_BASE_URL, TUserFeatures } from '@/constants'
+import { TUserFeatures } from '@/constants'
 import { database } from '@/infra'
 import {
   activationModel,
@@ -14,22 +13,6 @@ import {
 import { formatUsername } from './_utils'
 
 const emailHttpUrl = `http://${process.env.EMAIL_HTTP_HOST}:${process.env.EMAIL_HTTP_PORT}`
-
-const waitForAllServices = async () => {
-  await retry(
-    async () => {
-      const response = await fetch(`${API_BASE_URL}/status`)
-      if (!response.ok) {
-        throw new Error('Service not ready')
-      }
-    },
-    {
-      retries: 60,
-      maxTimeout: 1000,
-      minTimeout: 100
-    }
-  )
-}
 
 const clearDatabase = async () => {
   await database.query('drop schema public cascade; create schema public;')
@@ -74,7 +57,7 @@ const createActivatedUserWithSession = async (
 }
 
 const deleteAllEmails = async () => {
-  await fetch(`${emailHttpUrl}/messages`, {
+  await fetch(`${emailHttpUrl}/api/v1/messages`, {
     method: 'DELETE'
   })
 }
@@ -86,18 +69,32 @@ type TLastEmail = {
   text: string
 }
 
+type TMailpitAddress = {
+  Address: string
+}
+
 const getLastEmail = async (): Promise<TLastEmail> => {
-  const emailListResponse = await fetch(`${emailHttpUrl}/messages`)
-  const emailListBody = await emailListResponse.json()
-  const lastEmailItem = emailListBody.at(-1)
+  const emailListResponse = await fetch(`${emailHttpUrl}/api/v1/messages`)
+  const emailListBody: { messages: { ID: string }[] } =
+    await emailListResponse.json()
+  const lastEmailItem = emailListBody.messages[0]
 
-  const emailTextResponse = await fetch(
-    `${emailHttpUrl}/messages/${lastEmailItem.id}.plain`
+  const emailResponse = await fetch(
+    `${emailHttpUrl}/api/v1/message/${lastEmailItem.ID}`
   )
-  const emailTextBody = await emailTextResponse.text()
+  const emailBody: {
+    From: TMailpitAddress
+    To: TMailpitAddress[]
+    Subject: string
+    Text: string
+  } = await emailResponse.json()
 
-  lastEmailItem.text = emailTextBody
-  return lastEmailItem
+  return {
+    sender: emailBody.From.Address,
+    recipients: emailBody.To.map(({ Address }) => Address),
+    subject: emailBody.Subject,
+    text: emailBody.Text
+  }
 }
 
 const extractUUID = (text: string) => {
@@ -106,7 +103,6 @@ const extractUUID = (text: string) => {
 }
 
 const orchestrator = {
-  waitForAllServices,
   clearDatabase,
   runPendingMigrations,
   createUser,

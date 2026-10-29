@@ -1,9 +1,7 @@
+import { beforeEach, describe, expect, test } from 'vitest'
+
 import { email } from '@/infra'
 import orchestrator from '@/tests/orchestrator'
-
-beforeAll(async () => {
-  await orchestrator.waitForAllServices()
-})
 
 beforeEach(async () => {
   await orchestrator.deleteAllEmails()
@@ -32,8 +30,8 @@ describe('infra/email.ts', () => {
     })
 
     const lastEmail = await orchestrator.getLastEmail()
-    expect(lastEmail.sender).toBe('<contato@diasjoaovitor.com.br>')
-    expect(lastEmail.recipients[0]).toBe('<contato@curso.dev>')
+    expect(lastEmail.sender).toBe('contato@diasjoaovitor.com.br')
+    expect(lastEmail.recipients[0]).toBe('contato@curso.dev')
     expect(lastEmail.subject).toBe('Último email enviado')
     expect(lastEmail.text).toBe('Corpo do último email.\r\n')
   })

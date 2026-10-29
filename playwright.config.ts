@@ -1,0 +1,25 @@
+import { defineConfig, devices } from '@playwright/test'
+
+export default defineConfig({
+  testDir: './src/tests/e2e',
+  fullyParallel: false,
+  // `pnpm dev` compiles each route on its first request, which on a cold CI runner can outlast the
+  // default 5s of an assertion that waits for a navigation
+  expect: { timeout: 15_000 },
+  webServer: {
+    command: 'pnpm dev',
+    url: 'http://localhost:3000',
+    reuseExistingServer: !process.env.CI,
+    // `pnpm dev` only removes the containers on SIGINT or SIGTERM, not on the default SIGKILL
+    gracefulShutdown: { signal: 'SIGINT', timeout: 30_000 }
+  },
+  use: {
+    baseURL: 'http://localhost:3000'
+  },
+  projects: [
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] }
+    }
+  ]
+})
