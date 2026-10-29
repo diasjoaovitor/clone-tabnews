@@ -67,15 +67,14 @@ describe('POST /api/v1/users', () => {
       const responseBody = await response.json()
       const expectedData: ErrorResponse = {
         name: 'ValidationError',
-        message:
-          '✖ O username é obrigatório.\n' +
-          '  → at username\n' +
-          '✖ O email informado não é válido.\n' +
-          '  → at email\n' +
-          '✖ A senha é obrigatória.\n' +
-          '  → at password',
+        message: 'O username é obrigatório.',
         action: 'Ajuste os dados enviados e tente novamente.',
-        status_code: 400
+        status_code: 400,
+        fields: {
+          username: 'O username é obrigatório.',
+          email: 'O email informado não é válido.',
+          password: 'A senha é obrigatória.'
+        }
       }
       expect(responseBody).toEqual(expectedData)
     })
@@ -92,13 +91,13 @@ describe('POST /api/v1/users', () => {
       const responseBody = await response.json()
       const expectedData: ErrorResponse = {
         name: 'ValidationError',
-        message:
-          '✖ O email informado não é válido.\n' +
-          '  → at email\n' +
-          '✖ A senha é obrigatória.\n' +
-          '  → at password',
+        message: 'O email informado não é válido.',
         action: 'Ajuste os dados enviados e tente novamente.',
-        status_code: 400
+        status_code: 400,
+        fields: {
+          email: 'O email informado não é válido.',
+          password: 'A senha é obrigatória.'
+        }
       }
       expect(responseBody).toEqual(expectedData)
     })
@@ -116,9 +115,12 @@ describe('POST /api/v1/users', () => {
       const responseBody = await response.json()
       const expectedData: ErrorResponse = {
         name: 'ValidationError',
-        message: '✖ A senha é obrigatória.\n  → at password',
+        message: 'A senha é obrigatória.',
         action: 'Ajuste os dados enviados e tente novamente.',
-        status_code: 400
+        status_code: 400,
+        fields: {
+          password: 'A senha é obrigatória.'
+        }
       }
       expect(responseBody).toEqual(expectedData)
     })

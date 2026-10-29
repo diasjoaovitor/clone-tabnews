@@ -10,9 +10,12 @@ import { userActivationTokenRepository } from '@/repositories/user-activation-to
 import { UserActivationToken } from '@/repositories/user-activation-token-repository/types'
 import { User } from '@/repositories/user-repository/types'
 
+import { activationTokenIdSchema } from './schema'
+
 const findUniqueValidById = async (
   id: string
 ): Promise<UserActivationToken> => {
+  activationTokenIdSchema.parse({ token_id: id })
   const result = await userActivationTokenRepository.findUniqueValidById(id)
   if (!result) {
     throw new NotFoundError({

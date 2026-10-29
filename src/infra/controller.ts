@@ -1,6 +1,6 @@
 import { HTTP_METHOD, HTTP_METHODS } from 'next/dist/server/web/http'
 import { NextRequest, NextResponse } from 'next/server'
-import { z, ZodError } from 'zod'
+import { ZodError } from 'zod'
 
 import { UserFeature } from '@/constants/features'
 
@@ -43,9 +43,7 @@ const onNoMatchHandler = async (): Promise<NextResponse> => {
 
 const onErrorHandler = async (error: unknown): Promise<NextResponse> => {
   if (error instanceof ZodError) {
-    const publicErrorObject = new ValidationError({
-      message: z.prettifyError(error)
-    })
+    const publicErrorObject = ValidationError.fromZodError(error)
     return NextResponse.json(publicErrorObject, {
       status: publicErrorObject.statusCode
     })

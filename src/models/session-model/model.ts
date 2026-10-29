@@ -5,6 +5,7 @@ import { sessionRepository } from '@/repositories/session-repository/repository'
 import { Session } from '@/repositories/session-repository/types'
 
 import { SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS } from './constants'
+import { sessionTokenSchema } from './schema'
 
 const create = async (userId: string): Promise<Session> => {
   const token = crypto.randomBytes(48).toString('hex')
@@ -22,7 +23,11 @@ const create = async (userId: string): Promise<Session> => {
 }
 
 const findUniqueValidByToken = async (token: string): Promise<Session> => {
-  const sessionFound = await sessionRepository.findUniqueValidByToken(token)
+  // A malformed cookie answers like an unknown session (401, not 400), so the cookie is cleared and
+  // `gated()` falls back to the anonymous user
+  const sessionFound = sessionTokenSchema.safeParse(token).success
+    ? await sessionRepository.findUniqueValidByToken(token)
+    : null
 
   if (!sessionFound) {
     throw new UnauthorizedError({

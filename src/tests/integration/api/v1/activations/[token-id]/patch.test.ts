@@ -39,6 +39,25 @@ describe('PATCH /api/v1/activations/[token-id]', () => {
       expect(responseBody).toEqual(expectedData)
     })
 
+    test('With malformed token', async () => {
+      const response = await fetch(`${API_BASE_URL}/activations/not-a-uuid`, {
+        method: 'PATCH'
+      })
+      expect(response.status).toBe(400)
+
+      const responseBody = await response.json()
+      const expectedData: ErrorResponse = {
+        name: 'ValidationError',
+        message: 'O token de ativação informado não é válido.',
+        action: 'Ajuste os dados enviados e tente novamente.',
+        status_code: 400,
+        fields: {
+          token_id: 'O token de ativação informado não é válido.'
+        }
+      }
+      expect(responseBody).toEqual(expectedData)
+    })
+
     test('With expired token', async () => {
       vi.setSystemTime(
         new Date(Date.now() - ACTIVATION_TOKEN_EXPIRATION_IN_MILLISECONDS)
