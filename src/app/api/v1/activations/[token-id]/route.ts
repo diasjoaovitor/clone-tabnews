@@ -7,17 +7,17 @@ import { activationModel } from '@/models'
 
 const patchHandler = async (
   _: NextRequest,
-  context: RouteContext<'/api/v1/activations/[token_id]'>
+  context: RouteContext<'/api/v1/activations/[token-id]'>
 ) => {
-  const { token_id } = await context.params
-  z.uuid().parse(token_id)
+  const { 'token-id': tokenId } = await context.params
+  z.uuid().parse(tokenId)
 
   const validActivationToken =
-    await activationModel.findUniqueValidById(token_id)
+    await activationModel.findUniqueValidById(tokenId)
 
   await activationModel.activateUserByUserId(validActivationToken.user_id)
 
-  const usedActivationToken = await activationModel.markTokenAsUsed(token_id)
+  const usedActivationToken = await activationModel.markTokenAsUsed(tokenId)
 
   return NextResponse.json(getActivationDto(null, usedActivationToken))
 }

@@ -6,9 +6,7 @@ import { TUser } from './types'
 
 const create = async (data: TDataInput<TUser>): Promise<TUser> => {
   const { username, email, password, features } = data
-  const {
-    rows: [user]
-  } = await database.query(
+  const { rows } = await database.query(
     `
         INSERT INTO
           users (username, email, password, features)
@@ -18,52 +16,48 @@ const create = async (data: TDataInput<TUser>): Promise<TUser> => {
       `,
     [username, email, password, features]
   )
+  const [user] = rows
   return user
 }
 
 const findUniqueById = async (id: string): Promise<TUser | null> => {
-  const {
-    rows: [user]
-  } = await database.query(
+  const { rows } = await database.query(
     `
         SELECT * FROM users WHERE id = $1
       `,
     [id]
   )
+  const [user] = rows
   return user || null
 }
 
 const findUniqueByUsername = async (
   username: string
 ): Promise<TUser | null> => {
-  const {
-    rows: [user]
-  } = await database.query(
+  const { rows } = await database.query(
     `
         SELECT * FROM users WHERE LOWER(username) = LOWER($1)
       `,
     [username]
   )
+  const [user] = rows
   return user || null
 }
 
 const findUniqueByEmail = async (email: string): Promise<TUser | null> => {
-  const {
-    rows: [user]
-  } = await database.query(
+  const { rows } = await database.query(
     `
       SELECT * FROM users WHERE LOWER(email) = LOWER($1)
     `,
     [email]
   )
+  const [user] = rows
   return user || null
 }
 
 const update = async (id: string, data: TDataInput<TUser>): Promise<TUser> => {
   const { username, email, password } = data
-  const {
-    rows: [user]
-  } = await database.query(
+  const { rows } = await database.query(
     `UPDATE
         users
       SET
@@ -76,6 +70,7 @@ const update = async (id: string, data: TDataInput<TUser>): Promise<TUser> => {
       RETURNING *`,
     [username, email, password, id]
   )
+  const [user] = rows
   return user
 }
 
@@ -83,9 +78,7 @@ const setFeatures = async (
   id: string,
   features: TUserFeatures[]
 ): Promise<TUser> => {
-  const {
-    rows: [user]
-  } = await database.query(
+  const { rows } = await database.query(
     `UPDATE
         users
       SET
@@ -96,6 +89,7 @@ const setFeatures = async (
       RETURNING *`,
     [features, id]
   )
+  const [user] = rows
   return user
 }
 
@@ -103,9 +97,7 @@ const addFeatures = async (
   id: string,
   features: TUserFeatures[]
 ): Promise<TUser> => {
-  const {
-    rows: [user]
-  } = await database.query(
+  const { rows } = await database.query(
     `
     UPDATE
          users
@@ -119,6 +111,7 @@ const addFeatures = async (
     `,
     [features, id]
   )
+  const [user] = rows
   return user
 }
 

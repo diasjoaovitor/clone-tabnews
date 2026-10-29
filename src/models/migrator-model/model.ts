@@ -1,34 +1,34 @@
-import migrationRunner from 'node-pg-migrate'
-import { RunMigration } from 'node-pg-migrate/dist/migration'
+import { runner } from 'node-pg-migrate'
 import { ClientBase } from 'pg'
 
+import { TRunMigration } from './types'
 import { getDefaultMigrationOptions, handler } from './utils'
 
 const listPendingMigrations = async (
-  dbClient: ClientBase
-): Promise<RunMigration[]> => {
+  client: ClientBase
+): Promise<TRunMigration[]> => {
   const defaultMigrationOptions = getDefaultMigrationOptions({
-    dbClient,
+    dbClient: client,
     dryRun: true
   })
-  const pendingMigrations = await migrationRunner(defaultMigrationOptions)
+  const pendingMigrations = await runner(defaultMigrationOptions)
   return pendingMigrations
 }
 
 const runPendingMigrations = async (
-  dbClient: ClientBase
-): Promise<RunMigration[]> => {
+  client: ClientBase
+): Promise<TRunMigration[]> => {
   const defaultMigrationOptions = getDefaultMigrationOptions({
-    dbClient,
+    dbClient: client,
     dryRun: false
   })
-  const migratedMigrations = await migrationRunner(defaultMigrationOptions)
+  const migratedMigrations = await runner(defaultMigrationOptions)
   return migratedMigrations
 }
 
 export const migratorModel = {
-  listPendingMigrations: (): Promise<RunMigration[]> =>
+  listPendingMigrations: (): Promise<TRunMigration[]> =>
     handler(listPendingMigrations),
-  runPendingMigrations: (): Promise<RunMigration[]> =>
+  runPendingMigrations: (): Promise<TRunMigration[]> =>
     handler(runPendingMigrations)
 }

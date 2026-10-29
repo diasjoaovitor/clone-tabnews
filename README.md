@@ -6,7 +6,7 @@ As funcionalidades seguem as [issues do curso](https://github.com/filipedeschamp
 
 ## Como rodar
 
-Pré-requisitos: Node (versão no `.nvmrc`), pnpm e Docker.
+Pré-requisitos: Node 24 (versão no `.nvmrc`), pnpm (versão no `packageManager` do `package.json`) e Docker.
 
 ```bash
 pnpm install
@@ -29,6 +29,7 @@ O `pnpm dev` sobe o Postgres e o MailCatcher, roda as migrations e inicia o serv
 | `pnpm migrations:up:dry` / `:deploy`        | Simula ou roda as migrations no banco do `.env`              |
 | `pnpm eslint:check` / `pnpm eslint:fix`     | Verifica (e corrige) com ESLint                              |
 | `pnpm prettier:check` / `pnpm prettier:fix` | Verifica (e reescreve) a formatação                          |
+| `pnpm type-check`                           | Gera os tipos das rotas e roda o `tsc --noEmit`              |
 
 ## Convenções do projeto
 

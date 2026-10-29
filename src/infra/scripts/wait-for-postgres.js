@@ -1,8 +1,6 @@
 import { exec } from 'node:child_process'
 
-let tries = 60
-
-const checkPostgres = () => {
+const checkPostgres = (tries = 60) => {
   exec('docker exec postgres-tbn pg_isready --host localhost', (_, stdout) => {
     if (tries === 0) {
       console.error(
@@ -13,8 +11,7 @@ const checkPostgres = () => {
 
     if (!stdout.includes('accepting connections')) {
       process.stdout.write('.')
-      tries--
-      setTimeout(checkPostgres, 1000)
+      setTimeout(() => checkPostgres(tries - 1), 1000)
       return
     }
 

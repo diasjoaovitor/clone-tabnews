@@ -16,6 +16,9 @@ import {
 } from './errors'
 import { session } from './session'
 
+// Each route types its own context (`RouteContext<'/api/v1/...'>`), and such a handler isn't assignable
+// to one whose context is `unknown`
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type TRequest = (request: NextRequest, context?: any) => Promise<NextResponse>
 
 type TRouteConfig = {
@@ -36,7 +39,7 @@ const onNoMatchHandler = async (): Promise<NextResponse> => {
   })
 }
 
-const onErrorHandler = async (error: any): Promise<NextResponse> => {
+const onErrorHandler = async (error: unknown): Promise<NextResponse> => {
   if (error instanceof ZodError) {
     const publicErrorObject = new ValidationError({
       message: z.prettifyError(error)
@@ -79,30 +82,30 @@ export const controller = (
   const requests: Partial<TRequestsResult> = {}
   for (const method of HTTP_METHODS) {
     const routeDefinition = availableRequests[method]
-    let fn: TRequest | undefined
+    let routeHandler: TRequest | undefined
     let feature: TUserFeatures | undefined
     if (typeof routeDefinition === 'function') {
-      fn = routeDefinition
+      routeHandler = routeDefinition
     } else {
-      fn = routeDefinition?.handler
+      routeHandler = routeDefinition?.handler
       feature = routeDefinition?.feature
     }
     const handler = async (
-      req: NextRequest,
-      context?: any
+      request: NextRequest,
+      context?: Parameters<TRequest>[1]
     ): Promise<NextResponse> => {
       try {
         if (feature) {
           const user = await session.getUser()
           can(user, feature)
         }
-        const response = await fn!(req, context)
+        const response = await routeHandler!(request, context)
         return response
       } catch (error) {
         return onErrorHandler(error)
       }
     }
-    requests[method] = fn ? handler : onNoMatchHandler
+    requests[method] = routeHandler ? handler : onNoMatchHandler
   }
   return requests as TRequestsResult
 }

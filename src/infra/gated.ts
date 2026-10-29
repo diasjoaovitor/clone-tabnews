@@ -5,11 +5,11 @@ import { can } from './authorization'
 import { UnauthorizedError } from './errors'
 import { session, TUserSession } from './session'
 
-export const gated = <Args extends unknown[], T>(
-  handler: (user: TUserSession, ...args: Args) => Promise<T>,
+export const gated = <Params extends unknown[], T>(
+  handler: (user: TUserSession, ...params: Params) => Promise<T>,
   feature?: TUserFeatures
 ) => {
-  return async (...args: Args): Promise<T> => {
+  return async (...params: Params): Promise<T> => {
     let user: TUserSession
     try {
       user = await session.getUser()
@@ -21,6 +21,6 @@ export const gated = <Args extends unknown[], T>(
       }
     }
     can(user, feature)
-    return handler(user, ...args)
+    return handler(user, ...params)
   }
 }

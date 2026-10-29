@@ -5,9 +5,9 @@ import { BCRYPT_ROUNDS } from './constants'
 const hash = async (password: string): Promise<string> => {
   const environment = process.env.NODE_ENV
   const hash =
-    environment !== 'test'
-      ? await bcryptjs.hash(password, BCRYPT_ROUNDS)
-      : bcryptjs.hashSync(password, BCRYPT_ROUNDS)
+    environment === 'test'
+      ? bcryptjs.hashSync(password, BCRYPT_ROUNDS)
+      : await bcryptjs.hash(password, BCRYPT_ROUNDS)
   return hash
 }
 

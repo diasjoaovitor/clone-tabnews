@@ -16,7 +16,12 @@ const getHandler = async (_: NextRequest, context: TContext) => {
 const patchHandler = async (request: NextRequest, context: TContext) => {
   const params = await context.params
   const username = params.username
-  const userInputValues = await request.json().catch(() => ({}))
+  let userInputValues
+  try {
+    userInputValues = await request.json()
+  } catch {
+    userInputValues = {}
+  }
 
   const sessionUser = await session.getUser()
   const targetUser = await userModel.findUniqueByUsername(username)

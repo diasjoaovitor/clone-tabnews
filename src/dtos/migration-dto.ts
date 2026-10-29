@@ -1,10 +1,9 @@
-import { RunMigration } from 'node-pg-migrate/dist/migration'
-
+import { TRunMigration } from '@/models'
 import { TGetDto } from '@/types'
 
-export type TMigrationDto = RunMigration[]
+export type TMigrationDto = TRunMigration[]
 
-export const getMigrationDto: TGetDto<RunMigration[], TMigrationDto> = (
+export const getMigrationDto: TGetDto<TRunMigration[], TMigrationDto> = (
   _,
   migrations
 ) => {

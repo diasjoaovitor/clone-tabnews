@@ -19,7 +19,7 @@ beforeAll(async () => {
   await orchestrator.runPendingMigrations()
 })
 
-describe('PATCH /api/v1/activations/[token_id]', () => {
+describe('PATCH /api/v1/activations/[token-id]', () => {
   describe('Anonymous user', () => {
     test('With nonexistent token', async () => {
       const response = await fetch(
