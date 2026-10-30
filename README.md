@@ -47,7 +47,7 @@ As convenções completas estão no [`AGENTS.md`](./AGENTS.md), e o fluxo do pla
 - O código do servidor é dividido em camadas, e os imports só descem: `app` → `dtos`/`models` → `repositories` → `infra`, com `constants` disponível para todas.
 - `models/` guarda as regras de negócio de cada domínio, `repositories/` as queries SQL, `dtos/` o que cada rota pode expor conforme quem pede, e `infra/` as peças técnicas (banco, sessão, e-mail, erros e os wrappers de rota).
 - As rotas da API passam pelo `controller()`, e as Server Components e Server Actions pelo `gated()`. Os dois checam as features do usuário com o mesmo `can()`. As rotas leem o body com o `readJsonBody()`, que responde `400` quando ele não é um JSON válido.
-- Cada model valida a própria entrada com o seu `schema.ts`, inclusive os parâmetros da rota. A API responde `400` aos erros de validação, com `fields` trazendo a mensagem de cada campo inválido, e um cookie `session_id` mal formado é tratado como uma sessão inexistente (`401`).
+- Cada model valida a própria entrada com o seu `schema.ts`, inclusive os parâmetros da rota. O `schema.ts` também exporta o tipo da entrada de cada schema (`<Nome>Input`, com `z.input`), que o resto do código importa. A API responde `400` aos erros de validação, com `fields` trazendo a mensagem de cada campo inválido, e um cookie `session_id` mal formado é tratado como uma sessão inexistente (`401`).
 - `action.ts` com `'use server'` é só para mutações chamadas pelo cliente; dados lidos por uma Server Component vêm de um `data.ts`.
 - Os formulários usam TanStack Form com o schema Zod do model para validar no cliente e enviam para Server Actions envolvidas pelo `formAction()`, que converte os erros em mensagens no formulário. Eles funcionam sem JavaScript.
 

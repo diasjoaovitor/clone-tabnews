@@ -10,12 +10,8 @@ const patchHandler = async (
 ) => {
   const { 'token-id': tokenId } = await context.params
 
-  const validActivationToken =
-    await activationModel.findUniqueValidById(tokenId)
-
-  await activationModel.activateUserByUserId(validActivationToken.user_id)
-
-  const usedActivationToken = await activationModel.markTokenAsUsed(tokenId)
+  const usedActivationToken =
+    await activationModel.activateUserByTokenId(tokenId)
 
   return NextResponse.json(getActivationDto(null, usedActivationToken))
 }
