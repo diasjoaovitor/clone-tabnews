@@ -2,7 +2,9 @@ import { z } from 'zod'
 
 export const credentialsSchema = z.object({
   email: z.email({ message: 'O email informado não é válido.' }),
-  password: z.string({ message: 'A senha é obrigatória.' })
+  password: z
+    .string({ message: 'A senha é obrigatória.' })
+    .min(1, { message: 'A senha é obrigatória.' })
 })
 
 export type CredentialsInput = z.input<typeof credentialsSchema>

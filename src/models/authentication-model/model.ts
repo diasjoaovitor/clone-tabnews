@@ -1,4 +1,7 @@
-import { UnauthorizedError } from '@/infra/errors'
+import { ForbiddenError, UnauthorizedError } from '@/infra/errors'
+import { authorizationModel } from '@/models/authorization-model/model'
+import { sessionModel } from '@/models/session-model/model'
+import { Session } from '@/repositories/session-repository/types'
 import { User } from '@/repositories/user-repository/types'
 
 import { CredentialsInput, credentialsSchema } from './schema'
@@ -21,6 +24,21 @@ const getAuthenticatedUser = async (data: CredentialsInput): Promise<User> => {
   }
 }
 
+const signIn = async (
+  data: CredentialsInput
+): Promise<{ user: User; session: Session }> => {
+  const user = await getAuthenticatedUser(data)
+  if (!authorizationModel.can(user, 'create:session')) {
+    throw new ForbiddenError({
+      message: 'Você não possui permissão para fazer login.',
+      action: 'Contate o suporte caso você acredite que isto seja um erro.'
+    })
+  }
+  const session = await sessionModel.create(user.id)
+  return { user, session }
+}
+
 export const authenticationModel = {
-  getAuthenticatedUser
+  getAuthenticatedUser,
+  signIn
 }
