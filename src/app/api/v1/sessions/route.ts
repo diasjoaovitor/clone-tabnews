@@ -2,26 +2,18 @@ import { NextRequest, NextResponse } from 'next/server'
 
 import { getSessionDto } from '@/dtos/session-dto'
 import { controller } from '@/infra/controller'
-import { ForbiddenError } from '@/infra/errors'
 import { readJsonBody } from '@/infra/request'
 import { session } from '@/infra/session'
 import { authenticationModel } from '@/models/authentication-model/model'
-import { authorizationModel } from '@/models/authorization-model/model'
 import { sessionModel } from '@/models/session-model/model'
 
 const postHandler = async (request: NextRequest) => {
   const userInputValues = await readJsonBody(request)
-  const authenticatedUser = await authenticationModel.getAuthenticatedUser({
-    email: userInputValues.email,
-    password: userInputValues.password
-  })
-  if (!authorizationModel.can(authenticatedUser, 'create:session')) {
-    throw new ForbiddenError({
-      message: 'Você não possui permissão para fazer login.',
-      action: 'Contate o suporte caso você acredite que isto seja um erro.'
+  const { user: authenticatedUser, session: newSession } =
+    await authenticationModel.signIn({
+      email: userInputValues.email,
+      password: userInputValues.password
     })
-  }
-  const newSession = await sessionModel.create(authenticatedUser.id)
   await session.save(newSession.token)
   return NextResponse.json(getSessionDto(authenticatedUser, newSession), {
     status: 201
