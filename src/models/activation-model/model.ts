@@ -61,6 +61,15 @@ const activateUserByUserId = async (id: string): Promise<User> => {
   return activatedUser
 }
 
+const activateUserByTokenId = async (
+  tokenId: string
+): Promise<UserActivationToken> => {
+  const validActivationToken = await findUniqueValidById(tokenId)
+  await activateUserByUserId(validActivationToken.user_id)
+  const usedActivationToken = await markTokenAsUsed(tokenId)
+  return usedActivationToken
+}
+
 const sendEmailToUser = async (
   user: Pick<User, 'username' | 'email'>,
   activationTokenId: string
@@ -85,5 +94,6 @@ export const activationModel = {
   create,
   markTokenAsUsed,
   activateUserByUserId,
+  activateUserByTokenId,
   sendEmailToUser
 }
