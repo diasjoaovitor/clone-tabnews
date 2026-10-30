@@ -5,4 +5,4 @@ export const credentialsSchema = z.object({
   password: z.string({ message: 'A senha é obrigatória.' })
 })
 
-export type Credentials = z.infer<typeof credentialsSchema>
+export type CredentialsInput = z.input<typeof credentialsSchema>

@@ -13,8 +13,8 @@ export const createUserSchema = z.object({
     .min(8, { message: 'A senha deve conter pelo menos 8 caracteres.' })
 })
 
-export type CreateUserInput = z.infer<typeof createUserSchema>
+export type CreateUserInput = z.input<typeof createUserSchema>
 
 export const updateUserSchema = createUserSchema.partial()
 
-export type UpdateUserInput = z.infer<typeof updateUserSchema>
+export type UpdateUserInput = z.input<typeof updateUserSchema>
