@@ -5,6 +5,7 @@ import { beforeAll, describe, expect, test, vi } from 'vitest'
 import { API_BASE_URL } from '@/constants/base-url'
 import { UserDto } from '@/dtos/user-dto'
 import { ErrorResponse } from '@/infra/errors'
+import { ACTIVATED_USER_FEATURES } from '@/models/activation-model/constants'
 import { SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS } from '@/models/session-model/constants'
 import { sessionModel } from '@/models/session-model/model'
 import { ApiResponse } from '@/tests/_types/generics'
@@ -58,7 +59,7 @@ describe('GET /api/v1/user', () => {
         id: createdUser.id,
         username: 'UserWithValidSession',
         email: createdUser.email,
-        features: ['create:session', 'read:session', 'update:user'],
+        features: ACTIVATED_USER_FEATURES,
         created_at: createdUser.created_at,
         updated_at: activatedUser.updated_at
       }
@@ -120,7 +121,7 @@ describe('GET /api/v1/user', () => {
         id: createdUser.id,
         username: 'UserWithHalfwayExpiredSession',
         email: createdUser.email,
-        features: ['create:session', 'read:session', 'update:user'],
+        features: ACTIVATED_USER_FEATURES,
         created_at: createdUser.created_at,
         updated_at: activatedUser.updated_at
       }

@@ -3,7 +3,10 @@ import dedent from 'dedent'
 import { email } from '@/infra/email'
 import { ForbiddenError, NotFoundError } from '@/infra/errors'
 import { webserver } from '@/infra/webserver'
-import { ACTIVATION_TOKEN_EXPIRATION_IN_MILLISECONDS } from '@/models/activation-model/constants'
+import {
+  ACTIVATED_USER_FEATURES,
+  ACTIVATION_TOKEN_EXPIRATION_IN_MILLISECONDS
+} from '@/models/activation-model/constants'
 import { authorizationModel } from '@/models/authorization-model/model'
 import { userModel } from '@/models/user-model/model'
 import { userActivationTokenRepository } from '@/repositories/user-activation-token-repository/repository'
@@ -53,11 +56,7 @@ const activateUserByUserId = async (id: string): Promise<User> => {
     })
   }
 
-  const activatedUser = await userModel.setFeatures(id, [
-    'create:session',
-    'read:session',
-    'update:user'
-  ])
+  const activatedUser = await userModel.setFeatures(id, ACTIVATED_USER_FEATURES)
   return activatedUser
 }
 
