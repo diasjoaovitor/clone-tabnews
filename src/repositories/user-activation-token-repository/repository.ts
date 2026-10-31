@@ -48,8 +48,8 @@ const markAsUsed = async (id: string): Promise<UserActivationToken> => {
       UPDATE
         user_activation_tokens
       SET
-        used_at = timezone('utc', now()),
-        updated_at = timezone('utc', now())
+        used_at = now(),
+        updated_at = now()
       WHERE
         id = $1
       RETURNING

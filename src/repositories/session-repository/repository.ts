@@ -31,7 +31,7 @@ const findUniqueValidByToken = async (
           sessions
         WHERE
           token = $1
-          AND expires_at > timezone('utc', now())
+          AND expires_at > now()
         LIMIT
           1
       `,
@@ -47,7 +47,7 @@ const renew = async (id: string, expires_at: Date): Promise<Session> => {
         sessions
       SET
         expires_at = $2,
-        updated_at = timezone('utc', now())
+        updated_at = now()
       WHERE
         id = $1
       RETURNING *`,
@@ -63,7 +63,7 @@ const expires = async (id: string): Promise<Session> => {
         sessions
       SET
         expires_at = expires_at - interval '1 year',
-        updated_at = timezone('utc', now())
+        updated_at = now()
       WHERE
         id = $1
       RETURNING
