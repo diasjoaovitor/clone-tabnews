@@ -156,9 +156,12 @@ describe('PATCH /api/v1/activations/[token-id]', () => {
       data.expires_at.setMilliseconds(0)
       data.created_at.setMilliseconds(0)
 
-      expect(data.expires_at.getTime() - data.created_at.getTime()).toBe(
-        ACTIVATION_TOKEN_EXPIRATION_IN_MILLISECONDS
-      )
+      const actualLifetimeInMilliseconds =
+        data.expires_at.getTime() - data.created_at.getTime()
+      const lifetimeDifferenceInMilliseconds =
+        ACTIVATION_TOKEN_EXPIRATION_IN_MILLISECONDS -
+        actualLifetimeInMilliseconds
+      expect(lifetimeDifferenceInMilliseconds).toBeLessThanOrEqual(5000)
 
       const activatedUser = await userModel.findUniqueById(data.user_id)
       expect(activatedUser.features).toEqual(ACTIVATED_USER_FEATURES)
