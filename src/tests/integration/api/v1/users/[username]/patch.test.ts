@@ -288,6 +288,11 @@ describe('PATCH /api/v1/users/[username]', () => {
         updated_at: data.updated_at
       }
       expect(data).toEqual(expectedData)
+
+      const userInDatabase = await userRepository.findUniqueByUsername(
+        createdUser.username
+      )
+      expect(userInDatabase!.email).toBe('uniqueEmail2@curso.dev')
     })
 
     test("With new 'password'", async () => {

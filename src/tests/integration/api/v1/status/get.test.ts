@@ -32,6 +32,33 @@ describe('GET to /api/v1/status', () => {
     })
   })
 
+  describe('Default user', () => {
+    test('Retrieving current system status', async () => {
+      const { sessionObject } =
+        await orchestrator.createActivatedUserWithSession()
+
+      const response = await fetch(`${API_BASE_URL}/status`, {
+        headers: {
+          cookie: `session_id=${sessionObject.token}`
+        }
+      })
+      expect(response.status).toBe(200)
+
+      const responseBody: ApiResponse<StatusDto> = await response.json()
+      const data: StatusDto = isoStringFieldsToDate(responseBody)
+      const expectedData: ApiResponse<StatusDto> = {
+        updated_at: expect.any(Date),
+        dependencies: {
+          database: {
+            max_connections: 100,
+            opened_connections: 1
+          }
+        }
+      }
+      expect(data).toEqual(expectedData)
+    })
+  })
+
   describe('Privileged user', () => {
     test('Retrieving current system status', async () => {
       const { sessionObject } =
