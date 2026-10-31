@@ -49,7 +49,7 @@ As convenções completas estão no [`AGENTS.md`](./AGENTS.md), e o fluxo do pla
 - As rotas da API passam pelo `controller()`, e as Server Components e Server Actions pelo `gated()`. Os dois checam as features do usuário com o mesmo `can()`. As rotas leem o body com o `readJsonBody()`, que responde `400` quando ele não é um JSON válido.
 - Cada model valida a própria entrada com o seu `schema.ts`, inclusive os parâmetros da rota. O `schema.ts` também exporta o tipo da entrada de cada schema (`<Nome>Input`, com `z.input`), que o resto do código importa. A API responde `400` aos erros de validação, com `fields` trazendo a mensagem de cada campo inválido, e um cookie `session_id` mal formado é tratado como uma sessão inexistente (`401`).
 - `action.ts` com `'use server'` é só para mutações chamadas pelo cliente; dados lidos por uma Server Component vêm de um `data.ts`.
-- Os formulários usam TanStack Form com o schema Zod do model para validar no cliente e enviam para Server Actions envolvidas pelo `formAction()`, que converte os erros em mensagens no formulário. Eles funcionam sem JavaScript.
+- Os formulários usam TanStack Form com o schema Zod do model para validar no cliente e enviam para Server Actions envolvidas pelo `formAction()`, que converte os erros em mensagens no formulário. Eles só funcionam sem JavaScript em páginas estáticas: nas dinâmicas, o `src/app/(pages)/loading.tsx` mostra o fallback até o JavaScript carregar. Esse fallback fica de propósito.
 
 ### Interface
 

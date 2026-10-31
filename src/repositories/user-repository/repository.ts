@@ -62,7 +62,7 @@ const update = async (id: string, data: DataInput<User>): Promise<User> => {
         username = $1,
         email = $2,
         password = $3,
-        updated_at = timezone('utc', now())
+        updated_at = now()
       WHERE
         id = $4
       RETURNING *`,
@@ -81,7 +81,7 @@ const setFeatures = async (
         users
       SET
         features = $1,
-        updated_at = timezone('utc', now())
+        updated_at = now()
       WHERE
         id = $2
       RETURNING *`,
@@ -101,7 +101,7 @@ const addFeatures = async (
          users
        SET
          features = array_cat(features, $1),
-         updated_at = timezone('utc', now())
+         updated_at = now()
        WHERE
          id = $2
        RETURNING

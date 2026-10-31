@@ -4,6 +4,7 @@ import { beforeAll, describe, expect, test } from 'vitest'
 import { API_BASE_URL } from '@/constants/base-url'
 import { UserDto } from '@/dtos/user-dto'
 import { ErrorResponse } from '@/infra/errors'
+import { ACTIVATED_USER_FEATURES } from '@/models/activation-model/constants'
 import { passwordModel } from '@/models/password-model/model'
 import { userRepository } from '@/repositories/user-repository/repository'
 import { ApiResponse } from '@/tests/_types/generics'
@@ -246,7 +247,7 @@ describe('PATCH /api/v1/users/[username]', () => {
       const expectedData: UserDto = {
         id: createdUser.id,
         username: 'uniqueUser2',
-        features: ['create:session', 'read:session', 'update:user'],
+        features: ACTIVATED_USER_FEATURES,
         email: createdUser.email,
         created_at: createdUser.created_at,
         updated_at: data.updated_at
@@ -282,11 +283,16 @@ describe('PATCH /api/v1/users/[username]', () => {
         id: createdUser.id,
         username: createdUser.username,
         email: 'uniqueEmail2@curso.dev',
-        features: ['create:session', 'read:session', 'update:user'],
+        features: ACTIVATED_USER_FEATURES,
         created_at: createdUser.created_at,
         updated_at: data.updated_at
       }
       expect(data).toEqual(expectedData)
+
+      const userInDatabase = await userRepository.findUniqueByUsername(
+        createdUser.username
+      )
+      expect(userInDatabase!.email).toBe('uniqueEmail2@curso.dev')
     })
 
     test("With new 'password'", async () => {

@@ -1,5 +1,5 @@
 import { UserFeature } from '@/constants/features'
-import { NotFoundError, ValidationError } from '@/infra/errors'
+import { NotFoundError } from '@/infra/errors'
 import { passwordModel } from '@/models/password-model/model'
 import { userRepository } from '@/repositories/user-repository/repository'
 import { User } from '@/repositories/user-repository/types'
@@ -11,6 +11,11 @@ import {
   UpdateUserInput,
   updateUserSchema
 } from './schema'
+import {
+  createDuplicatedEmailError,
+  createDuplicatedUsernameError,
+  mapUniqueViolationError
+} from './utils'
 
 const validateUniqueUsername = async ({
   username,
@@ -22,11 +27,7 @@ const validateUniqueUsername = async ({
   const foundUserByUsername =
     await userRepository.findUniqueByUsername(username)
   if (foundUserByUsername && foundUserByUsername.id !== id) {
-    throw new ValidationError({
-      message: 'O username informado já está sendo utilizado.',
-      action: 'Utilize outro username para realizar esta operação.',
-      statusCode: 409
-    })
+    throw createDuplicatedUsernameError()
   }
 }
 
@@ -39,11 +40,7 @@ const validateUniqueEmail = async ({
 }): Promise<void> => {
   const foundUserByEmail = await userRepository.findUniqueByEmail(email)
   if (foundUserByEmail && foundUserByEmail.id !== id) {
-    throw new ValidationError({
-      message: 'O email informado já está sendo utilizado.',
-      action: 'Utilize outro email para realizar esta operação.',
-      statusCode: 409
-    })
+    throw createDuplicatedEmailError()
   }
 }
 
@@ -55,14 +52,17 @@ const create = async (data: CreateUserInput): Promise<User> => {
   await validateUniqueUsername({ username })
 
   const passwordHash = await passwordModel.hash(password)
-  const user = await userRepository.create({
-    username,
-    email,
-    password: passwordHash,
-    features: DEFAULT_USER_FEATURES
-  })
-
-  return user
+  try {
+    const user = await userRepository.create({
+      username,
+      email,
+      password: passwordHash,
+      features: DEFAULT_USER_FEATURES
+    })
+    return user
+  } catch (error) {
+    throw mapUniqueViolationError(error)
+  }
 }
 
 const findUniqueById = async (id: string): Promise<User> => {
@@ -127,12 +127,15 @@ const update = async (
     validData.password = await passwordModel.hash(password)
   }
 
-  const user = await userRepository.update(foundUserByUsername.id, {
-    ...foundUserByUsername,
-    ...validData
-  })
-
-  return user
+  try {
+    const user = await userRepository.update(foundUserByUsername.id, {
+      ...foundUserByUsername,
+      ...validData
+    })
+    return user
+  } catch (error) {
+    throw mapUniqueViolationError(error)
+  }
 }
 
 const setFeatures = async (

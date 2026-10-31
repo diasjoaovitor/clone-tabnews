@@ -186,6 +186,35 @@ describe('POST /api/v1/users', () => {
       }
       expect(response2Body).toEqual(expectedData)
     })
+
+    test("With simultaneous requests for the same 'username'", async () => {
+      const responses = await Promise.all(
+        ['simultaneous1@curso.dev', 'simultaneous2@curso.dev'].map((email) =>
+          fetch(`${API_BASE_URL}/users`, {
+            method: 'POST',
+            body: JSON.stringify({
+              username: 'simultaneousUsername',
+              email,
+              password: 'senha123'
+            })
+          })
+        )
+      )
+      const statuses = responses
+        .map(({ status }) => status)
+        .toSorted((a, b) => a - b)
+      expect(statuses).toEqual([201, 409])
+
+      const conflictResponse = responses.find(({ status }) => status === 409)!
+      const conflictResponseBody = await conflictResponse.json()
+      const expectedData: ErrorResponse = {
+        name: 'ValidationError',
+        message: 'O username informado já está sendo utilizado.',
+        action: 'Utilize outro username para realizar esta operação.',
+        status_code: 409
+      }
+      expect(conflictResponseBody).toEqual(expectedData)
+    })
   })
 
   describe('Default user', () => {

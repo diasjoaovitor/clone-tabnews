@@ -4,6 +4,7 @@ import { beforeAll, describe, expect, test } from 'vitest'
 import { API_BASE_URL } from '@/constants/base-url'
 import { UserDto } from '@/dtos/user-dto'
 import { ErrorResponse } from '@/infra/errors'
+import { ACTIVATED_USER_FEATURES } from '@/models/activation-model/constants'
 import { ApiResponse } from '@/tests/_types/generics'
 import { isoStringFieldsToDate } from '@/tests/_utils/formatters'
 import orchestrator from '@/tests/orchestrator'
@@ -93,7 +94,7 @@ describe('GET /api/v1/users/[username]', () => {
         id: user.id,
         username: user.username,
         email: user.email,
-        features: ['create:session', 'read:session', 'update:user'],
+        features: ACTIVATED_USER_FEATURES,
         created_at: user.created_at,
         updated_at: activatedUser.updated_at
       }
@@ -122,7 +123,7 @@ describe('GET /api/v1/users/[username]', () => {
       const expectedData: UserDto = {
         id: targetUser.id,
         username: targetUser.username,
-        features: ['create:session', 'read:session', 'update:user'],
+        features: ACTIVATED_USER_FEATURES,
         created_at: targetUser.created_at,
         updated_at: data.updated_at
       }

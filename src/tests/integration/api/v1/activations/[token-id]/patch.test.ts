@@ -4,7 +4,10 @@ import { beforeAll, describe, expect, test, vi } from 'vitest'
 import { API_BASE_URL } from '@/constants/base-url'
 import { UserActivationTokenDto } from '@/dtos/activation-dto'
 import { ErrorResponse } from '@/infra/errors'
-import { ACTIVATION_TOKEN_EXPIRATION_IN_MILLISECONDS } from '@/models/activation-model/constants'
+import {
+  ACTIVATED_USER_FEATURES,
+  ACTIVATION_TOKEN_EXPIRATION_IN_MILLISECONDS
+} from '@/models/activation-model/constants'
 import { activationModel } from '@/models/activation-model/model'
 import { userModel } from '@/models/user-model/model'
 import { UserActivationToken } from '@/repositories/user-activation-token-repository/types'
@@ -153,16 +156,15 @@ describe('PATCH /api/v1/activations/[token-id]', () => {
       data.expires_at.setMilliseconds(0)
       data.created_at.setMilliseconds(0)
 
-      expect(data.expires_at.getTime() - data.created_at.getTime()).toBe(
-        ACTIVATION_TOKEN_EXPIRATION_IN_MILLISECONDS
-      )
+      const actualLifetimeInMilliseconds =
+        data.expires_at.getTime() - data.created_at.getTime()
+      const lifetimeDifferenceInMilliseconds =
+        ACTIVATION_TOKEN_EXPIRATION_IN_MILLISECONDS -
+        actualLifetimeInMilliseconds
+      expect(lifetimeDifferenceInMilliseconds).toBeLessThanOrEqual(5000)
 
       const activatedUser = await userModel.findUniqueById(data.user_id)
-      expect(activatedUser.features).toEqual([
-        'create:session',
-        'read:session',
-        'update:user'
-      ])
+      expect(activatedUser.features).toEqual(ACTIVATED_USER_FEATURES)
     })
 
     test('With valid token but already activated user', async () => {

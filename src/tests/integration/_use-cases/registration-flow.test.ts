@@ -4,6 +4,7 @@ import { beforeAll, describe, expect, test } from 'vitest'
 import { API_BASE_URL, APP_BASE_URL } from '@/constants/base-url'
 import { SessionDto } from '@/dtos/session-dto'
 import { UserDto } from '@/dtos/user-dto'
+import { ACTIVATED_USER_FEATURES } from '@/models/activation-model/constants'
 import { activationModel } from '@/models/activation-model/model'
 import { userModel } from '@/models/user-model/model'
 import { ApiResponse } from '@/tests/_types/generics'
@@ -82,11 +83,7 @@ describe('Use case: Registration Flow (all successful)', () => {
 
     const activatedUser =
       await userModel.findUniqueByUsername('RegistrationFlow')
-    expect(activatedUser.features).toEqual([
-      'create:session',
-      'read:session',
-      'update:user'
-    ])
+    expect(activatedUser.features).toEqual(ACTIVATED_USER_FEATURES)
   })
 
   test('Login', async () => {
