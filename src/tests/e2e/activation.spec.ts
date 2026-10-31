@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test'
 import { getActivationUrl } from '@/tests/_utils/mailpit'
 
 test('activates the account from the email link', async ({ page, request }) => {
-  // Its own prefix: `sign-up.spec.ts` runs in another worker and may sign up in the same millisecond
+  // Its own prefix: the other specs run in other workers and may sign up in the same millisecond
   const username = `activation${Date.now()}`
   const email = `${username}@curso.dev`
 
