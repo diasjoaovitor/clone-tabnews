@@ -1,6 +1,6 @@
 import setCookieParser, { Cookie } from 'set-cookie-parser'
 import { version as uuidVersion } from 'uuid'
-import { beforeAll, describe, expect, test } from 'vitest'
+import { beforeAll, describe, expect, test, vi } from 'vitest'
 
 import { API_BASE_URL } from '@/constants/base-url'
 import { SessionDto } from '@/dtos/session-dto'
@@ -141,6 +141,45 @@ describe('POST /api/v1/sessions', () => {
         expires: expect.any(Date)
       }
       expect(parsedSetCookie.session_id).toEqual(expectedParsedSetCookie)
+    })
+
+    test('With an expired session cookie', async () => {
+      vi.setSystemTime(
+        new Date(Date.now() - SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS)
+      )
+
+      const createdUser = await orchestrator.createUser({
+        email: 'sessao.vencida@curso.dev',
+        password: 'sessaovencida'
+      })
+      await orchestrator.activateUser(createdUser.id)
+      const expiredSession = await orchestrator.createSession(createdUser.id)
+
+      vi.useRealTimers()
+
+      const response = await fetch(`${API_BASE_URL}/sessions`, {
+        method: 'POST',
+        headers: {
+          Cookie: `session_id=${expiredSession.token}`
+        },
+        body: JSON.stringify({
+          email: 'sessao.vencida@curso.dev',
+          password: 'sessaovencida'
+        })
+      })
+      expect(response.status).toBe(201)
+
+      const parsedSetCookie = setCookieParser(
+        response.headers.get('set-cookie')!,
+        {
+          map: true
+        }
+      )
+      expect(parsedSetCookie.session_id.value).toMatch(/^[0-9a-f]{96}$/)
+      expect(parsedSetCookie.session_id.value).not.toBe(expiredSession.token)
+      expect(parsedSetCookie.session_id.maxAge).toBe(
+        SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS / 1000
+      )
     })
   })
 })

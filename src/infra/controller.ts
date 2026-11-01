@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 import { UserFeature } from '@/constants/features'
 
-import { can } from './authorization'
+import { authorize } from './authorization'
 import {
   MethodNotAllowedError,
   normalizeError,
@@ -91,10 +91,8 @@ export const controller = (
       context?: Parameters<RouteHandler>[1]
     ): Promise<NextResponse> => {
       try {
-        if (feature) {
-          const user = await session.getUser()
-          can(user, feature)
-        }
+        const resolvedSession = await session.resolveAndClearInvalid()
+        authorize(resolvedSession, feature)
         const response = await routeHandler!(request, context)
         return response
       } catch (error) {

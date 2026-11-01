@@ -1,3 +1,4 @@
+import setCookieParser, { Cookie } from 'set-cookie-parser'
 import { beforeAll, describe, expect, test } from 'vitest'
 
 import { API_BASE_URL } from '@/constants/base-url'
@@ -29,6 +30,35 @@ describe('GET to /api/v1/status', () => {
         }
       }
       expect(data).toEqual(expectedData)
+    })
+
+    test('With an unknown session cookie', async () => {
+      const response = await fetch(`${API_BASE_URL}/status`, {
+        headers: {
+          cookie: `session_id=${'0'.repeat(96)}`
+        }
+      })
+      expect(response.status).toBe(200)
+
+      const responseBody: ApiResponse<StatusDto> = await response.json()
+      expect(responseBody.dependencies.database).not.toHaveProperty('version')
+
+      const parsedSetCookie = setCookieParser(
+        response.headers.get('Set-Cookie')!,
+        {
+          map: true
+        }
+      )
+      const expectedParsedSetCookie: Cookie = {
+        name: 'session_id',
+        value: 'invalid',
+        maxAge: -1,
+        path: '/',
+        sameSite: 'lax',
+        httpOnly: true,
+        expires: expect.any(Date)
+      }
+      expect(parsedSetCookie.session_id).toEqual(expectedParsedSetCookie)
     })
   })
 

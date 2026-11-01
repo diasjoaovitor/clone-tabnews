@@ -9,27 +9,27 @@ import { SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS } from '@/models/session-model
 import { sessionModel } from '@/models/session-model/model'
 import { userModel } from '@/models/user-model/model'
 
+import { UnauthorizedError } from './errors'
+
+// A browser only removes a cookie set with the same `path`, so `clear()` must share these with `save()`
+const SESSION_COOKIE_OPTIONS = {
+  path: '/',
+  secure: process.env.NODE_ENV === 'production',
+  httpOnly: true,
+  sameSite: 'lax'
+} as const
+
 const save = async (token: string): Promise<void> => {
-  const expiresAt = SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS / 1000
   const store = await cookies()
   store.set('session_id', token, {
-    path: '/',
-    maxAge: expiresAt,
-    secure: process.env.NODE_ENV === 'production',
-    httpOnly: true,
-    sameSite: 'lax'
+    ...SESSION_COOKIE_OPTIONS,
+    maxAge: SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS / 1000
   })
 }
 
 const clear = async (): Promise<void> => {
   const store = await cookies()
-  store.set('session_id', 'invalid', {
-    path: '/',
-    maxAge: -1,
-    secure: process.env.NODE_ENV === 'production',
-    httpOnly: true,
-    sameSite: 'lax'
-  })
+  store.set('session_id', 'invalid', { ...SESSION_COOKIE_OPTIONS, maxAge: -1 })
 }
 
 export type UserSession = {
@@ -38,21 +38,45 @@ export type UserSession = {
   sessionId?: string
 }
 
-const getUser = cache(async (): Promise<UserSession> => {
+export type ResolvedSession = {
+  user: UserSession
+  // Returned instead of clearing the cookie here, since Server Components can't set cookies
+  sessionError?: UnauthorizedError
+}
+
+const resolve = cache(async (): Promise<ResolvedSession> => {
   const store = await cookies()
   const token = store.get('session_id')?.value
-  if (!token) return { features: ANONYMOUS_FEATURES }
-  const session = await sessionModel.findUniqueValidByToken(token)
-  const user = await userModel.findUniqueById(session.user_id)
-  return {
-    id: user.id,
-    sessionId: session.id,
-    features: user.features
+  if (!token) return { user: { features: ANONYMOUS_FEATURES } }
+  try {
+    const session = await sessionModel.findUniqueValidByToken(token)
+    const user = await userModel.findUniqueById(session.user_id)
+    return {
+      user: { id: user.id, sessionId: session.id, features: user.features }
+    }
+  } catch (error) {
+    if (!(error instanceof UnauthorizedError)) throw error
+    return { user: { features: ANONYMOUS_FEATURES }, sessionError: error }
   }
 })
+
+// Only Route Handlers and Server Actions can call it, since Server Components can't set cookies
+const resolveAndClearInvalid = async (): Promise<ResolvedSession> => {
+  const resolvedSession = await resolve()
+  // Cleared before the handler runs, so a new session saved by the handler (sign-in) still wins
+  if (resolvedSession.sessionError) await clear()
+  return resolvedSession
+}
+
+const getUser = async (): Promise<UserSession> => {
+  const { user } = await resolve()
+  return user
+}
 
 export const session = {
   save,
   clear,
+  resolve,
+  resolveAndClearInvalid,
   getUser
 }

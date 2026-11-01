@@ -23,8 +23,8 @@ const create = async (userId: string): Promise<Session> => {
 }
 
 const findUniqueValidByToken = async (token: string): Promise<Session> => {
-  // A malformed cookie answers like an unknown session (401, not 400), so the cookie is cleared and
-  // `gated()` falls back to the anonymous user
+  // A malformed cookie answers like an unknown session (401, not 400), so `session.resolve()` falls
+  // back to the anonymous user instead of failing the request
   const sessionFound = sessionTokenSchema.safeParse(token).success
     ? await sessionRepository.findUniqueValidByToken(token)
     : null

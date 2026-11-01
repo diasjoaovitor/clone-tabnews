@@ -1,6 +1,7 @@
 import { unstable_rethrow } from 'next/navigation'
 
 import { normalizeError, ValidationError } from '@/infra/errors'
+import { session } from '@/infra/session'
 
 type FieldValues<TValues> = Partial<Record<keyof TValues & string, string>>
 
@@ -70,6 +71,7 @@ export const formAction = async <TValues>(
     })
 
   try {
+    await session.resolveAndClearInvalid()
     return await handler(input)
   } catch (error_) {
     // redirect() and notFound() work by throwing
