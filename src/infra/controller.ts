@@ -1,18 +1,14 @@
 import { HTTP_METHOD, HTTP_METHODS } from 'next/dist/server/web/http'
+import { unstable_rethrow } from 'next/navigation'
 import { NextRequest, NextResponse } from 'next/server'
-import { ZodError } from 'zod'
 
 import { UserFeature } from '@/constants/features'
 
 import { can } from './authorization'
 import {
-  ForbiddenError,
-  InternalServerError,
   MethodNotAllowedError,
-  NotFoundError,
-  ServiceError,
-  UnauthorizedError,
-  ValidationError
+  normalizeError,
+  UnauthorizedError
 } from './errors'
 import { session } from './session'
 
@@ -41,39 +37,11 @@ const onNoMatchHandler = async (): Promise<NextResponse> => {
   })
 }
 
-const onErrorHandler = async (error: unknown): Promise<NextResponse> => {
-  if (error instanceof ZodError) {
-    const publicErrorObject = ValidationError.fromZodError(error)
-    return NextResponse.json(publicErrorObject, {
-      status: publicErrorObject.statusCode
-    })
-  }
-
-  if (
-    error instanceof ValidationError ||
-    error instanceof NotFoundError ||
-    error instanceof ForbiddenError ||
-    error instanceof ServiceError
-  ) {
-    return NextResponse.json(error, {
-      status: error.statusCode
-    })
-  }
-
-  if (error instanceof UnauthorizedError) {
-    await session.clear()
-    return NextResponse.json(error, {
-      status: error.statusCode
-    })
-  }
-
-  const publicErrorObject = new InternalServerError({
-    cause: error
-  })
-  console.error(publicErrorObject)
-  return NextResponse.json(publicErrorObject, {
-    status: publicErrorObject.statusCode
-  })
+const onErrorHandler = async (error_: unknown): Promise<NextResponse> => {
+  const error = normalizeError(error_)
+  if (error.statusCode >= 500) console.error(error)
+  if (error instanceof UnauthorizedError) await session.clear()
+  return NextResponse.json(error, { status: error.statusCode })
 }
 
 export const controller = (
@@ -102,6 +70,9 @@ export const controller = (
         const response = await routeHandler!(request, context)
         return response
       } catch (error) {
+        // Request-time APIs such as `cookies()` throw to opt out of prerendering:
+        // https://nextjs.org/docs/app/api-reference/functions/unstable_rethrow
+        unstable_rethrow(error)
         return onErrorHandler(error)
       }
     }

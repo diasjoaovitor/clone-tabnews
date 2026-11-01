@@ -168,3 +168,9 @@ export class ForbiddenError extends AppError {
     this.name = 'ForbiddenError'
   }
 }
+
+export const normalizeError = (error: unknown): AppError => {
+  if (error instanceof z.ZodError) return ValidationError.fromZodError(error)
+  if (error instanceof AppError) return error
+  return new InternalServerError({ cause: error })
+}

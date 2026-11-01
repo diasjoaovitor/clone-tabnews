@@ -84,7 +84,7 @@ describe('formAction', () => {
     })
     expect(state).toMatchObject({
       status: 'error',
-      message: 'Ocorreu um erro inesperado.'
+      message: 'Um erro interno não esperado aconteceu'
     })
     expect(log).toHaveBeenCalled()
     log.mockRestore()
