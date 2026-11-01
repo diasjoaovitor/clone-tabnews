@@ -1,14 +1,15 @@
-import { HTTP_METHODS } from 'next/dist/server/web/http'
 import { describe, expect, test } from 'vitest'
 
 import { API_BASE_URL } from '@/constants/base-url'
+import { HTTP_METHODS, HttpMethod } from '@/infra/controller'
 import { ErrorResponse } from '@/infra/errors'
 
 describe('Not allowed methods to /api/v1/users/[username]', () => {
-  test('should return 405 and the response error', async () => {
+  test('should return 405, the allowed methods and the response error', async () => {
     const url = `${API_BASE_URL}/users/username`
+    const allowedMethods = new Set<HttpMethod>(['GET', 'PATCH'])
     const notAllowedMethods = HTTP_METHODS.filter(
-      (method) => method !== 'GET' && method !== 'PATCH'
+      (method) => !allowedMethods.has(method)
     )
     const expectedData: ErrorResponse = {
       name: 'MethodNotAllowedError',
@@ -21,7 +22,7 @@ describe('Not allowed methods to /api/v1/users/[username]', () => {
         method
       })
       expect(response.status).toBe(expectedData.status_code)
-      if (method === 'HEAD') continue
+      expect(response.headers.get('Allow')).toBe('GET, HEAD, PATCH, OPTIONS')
       expect(await response.json()).toEqual(expectedData)
     }
   })

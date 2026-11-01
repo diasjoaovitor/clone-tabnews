@@ -29,7 +29,7 @@ const deleteHandler = async () => {
   })
 }
 
-export const { POST, DELETE, GET, HEAD, OPTIONS, PATCH, PUT } = controller({
+export const { GET, POST, PUT, PATCH, DELETE, OPTIONS } = controller({
   POST: { handler: postHandler, feature: 'create:session' },
   DELETE: { handler: deleteHandler, feature: 'read:session' }
 })

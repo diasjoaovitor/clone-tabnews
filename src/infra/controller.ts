@@ -1,4 +1,3 @@
-import { HTTP_METHOD, HTTP_METHODS } from 'next/dist/server/web/http'
 import { unstable_rethrow } from 'next/navigation'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -11,6 +10,13 @@ import {
   UnauthorizedError
 } from './errors'
 import { session } from './session'
+
+// HEAD is left out so Next.js implements it from the exported GET (RFC 9110 §9.1). OPTIONS is answered by
+// the controller, since Next.js's own lists every exported method in `Allow`, even those that answer `405`.
+// The list is copied instead of imported, since `next/dist/server/web/http` isn't public
+export const HTTP_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'] as const
+
+export type HttpMethod = (typeof HTTP_METHODS)[number]
 
 // Each route types its own context (`RouteContext<'/api/v1/...'>`), and such a handler isn't assignable
 // to one whose context is `unknown`
@@ -25,17 +31,33 @@ type RouteConfig = {
 }
 
 type RequestsConfig = {
-  [key in HTTP_METHOD]?: RouteHandler | RouteConfig
+  [key in HttpMethod]?: RouteHandler | RouteConfig
 }
 
-type RequestsResult = Record<HTTP_METHOD, RouteHandler>
+type RequestsResult = Record<HttpMethod | 'OPTIONS', RouteHandler>
 
-const onNoMatchHandler = async (): Promise<NextResponse> => {
-  const publicErrorObject = new MethodNotAllowedError()
-  return NextResponse.json(publicErrorObject, {
-    status: publicErrorObject.statusCode
-  })
-}
+const getAllowHeader = (methods: HttpMethod[]): string =>
+  [
+    ...methods.flatMap((method) =>
+      method === 'GET' ? ['GET', 'HEAD'] : method
+    ),
+    'OPTIONS'
+  ].join(', ')
+
+const createOptionsHandler =
+  (allow: string): RouteHandler =>
+  async () =>
+    new NextResponse(null, { status: 204, headers: { Allow: allow } })
+
+const createNoMatchHandler =
+  (allow: string): RouteHandler =>
+  async () => {
+    const publicErrorObject = new MethodNotAllowedError()
+    return NextResponse.json(publicErrorObject, {
+      status: publicErrorObject.statusCode,
+      headers: { Allow: allow }
+    })
+  }
 
 const onErrorHandler = async (error_: unknown): Promise<NextResponse> => {
   const error = normalizeError(error_)
@@ -47,7 +69,13 @@ const onErrorHandler = async (error_: unknown): Promise<NextResponse> => {
 export const controller = (
   availableRequests: Partial<RequestsConfig>
 ): RequestsResult => {
-  const requests: Partial<RequestsResult> = {}
+  const allow = getAllowHeader(
+    HTTP_METHODS.filter((method) => availableRequests[method])
+  )
+  const onNoMatchHandler = createNoMatchHandler(allow)
+  const requests: Partial<RequestsResult> = {
+    OPTIONS: createOptionsHandler(allow)
+  }
   for (const method of HTTP_METHODS) {
     const routeDefinition = availableRequests[method]
     let routeHandler: RouteHandler | undefined

@@ -13,6 +13,6 @@ const postHandler = async (request: NextRequest) => {
   return NextResponse.json(getUserDto(newUser, newUser), { status: 201 })
 }
 
-export const { POST, DELETE, GET, HEAD, OPTIONS, PATCH, PUT } = controller({
+export const { GET, POST, PUT, PATCH, DELETE, OPTIONS } = controller({
   POST: { handler: postHandler, feature: 'create:user' }
 })

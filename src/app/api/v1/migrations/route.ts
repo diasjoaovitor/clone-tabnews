@@ -19,7 +19,7 @@ const postHandler = async () => {
   })
 }
 
-export const { GET, POST, DELETE, HEAD, OPTIONS, PATCH, PUT } = controller({
+export const { GET, POST, PUT, PATCH, DELETE, OPTIONS } = controller({
   GET: { handler: getHandler, feature: 'read:migration' },
   POST: { handler: postHandler, feature: 'create:migration' }
 })

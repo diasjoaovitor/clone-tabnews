@@ -24,6 +24,6 @@ const getHandler = async () => {
   })
 }
 
-export const { GET, DELETE, HEAD, OPTIONS, PATCH, POST, PUT } = controller({
+export const { GET, POST, PUT, PATCH, DELETE, OPTIONS } = controller({
   GET: { handler: getHandler, feature: 'read:session' }
 })

@@ -16,7 +16,7 @@ const patchHandler = async (
   return NextResponse.json(getActivationDto(null, usedActivationToken))
 }
 
-export const { PATCH, DELETE, GET, HEAD, OPTIONS, POST, PUT } = controller({
+export const { GET, POST, PUT, PATCH, DELETE, OPTIONS } = controller({
   PATCH: {
     handler: patchHandler,
     feature: 'read:activation_token'

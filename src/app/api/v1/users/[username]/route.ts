@@ -39,7 +39,7 @@ const patchHandler = async (request: NextRequest, context: Context) => {
   })
 }
 
-export const { GET, PATCH, DELETE, HEAD, OPTIONS, POST, PUT } = controller({
+export const { GET, POST, PUT, PATCH, DELETE, OPTIONS } = controller({
   GET: getHandler,
   PATCH: { handler: patchHandler, feature: 'update:user' }
 })
