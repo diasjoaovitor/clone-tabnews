@@ -1,6 +1,6 @@
 import { DatabaseError } from 'pg'
 
-import { ServiceError, ValidationError } from '@/infra/errors'
+import { ValidationError } from '@/infra/errors'
 
 const UNIQUE_VIOLATION_CODE = '23505'
 
@@ -22,16 +22,15 @@ export const createDuplicatedEmailError = (): ValidationError =>
 // so the unique indexes are the last check
 export const mapUniqueViolationError = (error: unknown): unknown => {
   if (
-    !(error instanceof ServiceError) ||
-    !(error.cause instanceof DatabaseError) ||
-    error.cause.code !== UNIQUE_VIOLATION_CODE
+    !(error instanceof DatabaseError) ||
+    error.code !== UNIQUE_VIOLATION_CODE
   ) {
     return error
   }
-  if (error.cause.constraint === 'users_username_lower_key') {
+  if (error.constraint === 'users_username_lower_key') {
     return createDuplicatedUsernameError()
   }
-  if (error.cause.constraint === 'users_email_lower_key') {
+  if (error.constraint === 'users_email_lower_key') {
     return createDuplicatedEmailError()
   }
   return error

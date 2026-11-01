@@ -1,7 +1,6 @@
 import { unstable_rethrow } from 'next/navigation'
-import { z } from 'zod'
 
-import { AppError, ValidationError } from '@/infra/errors'
+import { normalizeError, ValidationError } from '@/infra/errors'
 
 type FieldValues<TValues> = Partial<Record<keyof TValues & string, string>>
 
@@ -75,18 +74,11 @@ export const formAction = async <TValues>(
   } catch (error_) {
     // redirect() and notFound() work by throwing
     unstable_rethrow(error_)
-    if (error_ instanceof z.ZodError) {
-      return errorState({ errors: ValidationError.fromZodError(error_).fields })
+    const error = normalizeError(error_)
+    if (error.statusCode >= 500) console.error(error)
+    if (error instanceof ValidationError && error.fields) {
+      return errorState({ errors: error.fields })
     }
-    if (error_ instanceof AppError) {
-      // A failure on our side (e.g. the database is down) still needs a trace in the logs
-      if (error_.statusCode >= 500) console.error(error_)
-      return errorState({ message: error_.message, action: error_.action })
-    }
-    console.error(error_)
-    return errorState({
-      message: 'Ocorreu um erro inesperado.',
-      action: 'Tente novamente em instantes.'
-    })
+    return errorState({ message: error.message, action: error.action })
   }
 }

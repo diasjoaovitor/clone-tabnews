@@ -4,25 +4,19 @@ import { RunnerOption } from 'node-pg-migrate'
 import { ClientBase } from 'pg'
 
 import { database } from '@/infra/database'
-import { ServiceError } from '@/infra/errors'
 
 import { Migration } from './types'
 
 export const handler = async (
   operation: (client: ClientBase) => Promise<Migration[]>
 ): Promise<Migration[]> => {
-  let client
+  const client = await database.getNewClient()
   try {
-    client = await database.getNewClient()
     return await operation(client)
   } catch (error) {
-    const serviceErrorObject = new ServiceError({
-      message: 'Erro ao realizar operações de migração.',
-      cause: error
-    })
-    throw serviceErrorObject
+    throw database.mapConnectionError(error)
   } finally {
-    await client?.end()
+    await client.end()
   }
 }
 
