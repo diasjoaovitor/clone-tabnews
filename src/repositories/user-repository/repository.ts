@@ -1,10 +1,13 @@
 import { UserFeature } from '@/constants/features'
-import { database } from '@/infra/database'
+import { database, DatabaseClient } from '@/infra/database'
 import { DataInput } from '@/types/generics'
 
 import { User } from './types'
 
-const create = async (data: DataInput<User>): Promise<User> => {
+const create = async (
+  data: DataInput<User>,
+  client?: DatabaseClient
+): Promise<User> => {
   const { username, email, password, features } = data
   const result = await database.query<User>(
     `
@@ -14,7 +17,8 @@ const create = async (data: DataInput<User>): Promise<User> => {
           ($1, $2, $3, $4)
         RETURNING *
       `,
-    [username, email, password, features]
+    [username, email, password, features],
+    client
   )
   return database.getRequiredRow(result)
 }

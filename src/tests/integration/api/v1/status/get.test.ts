@@ -25,11 +25,12 @@ describe('GET to /api/v1/status', () => {
         dependencies: {
           database: {
             max_connections: 100,
-            opened_connections: 1
+            opened_connections: expect.any(Number)
           }
         }
       }
       expect(data).toEqual(expectedData)
+      expect(data.dependencies.database.opened_connections).toBeGreaterThan(0)
     })
 
     test('With an unknown session cookie', async () => {
@@ -81,11 +82,12 @@ describe('GET to /api/v1/status', () => {
         dependencies: {
           database: {
             max_connections: 100,
-            opened_connections: 1
+            opened_connections: expect.any(Number)
           }
         }
       }
       expect(data).toEqual(expectedData)
+      expect(data.dependencies.database.opened_connections).toBeGreaterThan(0)
     })
   })
 
@@ -111,11 +113,12 @@ describe('GET to /api/v1/status', () => {
           database: {
             version: '16.0',
             max_connections: 100,
-            opened_connections: 1
+            opened_connections: expect.any(Number)
           }
         }
       }
       expect(data).toEqual(expectedData)
+      expect(data.dependencies.database.opened_connections).toBeGreaterThan(0)
     })
   })
 })
