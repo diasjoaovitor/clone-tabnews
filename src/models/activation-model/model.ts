@@ -1,6 +1,7 @@
 import dedent from 'dedent'
 
 import { APP_BASE_URL } from '@/constants/base-url'
+import { DatabaseClient } from '@/infra/database'
 import { email } from '@/infra/email'
 import { ForbiddenError, NotFoundError } from '@/infra/errors'
 import {
@@ -30,14 +31,20 @@ const findUniqueValidById = async (
   return result
 }
 
-const create = async (userId: string): Promise<UserActivationToken> => {
+const create = async (
+  userId: string,
+  client?: DatabaseClient
+): Promise<UserActivationToken> => {
   const expiresAt = new Date(
     Date.now() + ACTIVATION_TOKEN_EXPIRATION_IN_MILLISECONDS
   )
-  const result = await userActivationTokenRepository.create({
-    expires_at: expiresAt,
-    user_id: userId
-  })
+  const result = await userActivationTokenRepository.create(
+    {
+      expires_at: expiresAt,
+      user_id: userId
+    },
+    client
+  )
   return result
 }
 
