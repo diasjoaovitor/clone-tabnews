@@ -1,14 +1,16 @@
-import { HTTP_METHODS } from 'next/dist/server/web/http'
 import { describe, expect, test } from 'vitest'
 
 import { API_BASE_URL } from '@/constants/base-url'
+import { HTTP_METHODS, HttpMethod } from '@/infra/controller'
 import { ErrorResponse } from '@/infra/errors'
 
 describe('Not allowed methods to /api/v1/status', () => {
-  test('should return 405 and the response error', async () => {
+  test('should return 405, the allowed methods and the response error', async () => {
     const url = `${API_BASE_URL}/status`
-    const notAllowedMethods = HTTP_METHODS.filter((method) => method !== 'GET')
-
+    const allowedMethods = new Set<HttpMethod>(['GET'])
+    const notAllowedMethods = HTTP_METHODS.filter(
+      (method) => !allowedMethods.has(method)
+    )
     const expectedData: ErrorResponse = {
       name: 'MethodNotAllowedError',
       message: 'Método não permitido para este endpoint.',
@@ -20,7 +22,7 @@ describe('Not allowed methods to /api/v1/status', () => {
         method
       })
       expect(response.status).toBe(expectedData.status_code)
-      if (method === 'HEAD') continue
+      expect(response.headers.get('Allow')).toBe('GET, HEAD, OPTIONS')
       expect(await response.json()).toEqual(expectedData)
     }
   })
