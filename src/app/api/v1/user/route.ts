@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server'
 
 import { getUserDto } from '@/dtos/user-dto'
-import { controller } from '@/infra/controller'
-import { session } from '@/infra/session'
+import { controller } from '@/entry/controller'
+import { session } from '@/entry/session'
 import { sessionModel } from '@/models/session-model/model'
 import { userModel } from '@/models/user-model/model'
 

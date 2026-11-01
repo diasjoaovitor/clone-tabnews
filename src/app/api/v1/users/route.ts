@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 import { getUserDto } from '@/dtos/user-dto'
-import { controller } from '@/infra/controller'
-import { readJsonBody } from '@/infra/request'
+import { controller } from '@/entry/controller'
+import { readJsonBody } from '@/entry/request'
 import { registrationModel } from '@/models/registration-model/model'
 
 const postHandler = async (request: NextRequest) => {

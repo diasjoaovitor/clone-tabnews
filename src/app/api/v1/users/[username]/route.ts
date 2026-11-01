@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 import { getUserDto } from '@/dtos/user-dto'
-import { controller } from '@/infra/controller'
+import { controller } from '@/entry/controller'
+import { readJsonBody } from '@/entry/request'
+import { session } from '@/entry/session'
 import { ForbiddenError } from '@/infra/errors'
-import { readJsonBody } from '@/infra/request'
-import { session } from '@/infra/session'
 import { authorizationModel } from '@/models/authorization-model/model'
 import { userModel } from '@/models/user-model/model'
 

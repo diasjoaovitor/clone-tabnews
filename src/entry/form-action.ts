@@ -1,7 +1,7 @@
 import { unstable_rethrow } from 'next/navigation'
 
+import { session } from '@/entry/session'
 import { normalizeError, ValidationError } from '@/infra/errors'
-import { session } from '@/infra/session'
 
 type FieldValues<TValues> = Partial<Record<keyof TValues & string, string>>
 

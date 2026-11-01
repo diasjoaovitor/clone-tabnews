@@ -44,8 +44,8 @@ As convenções completas estão no [`AGENTS.md`](./AGENTS.md), e o fluxo do pla
 
 ### Arquitetura
 
-- O código do servidor é dividido em camadas, e os imports só descem: `app` → `dtos`/`models` → `repositories` → `infra`, com `constants` disponível para todas.
-- `models/` guarda as regras de negócio de cada domínio, `repositories/` as queries SQL, `dtos/` o que cada rota pode expor conforme quem pede, e `infra/` as peças técnicas (banco, sessão, e-mail, erros e os wrappers de rota).
+- O código do servidor é dividido em camadas, e os imports só descem: `app` → `entry` → `dtos`/`models` → `repositories` → `infra`, com `constants` disponível para todas, sem importar nenhuma delas. O ESLint garante essa direção.
+- `models/` guarda as regras de negócio de cada domínio, `repositories/` as queries SQL, `dtos/` o que cada rota pode expor conforme quem pede, `entry/` a camada de entrada (os wrappers de rota, de Server Components e de Server Actions, a sessão e a autorização) e `infra/` a base técnica (banco, e-mail e erros).
 - As rotas da API passam pelo `controller()`, e as Server Components e Server Actions pelo `gated()`. Os dois checam as features do usuário com o mesmo `authorize()`. Um cookie de sessão inválido (vencido, desconhecido ou malformado) é tratado como o usuário anônimo, e o `controller` e as Server Actions limpam o cookie. A API e os formulários só respondem `401` quando exigem uma feature que o anônimo não tem. Um método não configurado responde `405` e o `OPTIONS` responde `204`, os dois com o header `Allow`. O `HEAD` fica com o Next, que executa o `GET`. As rotas leem o body com o `readJsonBody()`, que responde `400` quando ele não é um JSON válido.
 - O `controller()` e o `formAction()` convertem os erros com o mesmo `normalizeError()`: um erro do Zod vira `400`, um `AppError` mantém o próprio status e qualquer outro erro vira `500`. Os erros `5xx` são logados.
 - Só a perda de conexão com o banco responde `503`. Os outros erros do banco (sintaxe, coluna inexistente, constraint) são bugs e respondem `500`.

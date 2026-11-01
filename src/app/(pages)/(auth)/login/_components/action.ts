@@ -2,9 +2,9 @@
 
 import { redirect } from 'next/navigation'
 
-import { formAction, type FormState } from '@/infra/form-action'
-import { gated } from '@/infra/gated'
-import { session } from '@/infra/session'
+import { formAction, type FormState } from '@/entry/form-action'
+import { gated } from '@/entry/gated'
+import { session } from '@/entry/session'
 import { authenticationModel } from '@/models/authentication-model/model'
 import type { CredentialsInput } from '@/models/authentication-model/schema'
 

@@ -8,7 +8,7 @@ import { FormMessage } from '@/app/components/ui/custom/form-message'
 import { SubmitButton } from '@/app/components/ui/custom/submit-button'
 import { buttonVariants } from '@/app/components/ui/shadcn/button'
 import { useFormAction } from '@/app/hooks/use-form-action'
-import type { FormState } from '@/infra/form-action'
+import type { FormState } from '@/entry/form-action'
 import {
   type ActivationTokenIdInput,
   activationTokenIdSchema

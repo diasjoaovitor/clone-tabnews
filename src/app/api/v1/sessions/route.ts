@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 import { getSessionDto } from '@/dtos/session-dto'
-import { controller } from '@/infra/controller'
-import { readJsonBody } from '@/infra/request'
-import { session } from '@/infra/session'
+import { controller } from '@/entry/controller'
+import { readJsonBody } from '@/entry/request'
+import { session } from '@/entry/session'
 import { authenticationModel } from '@/models/authentication-model/model'
 import { sessionModel } from '@/models/session-model/model'
 

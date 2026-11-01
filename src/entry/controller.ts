@@ -2,13 +2,13 @@ import { unstable_rethrow } from 'next/navigation'
 import { NextRequest, NextResponse } from 'next/server'
 
 import { UserFeature } from '@/constants/features'
-
-import { authorize } from './authorization'
 import {
   MethodNotAllowedError,
   normalizeError,
   UnauthorizedError
-} from './errors'
+} from '@/infra/errors'
+
+import { authorize } from './authorization'
 import { session } from './session'
 
 // HEAD is left out so Next.js implements it from the exported GET (RFC 9110 §9.1). OPTIONS is answered by

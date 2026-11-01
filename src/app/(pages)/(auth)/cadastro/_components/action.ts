@@ -2,8 +2,8 @@
 
 import { redirect } from 'next/navigation'
 
-import { formAction, type FormState } from '@/infra/form-action'
-import { gated } from '@/infra/gated'
+import { formAction, type FormState } from '@/entry/form-action'
+import { gated } from '@/entry/gated'
 import { registrationModel } from '@/models/registration-model/model'
 import type { RegistrationInput } from '@/models/registration-model/schema'
 

@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
-import { authorize } from '@/infra/authorization'
+import { authorize } from '@/entry/authorization'
 import { ForbiddenError, UnauthorizedError } from '@/infra/errors'
 
 const anonymous = { features: [] }

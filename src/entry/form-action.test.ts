@@ -2,10 +2,10 @@ import { redirect } from 'next/navigation'
 import { describe, expect, test, vi } from 'vitest'
 import { z } from 'zod'
 
+import { formAction, formSuccess } from '@/entry/form-action'
 import { ServiceError, ValidationError } from '@/infra/errors'
-import { formAction, formSuccess } from '@/infra/form-action'
 
-vi.mock('@/infra/session', () => ({
+vi.mock('@/entry/session', () => ({
   session: {
     resolveAndClearInvalid: vi.fn(async () => ({ user: { features: [] } }))
   }

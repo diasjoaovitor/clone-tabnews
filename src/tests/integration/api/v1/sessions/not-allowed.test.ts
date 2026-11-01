@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest'
 
 import { API_BASE_URL } from '@/constants/base-url'
-import { HTTP_METHODS, HttpMethod } from '@/infra/controller'
+import { HTTP_METHODS, HttpMethod } from '@/entry/controller'
 import { ErrorResponse } from '@/infra/errors'
 
 describe('Not allowed methods to /api/v1/sessions', () => {
