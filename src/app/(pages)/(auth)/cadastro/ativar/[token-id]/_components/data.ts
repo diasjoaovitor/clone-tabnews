@@ -1,7 +1,7 @@
 import { tokenErrorAsMessage } from '@/app/(pages)/(auth)/cadastro/ativar/[token-id]/token-error'
+import { formError, type FormState } from '@/entry/form-action'
+import { gated } from '@/entry/gated'
 import { AppError } from '@/infra/errors'
-import { formError, type FormState } from '@/infra/form-action'
-import { gated } from '@/infra/gated'
 import { activationModel } from '@/models/activation-model/model'
 import type { ActivationTokenIdInput } from '@/models/activation-model/schema'
 

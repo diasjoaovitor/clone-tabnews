@@ -1,7 +1,8 @@
 import { UserFeature } from '@/constants/features'
+import { UserSession } from '@/models/authorization-model/types'
 
 import { authorize } from './authorization'
-import { session, UserSession } from './session'
+import { session } from './session'
 
 export const gated = <Params extends unknown[], T>(
   handler: (user: UserSession, ...params: Params) => Promise<T>,

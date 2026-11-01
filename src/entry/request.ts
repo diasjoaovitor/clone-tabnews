@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server'
 
-import { ValidationError } from './errors'
+import { ValidationError } from '@/infra/errors'
 
 export const readJsonBody = async (
   request: NextRequest

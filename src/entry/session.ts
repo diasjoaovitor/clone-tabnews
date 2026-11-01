@@ -3,13 +3,12 @@ import 'server-only'
 import { cookies } from 'next/headers'
 import { cache } from 'react'
 
-import { UserFeature } from '@/constants/features'
+import { UnauthorizedError } from '@/infra/errors'
 import { ANONYMOUS_FEATURES } from '@/models/authorization-model/constants'
+import { UserSession } from '@/models/authorization-model/types'
 import { SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS } from '@/models/session-model/constants'
 import { sessionModel } from '@/models/session-model/model'
 import { userModel } from '@/models/user-model/model'
-
-import { UnauthorizedError } from './errors'
 
 // A browser only removes a cookie set with the same `path`, so `clear()` must share these with `save()`
 const SESSION_COOKIE_OPTIONS = {
@@ -30,12 +29,6 @@ const save = async (token: string): Promise<void> => {
 const clear = async (): Promise<void> => {
   const store = await cookies()
   store.set('session_id', 'invalid', { ...SESSION_COOKIE_OPTIONS, maxAge: -1 })
-}
-
-export type UserSession = {
-  features: UserFeature[]
-  id?: string
-  sessionId?: string
 }
 
 export type ResolvedSession = {

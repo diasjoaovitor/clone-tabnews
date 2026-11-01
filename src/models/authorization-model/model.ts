@@ -1,5 +1,6 @@
 import { UserFeature } from '@/constants/features'
-import { UserSession } from '@/infra/session'
+
+import { UserSession } from './types'
 
 const can = (
   user: UserSession,

@@ -58,6 +58,40 @@ const eslintConfig = defineConfig([
     files: ['src/infra/migrations/**'],
     rules: { 'unicorn/filename-case': 'off' }
   },
+  ...Object.entries({
+    'src/entry/**': ['app'],
+    'src/{dtos,models,types}/**': ['app', 'entry'],
+    'src/repositories/**': ['app', 'entry', 'dtos', 'models'],
+    'src/infra/**': ['app', 'entry', 'dtos', 'models', 'repositories', 'types'],
+    'src/constants/**': [
+      'app',
+      'entry',
+      'dtos',
+      'models',
+      'repositories',
+      'infra',
+      'types'
+    ]
+  }).map(([files, layers]) => ({
+    files: [files],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              regex: `^@/(${layers.join('|')})(/|$)`,
+              message: 'Imports only flow down the layers (see AGENTS.md).'
+            },
+            {
+              group: ['../*'],
+              message: 'Import across folders through the `@/` alias.'
+            }
+          ]
+        }
+      ]
+    }
+  })),
   {
     files: ['src/infra/scripts/**'],
     rules: { 'unicorn/no-process-exit': 'off' }

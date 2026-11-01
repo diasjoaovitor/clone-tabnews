@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server'
 
 import { getStatusDto } from '@/dtos/status-dto'
-import { controller } from '@/infra/controller'
-import { session } from '@/infra/session'
+import { controller } from '@/entry/controller'
+import { session } from '@/entry/session'
 import { statusModel } from '@/models/status-model/model'
 
 const getHandler = async () => {

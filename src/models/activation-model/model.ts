@@ -1,8 +1,8 @@
 import dedent from 'dedent'
 
+import { APP_BASE_URL } from '@/constants/base-url'
 import { email } from '@/infra/email'
 import { ForbiddenError, NotFoundError } from '@/infra/errors'
-import { webserver } from '@/infra/webserver'
 import {
   ACTIVATED_USER_FEATURES,
   ACTIVATION_TOKEN_EXPIRATION_IN_MILLISECONDS
@@ -80,7 +80,7 @@ const sendEmailToUser = async (
     text: dedent`
       ${user.username}, clique no link abaixo para ativar seu cadastro no Clone TabNews:
 
-      ${webserver.origin}/cadastro/ativar/${activationTokenId}
+      ${APP_BASE_URL}/cadastro/ativar/${activationTokenId}
 
       Atenciosamente,
       Equipe Clone TabNews

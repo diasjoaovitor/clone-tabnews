@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 
 import { getMigrationDto } from '@/dtos/migration-dto'
-import { controller } from '@/infra/controller'
+import { controller } from '@/entry/controller'
 import { migratorModel } from '@/models/migrator-model/model'
 
 const getHandler = async () => {
