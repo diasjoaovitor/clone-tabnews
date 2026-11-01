@@ -1,10 +1,11 @@
-import { database } from '@/infra/database'
+import { database, DatabaseClient } from '@/infra/database'
 import { DataInput } from '@/types/generics'
 
 import { UserActivationToken } from './types'
 
 const create = async (
-  data: DataInput<Omit<UserActivationToken, 'used_at'>>
+  data: DataInput<Omit<UserActivationToken, 'used_at'>>,
+  client?: DatabaseClient
 ): Promise<UserActivationToken> => {
   const result = await database.query<UserActivationToken>(
     `
@@ -15,7 +16,8 @@ const create = async (
       RETURNING
         *
     `,
-    [data.user_id, data.expires_at]
+    [data.user_id, data.expires_at],
+    client
   )
   return database.getRequiredRow(result)
 }
