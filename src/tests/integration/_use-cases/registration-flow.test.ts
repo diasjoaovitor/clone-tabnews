@@ -104,7 +104,7 @@ describe('Use case: Registration Flow (all successful)', () => {
     sessionToken = setCookieParser(
       createSessionsResponse.headers.get('set-cookie')!,
       { map: true }
-    ).session_id.value
+    ).session_id!.value
 
     expect(createSessionsResponseBody.user_id).toBe(createUserResponseBody.id)
   })

@@ -92,7 +92,7 @@ export class ValidationError extends AppError {
   static fromZodError(error: z.ZodError): ValidationError {
     const fields = Object.fromEntries(
       Object.entries(z.flattenError(error).fieldErrors).map(
-        ([field, messages]) => [field, (messages as string[])[0]]
+        ([field, messages]) => [field, (messages as [string, ...string[]])[0]]
       )
     )
     return new ValidationError({

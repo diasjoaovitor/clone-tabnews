@@ -6,7 +6,7 @@ import { User } from './types'
 
 const create = async (data: DataInput<User>): Promise<User> => {
   const { username, email, password, features } = data
-  const { rows } = await database.query(
+  const result = await database.query<User>(
     `
         INSERT INTO
           users (username, email, password, features)
@@ -16,46 +16,45 @@ const create = async (data: DataInput<User>): Promise<User> => {
       `,
     [username, email, password, features]
   )
-  const [user] = rows
-  return user
+  return database.getRequiredRow(result)
 }
 
 const findUniqueById = async (id: string): Promise<User | null> => {
-  const { rows } = await database.query(
+  const result = await database.query<User>(
     `
         SELECT * FROM users WHERE id = $1
       `,
     [id]
   )
-  const [user] = rows
-  return user || null
+  const [user] = result.rows
+  return user ?? null
 }
 
 const findUniqueByUsername = async (username: string): Promise<User | null> => {
-  const { rows } = await database.query(
+  const result = await database.query<User>(
     `
         SELECT * FROM users WHERE LOWER(username) = LOWER($1)
       `,
     [username]
   )
-  const [user] = rows
-  return user || null
+  const [user] = result.rows
+  return user ?? null
 }
 
 const findUniqueByEmail = async (email: string): Promise<User | null> => {
-  const { rows } = await database.query(
+  const result = await database.query<User>(
     `
       SELECT * FROM users WHERE LOWER(email) = LOWER($1)
     `,
     [email]
   )
-  const [user] = rows
-  return user || null
+  const [user] = result.rows
+  return user ?? null
 }
 
 const update = async (id: string, data: DataInput<User>): Promise<User> => {
   const { username, email, password } = data
-  const { rows } = await database.query(
+  const result = await database.query<User>(
     `UPDATE
         users
       SET
@@ -68,15 +67,14 @@ const update = async (id: string, data: DataInput<User>): Promise<User> => {
       RETURNING *`,
     [username, email, password, id]
   )
-  const [user] = rows
-  return user
+  return database.getRequiredRow(result)
 }
 
 const setFeatures = async (
   id: string,
   features: UserFeature[]
 ): Promise<User> => {
-  const { rows } = await database.query(
+  const result = await database.query<User>(
     `UPDATE
         users
       SET
@@ -87,15 +85,14 @@ const setFeatures = async (
       RETURNING *`,
     [features, id]
   )
-  const [user] = rows
-  return user
+  return database.getRequiredRow(result)
 }
 
 const addFeatures = async (
   id: string,
   features: UserFeature[]
 ): Promise<User> => {
-  const { rows } = await database.query(
+  const result = await database.query<User>(
     `
     UPDATE
          users
@@ -109,8 +106,7 @@ const addFeatures = async (
     `,
     [features, id]
   )
-  const [user] = rows
-  return user
+  return database.getRequiredRow(result)
 }
 
 export const userRepository = {

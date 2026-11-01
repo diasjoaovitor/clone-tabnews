@@ -77,7 +77,7 @@ const getLastEmail = async (): Promise<LastEmail> => {
   const lastEmailItem = emailListBody.messages[0]
 
   const emailResponse = await fetch(
-    `${emailHttpUrl}/api/v1/message/${lastEmailItem.ID}`
+    `${emailHttpUrl}/api/v1/message/${lastEmailItem!.ID}`
   )
   const emailBody: {
     From: MailpitAddress

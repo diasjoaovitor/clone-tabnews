@@ -1,4 +1,3 @@
-import { InternalServerError } from '@/infra/errors'
 import { authorizationModel } from '@/models/authorization-model/model'
 import { Status } from '@/models/status-model/types'
 import { DtoGetter } from '@/types/generics'
@@ -15,12 +14,6 @@ export type StatusDto = {
 }
 
 export const getStatusDto: DtoGetter<Status, StatusDto> = (user, status) => {
-  if (!user)
-    throw new InternalServerError({
-      cause:
-        'É necessário fornecer um usuário (anônimo ou autenticado) em "getStatusDto".'
-    })
-
   if (authorizationModel.can(user, 'read:status:all')) return status
 
   return {

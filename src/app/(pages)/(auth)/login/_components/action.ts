@@ -17,7 +17,7 @@ export const signIn = async (
   formAction(
     formData,
     gated(async (_user, input) => {
-      const { session: newSession } = await authenticationModel.signIn(
+      const newSession = await authenticationModel.signIn(
         input as CredentialsInput
       )
       await session.save(newSession.token)

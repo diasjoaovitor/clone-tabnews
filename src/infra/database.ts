@@ -1,4 +1,4 @@
-import { Client, DatabaseError, QueryResult } from 'pg'
+import { Client, DatabaseError, QueryResult, QueryResultRow } from 'pg'
 
 import { ServiceError } from './errors'
 
@@ -67,13 +67,13 @@ const getNewClient = async (): Promise<Client> => {
   return client
 }
 
-const query = async (
+const query = async <Row extends QueryResultRow = never>(
   query: string | { text: string; values: unknown[] },
   values?: unknown[]
-): Promise<QueryResult> => {
+): Promise<QueryResult<Row>> => {
   const client = await getNewClient()
   try {
-    return await client.query(query, values)
+    return await client.query<Row>(query, values)
   } catch (error) {
     throw mapConnectionError(error)
   } finally {
@@ -81,8 +81,17 @@ const query = async (
   }
 }
 
+const getRequiredRow = <Row extends QueryResultRow>({
+  rows
+}: QueryResult<Row>): Row => {
+  const [row] = rows
+  if (!row) throw new Error('The query returned no row.')
+  return row
+}
+
 export const database = {
   query,
+  getRequiredRow,
   getNewClient,
   mapConnectionError
 }
