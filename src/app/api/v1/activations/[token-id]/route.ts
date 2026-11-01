@@ -13,7 +13,7 @@ const patchHandler = async (
   const usedActivationToken =
     await activationModel.activateUserByTokenId(tokenId)
 
-  return NextResponse.json(getActivationDto(null, usedActivationToken))
+  return NextResponse.json(getActivationDto(usedActivationToken))
 }
 
 export const { GET, POST, PUT, PATCH, DELETE, OPTIONS } = controller({

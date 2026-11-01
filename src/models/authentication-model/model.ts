@@ -24,9 +24,7 @@ const getAuthenticatedUser = async (data: CredentialsInput): Promise<User> => {
   }
 }
 
-const signIn = async (
-  data: CredentialsInput
-): Promise<{ user: User; session: Session }> => {
+const signIn = async (data: CredentialsInput): Promise<Session> => {
   const user = await getAuthenticatedUser(data)
   if (!authorizationModel.can(user, 'create:session')) {
     throw new ForbiddenError({
@@ -34,8 +32,7 @@ const signIn = async (
       action: 'Contate o suporte caso você acredite que isto seja um erro.'
     })
   }
-  const session = await sessionModel.create(user.id)
-  return { user, session }
+  return await sessionModel.create(user.id)
 }
 
 export const authenticationModel = {

@@ -1,12 +1,10 @@
 import { UserActivationToken } from '@/repositories/user-activation-token-repository/types'
-import { DtoGetter } from '@/types/generics'
 
 export type UserActivationTokenDto = UserActivationToken
 
-export const getActivationDto: DtoGetter<
-  UserActivationToken,
-  UserActivationTokenDto
-> = (_, activation) => {
+export const getActivationDto = (
+  activation: UserActivationToken
+): UserActivationTokenDto => {
   return {
     id: activation.id,
     user_id: activation.user_id,

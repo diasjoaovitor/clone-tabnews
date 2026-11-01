@@ -1,4 +1,3 @@
-import { InternalServerError } from '@/infra/errors'
 import { User } from '@/repositories/user-repository/types'
 import { DtoGetter } from '@/types/generics'
 
@@ -10,13 +9,6 @@ export type UserDto = Pick<
 }
 
 export const getUserDto: DtoGetter<User, UserDto> = (sessionUser, user) => {
-  if (!sessionUser) {
-    throw new InternalServerError({
-      cause:
-        'É necessário fornecer um usuário (anônimo ou autenticado) em "getUserDto".'
-    })
-  }
-
   if (sessionUser.id === user.id) {
     return {
       id: user.id,

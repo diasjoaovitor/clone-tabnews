@@ -6,7 +6,7 @@ import { migratorModel } from '@/models/migrator-model/model'
 
 const getHandler = async () => {
   const pendingMigrations = await migratorModel.listPendingMigrations()
-  return NextResponse.json(getMigrationDto(null, pendingMigrations), {
+  return NextResponse.json(getMigrationDto(pendingMigrations), {
     status: 200
   })
 }
@@ -14,7 +14,7 @@ const getHandler = async () => {
 const postHandler = async () => {
   const migratedMigrations = await migratorModel.runPendingMigrations()
   const status = migratedMigrations.length > 0 ? 201 : 200
-  return NextResponse.json(getMigrationDto(null, migratedMigrations), {
+  return NextResponse.json(getMigrationDto(migratedMigrations), {
     status
   })
 }

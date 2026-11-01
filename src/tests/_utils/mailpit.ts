@@ -13,7 +13,7 @@ export const getActivationUrl = async (
   })
   const { messages } = (await search.json()) as { messages: { ID: string }[] }
   const message = await request.get(
-    `${mailpitUrl}/api/v1/message/${messages[0].ID}`
+    `${mailpitUrl}/api/v1/message/${messages[0]!.ID}`
   )
   const { Text } = (await message.json()) as { Text: string }
   return Text.match(/https?:\/\/\S+\/cadastro\/ativar\/\S+/)?.[0]

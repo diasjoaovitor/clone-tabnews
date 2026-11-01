@@ -130,10 +130,10 @@ describe('POST /api/v1/sessions', () => {
           map: true
         }
       )
-      expect(parsedSetCookie.session_id.value).toMatch(/^[0-9a-f]{96}$/)
+      expect(parsedSetCookie.session_id!.value).toMatch(/^[0-9a-f]{96}$/)
       const expectedParsedSetCookie: Cookie = {
         name: 'session_id',
-        value: parsedSetCookie.session_id.value,
+        value: parsedSetCookie.session_id!.value,
         maxAge: SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS / 1000,
         path: '/',
         sameSite: 'lax',
@@ -175,9 +175,9 @@ describe('POST /api/v1/sessions', () => {
           map: true
         }
       )
-      expect(parsedSetCookie.session_id.value).toMatch(/^[0-9a-f]{96}$/)
-      expect(parsedSetCookie.session_id.value).not.toBe(expiredSession.token)
-      expect(parsedSetCookie.session_id.maxAge).toBe(
+      expect(parsedSetCookie.session_id!.value).toMatch(/^[0-9a-f]{96}$/)
+      expect(parsedSetCookie.session_id!.value).not.toBe(expiredSession.token)
+      expect(parsedSetCookie.session_id!.maxAge).toBe(
         SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS / 1000
       )
     })

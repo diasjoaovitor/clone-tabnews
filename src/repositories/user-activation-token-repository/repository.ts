@@ -6,7 +6,7 @@ import { UserActivationToken } from './types'
 const create = async (
   data: DataInput<Omit<UserActivationToken, 'used_at'>>
 ): Promise<UserActivationToken> => {
-  const results = await database.query(
+  const result = await database.query<UserActivationToken>(
     `
       INSERT INTO
         user_activation_tokens (user_id, expires_at)
@@ -17,13 +17,13 @@ const create = async (
     `,
     [data.user_id, data.expires_at]
   )
-  return results.rows[0]
+  return database.getRequiredRow(result)
 }
 
 const findUniqueValidById = async (
   id: string
-): Promise<UserActivationToken> => {
-  const results = await database.query(
+): Promise<UserActivationToken | null> => {
+  const result = await database.query<UserActivationToken>(
     `
       SELECT
         *
@@ -39,11 +39,12 @@ const findUniqueValidById = async (
     [id]
   )
 
-  return results.rows[0] || null
+  const [activationToken] = result.rows
+  return activationToken ?? null
 }
 
 const markAsUsed = async (id: string): Promise<UserActivationToken> => {
-  const results = await database.query(
+  const result = await database.query<UserActivationToken>(
     `
       UPDATE
         user_activation_tokens
@@ -58,7 +59,7 @@ const markAsUsed = async (id: string): Promise<UserActivationToken> => {
     [id]
   )
 
-  return results.rows[0]
+  return database.getRequiredRow(result)
 }
 
 export const userActivationTokenRepository = {

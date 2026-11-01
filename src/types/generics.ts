@@ -6,4 +6,4 @@ export type DataInput<T> = T extends readonly (infer U)[]
   ? Omit<U, AutomaticFields>[]
   : Omit<T, AutomaticFields>
 
-export type DtoGetter<T, R> = (user: UserSession | null, data: T) => R
+export type DtoGetter<T, R> = (user: UserSession, data: T) => R
