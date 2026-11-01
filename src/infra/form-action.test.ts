@@ -5,6 +5,12 @@ import { z } from 'zod'
 import { ServiceError, ValidationError } from '@/infra/errors'
 import { formAction, formSuccess } from '@/infra/form-action'
 
+vi.mock('@/infra/session', () => ({
+  session: {
+    resolveAndClearInvalid: vi.fn(async () => ({ user: { features: [] } }))
+  }
+}))
+
 const formData = (entries: Record<string, string>) => {
   const data = new FormData()
   for (const [key, value] of Object.entries(entries)) data.set(key, value)
