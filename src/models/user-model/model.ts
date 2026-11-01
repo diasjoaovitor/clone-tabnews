@@ -1,4 +1,5 @@
 import { UserFeature } from '@/constants/features'
+import { DatabaseClient } from '@/infra/database'
 import { NotFoundError } from '@/infra/errors'
 import { passwordModel } from '@/models/password-model/model'
 import { userRepository } from '@/repositories/user-repository/repository'
@@ -44,7 +45,10 @@ const validateUniqueEmail = async ({
   }
 }
 
-const create = async (data: CreateUserInput): Promise<User> => {
+const create = async (
+  data: CreateUserInput,
+  client?: DatabaseClient
+): Promise<User> => {
   const validData = createUserSchema.parse(data)
   const { username, email, password } = validData
 
@@ -53,12 +57,15 @@ const create = async (data: CreateUserInput): Promise<User> => {
 
   const passwordHash = await passwordModel.hash(password)
   try {
-    const user = await userRepository.create({
-      username,
-      email,
-      password: passwordHash,
-      features: DEFAULT_USER_FEATURES
-    })
+    const user = await userRepository.create(
+      {
+        username,
+        email,
+        password: passwordHash,
+        features: DEFAULT_USER_FEATURES
+      },
+      client
+    )
     return user
   } catch (error) {
     throw mapUniqueViolationError(error)
