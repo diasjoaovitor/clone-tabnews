@@ -95,7 +95,7 @@ This is **clone-tabnews**, an implementation of [TabNews](https://www.tabnews.co
 
 - Never send the session token back in a JSON body: it already goes in the `httpOnly` cookie.
 - Sign-in takes the same time for an unknown email and a wrong password: compare against a dummy hash (`DUMMY_PASSWORD_HASH`) when the email doesn't exist.
-- bcrypt uses 14 rounds in production (`NODE_ENV === 'production'`) and 1 everywhere else, so tests stay fast.
+- bcrypt uses 14 rounds in production (`NODE_ENV === 'production'`) and 4 (bcrypt's minimum) everywhere else, so tests stay fast. `DUMMY_PASSWORD_HASH` is a precomputed literal for each cost, so the authentication model doesn't hash on import; a unit test checks it matches `BCRYPT_ROUNDS`.
 - Always persist the data Zod validated, never the raw input, to prevent mass assignment.
 
 ### Linting & formatting
