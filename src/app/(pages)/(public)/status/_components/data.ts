@@ -1,6 +1,6 @@
 import { getStatusDto, StatusDto } from '@/dtos/status-dto'
 import { gated } from '@/entry/gated'
-import { statusModel } from '@/models/status-model/model'
+import { statusModel } from '@/models/status/model'
 
 export const getStatus = gated(async (user): Promise<StatusDto> => {
   const status = await statusModel.check()

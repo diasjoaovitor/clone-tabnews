@@ -1,14 +1,14 @@
 import { NotFoundError, UnauthorizedError } from '@/infra/errors'
-import { passwordModel } from '@/models/password-model/model'
-import { userModel } from '@/models/user-model/model'
-import { User } from '@/repositories/user-repository/types'
+import { passwordHasher } from '@/infra/password-hasher'
+import { userModel } from '@/models/user/model'
+import { User } from '@/repositories/user/types'
 
 import { DUMMY_PASSWORD_HASH } from './constants'
 
 export const compareToDummyPassword = async (
   password: string
 ): Promise<void> => {
-  await passwordModel.compare(password, DUMMY_PASSWORD_HASH)
+  await passwordHasher.compare(password, DUMMY_PASSWORD_HASH)
 }
 
 export const findUserByEmail = async (
@@ -37,7 +37,7 @@ export const validatePassword = async ({
   password: string
   storedPassword: string
 }): Promise<void> => {
-  const correctPasswordMatch = await passwordModel.compare(
+  const correctPasswordMatch = await passwordHasher.compare(
     password,
     storedPassword
   )

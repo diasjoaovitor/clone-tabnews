@@ -1,9 +1,9 @@
 import { UserFeature } from '@/constants/features'
 import { DatabaseClient } from '@/infra/database'
 import { NotFoundError } from '@/infra/errors'
-import { passwordModel } from '@/models/password-model/model'
-import { userRepository } from '@/repositories/user-repository/repository'
-import { User } from '@/repositories/user-repository/types'
+import { passwordHasher } from '@/infra/password-hasher'
+import { userRepository } from '@/repositories/user/repository'
+import { User } from '@/repositories/user/types'
 
 import { DEFAULT_USER_FEATURES } from './constants'
 import {
@@ -55,7 +55,7 @@ const create = async (
   await validateUniqueEmail({ email })
   await validateUniqueUsername({ username })
 
-  const passwordHash = await passwordModel.hash(password)
+  const passwordHash = await passwordHasher.hash(password)
   try {
     const user = await userRepository.create(
       {
@@ -131,7 +131,7 @@ const update = async (
     await validateUniqueEmail({ email, id: foundUserByUsername.id })
   }
   if (password) {
-    validData.password = await passwordModel.hash(password)
+    validData.password = await passwordHasher.hash(password)
   }
 
   try {

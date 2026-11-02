@@ -4,9 +4,9 @@ import { beforeAll, describe, expect, test } from 'vitest'
 import { API_BASE_URL } from '@/constants/base-url'
 import { UserDto } from '@/dtos/user-dto'
 import { ErrorResponse } from '@/infra/errors'
-import { ACTIVATED_USER_FEATURES } from '@/models/activation-model/constants'
-import { passwordModel } from '@/models/password-model/model'
-import { userRepository } from '@/repositories/user-repository/repository'
+import { passwordHasher } from '@/infra/password-hasher'
+import { ACTIVATED_USER_FEATURES } from '@/models/activation/constants'
+import { userRepository } from '@/repositories/user/repository'
 import { ApiResponse } from '@/tests/_types/generics'
 import { isoStringFieldsToDate } from '@/tests/_utils/formatters'
 import orchestrator from '@/tests/orchestrator'
@@ -323,13 +323,13 @@ describe('PATCH /api/v1/users/[username]', () => {
         createdUser.username
       )
 
-      const correctPasswordMatch = await passwordModel.compare(
+      const correctPasswordMatch = await passwordHasher.compare(
         'newPassword2',
         userInDatabase!.password
       )
       expect(correctPasswordMatch).toBe(true)
 
-      const incorrectPasswordMatch = await passwordModel.compare(
+      const incorrectPasswordMatch = await passwordHasher.compare(
         'newPassword1',
         userInDatabase!.password
       )

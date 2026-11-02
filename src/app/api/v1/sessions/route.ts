@@ -4,8 +4,8 @@ import { getSessionDto } from '@/dtos/session-dto'
 import { controller } from '@/entry/controller'
 import { readJsonBody } from '@/entry/request'
 import { session } from '@/entry/session'
-import { authenticationModel } from '@/models/authentication-model/model'
-import { sessionModel } from '@/models/session-model/model'
+import { authenticationModel } from '@/models/authentication/model'
+import { sessionModel } from '@/models/session/model'
 
 const postHandler = async (request: NextRequest) => {
   const userInputValues = await readJsonBody(request)

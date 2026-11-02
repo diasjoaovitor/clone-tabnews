@@ -3,7 +3,6 @@
 import { cn } from 'cn'
 import Link from 'next/link'
 
-import { activate } from '@/app/(pages)/(auth)/cadastro/ativar/[token-id]/_components/action'
 import { FormMessage } from '@/app/components/ui/custom/form-message'
 import { SubmitButton } from '@/app/components/ui/custom/submit-button'
 import { buttonVariants } from '@/app/components/ui/shadcn/button'
@@ -12,7 +11,9 @@ import type { FormState } from '@/entry/form-action'
 import {
   type ActivationTokenIdInput,
   activationTokenIdSchema
-} from '@/models/activation-model/schema'
+} from '@/models/activation/schema'
+
+import { activate } from './action'
 
 type ActivationFormProps = {
   tokenId: string

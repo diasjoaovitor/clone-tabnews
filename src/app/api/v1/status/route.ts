@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 import { getStatusDto } from '@/dtos/status-dto'
 import { controller } from '@/entry/controller'
 import { session } from '@/entry/session'
-import { statusModel } from '@/models/status-model/model'
+import { statusModel } from '@/models/status/model'
 
 const getHandler = async () => {
   const status = await statusModel.check()

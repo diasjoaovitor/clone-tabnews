@@ -1,4 +1,4 @@
-import { statusRepository } from '@/repositories/status-repository/repository'
+import { statusRepository } from '@/repositories/status/repository'
 
 import { Status } from './types'
 

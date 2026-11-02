@@ -1,8 +1,8 @@
 import { database } from '@/infra/database'
-import { activationModel } from '@/models/activation-model/model'
-import { userModel } from '@/models/user-model/model'
-import type { CreateUserInput } from '@/models/user-model/schema'
-import { User } from '@/repositories/user-repository/types'
+import { activationModel } from '@/models/activation/model'
+import { userModel } from '@/models/user/model'
+import type { CreateUserInput } from '@/models/user/schema'
+import { User } from '@/repositories/user/types'
 
 import { type RegistrationInput, registrationSchema } from './schema'
 

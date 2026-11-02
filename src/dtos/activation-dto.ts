@@ -1,4 +1,4 @@
-import { UserActivationToken } from '@/repositories/user-activation-token-repository/types'
+import { UserActivationToken } from '@/repositories/user-activation-token/types'
 
 export type UserActivationTokenDto = UserActivationToken
 

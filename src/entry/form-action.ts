@@ -1,7 +1,8 @@
 import { unstable_rethrow } from 'next/navigation'
 
-import { session } from '@/entry/session'
 import { normalizeError, ValidationError } from '@/infra/errors'
+
+import { session } from './session'
 
 type FieldName<TValues> = keyof TValues & string
 

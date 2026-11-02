@@ -1,4 +1,4 @@
-import { BCRYPT_ROUNDS } from '@/models/password-model/constants'
+import { BCRYPT_ROUNDS } from '@/infra/password-hasher'
 
 // Precomputed so importing the model doesn't block the event loop on a
 // 14-round hash at every cold start (#75).

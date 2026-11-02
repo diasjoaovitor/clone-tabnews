@@ -1,8 +1,8 @@
 import crypto from 'node:crypto'
 
 import { UnauthorizedError } from '@/infra/errors'
-import { sessionRepository } from '@/repositories/session-repository/repository'
-import { Session } from '@/repositories/session-repository/types'
+import { sessionRepository } from '@/repositories/session/repository'
+import { Session } from '@/repositories/session/types'
 
 import { SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS } from './constants'
 import { sessionTokenSchema } from './schema'

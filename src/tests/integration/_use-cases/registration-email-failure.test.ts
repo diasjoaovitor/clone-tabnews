@@ -2,7 +2,7 @@ import { afterEach, beforeAll, describe, expect, test, vi } from 'vitest'
 
 import { database } from '@/infra/database'
 import { email } from '@/infra/email'
-import { registrationModel } from '@/models/registration-model/model'
+import { registrationModel } from '@/models/registration/model'
 import orchestrator from '@/tests/orchestrator'
 
 beforeAll(async () => {

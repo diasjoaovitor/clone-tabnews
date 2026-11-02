@@ -1,11 +1,12 @@
 'use client'
 
-import { signUp } from '@/app/(pages)/(auth)/cadastro/_components/action'
 import { FormField } from '@/app/components/ui/custom/form-field'
 import { FormMessage } from '@/app/components/ui/custom/form-message'
 import { SubmitButton } from '@/app/components/ui/custom/submit-button'
 import { useFormAction } from '@/app/hooks/use-form-action'
-import { registrationSchema } from '@/models/registration-model/schema'
+import { registrationSchema } from '@/models/registration/schema'
+
+import { signUp } from './action'
 
 export const SignUpForm = () => {
   const { field, state, pending, announcement, formProps } = useFormAction({

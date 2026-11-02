@@ -1,11 +1,12 @@
 'use client'
 
-import { signIn } from '@/app/(pages)/(auth)/login/_components/action'
 import { FormField } from '@/app/components/ui/custom/form-field'
 import { FormMessage } from '@/app/components/ui/custom/form-message'
 import { SubmitButton } from '@/app/components/ui/custom/submit-button'
 import { useFormAction } from '@/app/hooks/use-form-action'
-import { credentialsSchema } from '@/models/authentication-model/schema'
+import { credentialsSchema } from '@/models/authentication/schema'
+
+import { signIn } from './action'
 
 export const SignInForm = () => {
   const { field, state, pending, announcement, formProps } = useFormAction({

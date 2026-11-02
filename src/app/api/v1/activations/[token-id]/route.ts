@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 import { getActivationDto } from '@/dtos/activation-dto'
 import { controller } from '@/entry/controller'
-import { activationModel } from '@/models/activation-model/model'
+import { activationModel } from '@/models/activation/model'
 
 const patchHandler = async (
   _: NextRequest,

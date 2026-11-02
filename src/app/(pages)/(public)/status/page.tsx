@@ -1,8 +1,9 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 
-import { DatabaseStatus } from '@/app/(pages)/(public)/status/_components/database-status'
 import { Loader } from '@/app/components/ui/custom/loader'
+
+import { DatabaseStatus } from './_components/database-status'
 
 export const metadata: Metadata = {
   title: 'Status'

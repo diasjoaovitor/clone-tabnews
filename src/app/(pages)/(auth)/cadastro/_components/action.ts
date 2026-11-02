@@ -4,8 +4,8 @@ import { redirect } from 'next/navigation'
 
 import { formAction, type FormState } from '@/entry/form-action'
 import { gated } from '@/entry/gated'
-import { registrationModel } from '@/models/registration-model/model'
-import type { RegistrationInput } from '@/models/registration-model/schema'
+import { registrationModel } from '@/models/registration/model'
+import type { RegistrationInput } from '@/models/registration/schema'
 
 type SignUpState = FormState<RegistrationInput>
 
