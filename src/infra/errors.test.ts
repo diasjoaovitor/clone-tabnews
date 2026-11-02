@@ -22,6 +22,18 @@ describe('normalizeError', () => {
     })
   })
 
+  test('keeps the path of a nested field and its first message', () => {
+    const link = z.object({
+      url: z.string().min(1, 'Informe.').min(2, 'Curto.')
+    })
+    const result = z
+      .object({ links: z.array(link) })
+      .safeParse({ links: [{ url: 'ok' }, { url: '' }] })
+    expect(normalizeError(result.error)).toMatchObject({
+      fields: { 'links.1.url': 'Informe.' }
+    })
+  })
+
   test('keeps an app error as it is', () => {
     const serviceError = new ServiceError({})
     expect(normalizeError(serviceError)).toBe(serviceError)

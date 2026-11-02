@@ -23,7 +23,7 @@ export const ActivationForm = ({
   tokenId,
   initialState
 }: ActivationFormProps) => {
-  const { Form, state, pending, announcement, formProps } = useFormAction({
+  const { state, pending, announcement, formProps } = useFormAction({
     schema: activationTokenIdSchema,
     defaultValues: { token_id: tokenId },
     action: activate,
@@ -31,8 +31,7 @@ export const ActivationForm = ({
   })
 
   return (
-    <Form {...formProps} className="flex flex-col gap-6">
-      <input type="hidden" name="token_id" value={tokenId} />
+    <form {...formProps} className="flex flex-col gap-6">
       <FormMessage state={state} announcement={announcement} />
       {state.status === 'success' ? (
         <Link href="/login" className={cn(buttonVariants(), 'w-full')}>
@@ -43,6 +42,6 @@ export const ActivationForm = ({
           <SubmitButton pending={pending}>Ativar conta</SubmitButton>
         )
       )}
-    </Form>
+    </form>
   )
 }

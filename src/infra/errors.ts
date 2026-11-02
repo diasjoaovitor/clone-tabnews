@@ -90,15 +90,16 @@ export class MethodNotAllowedError extends AppError {
 
 export class ValidationError extends AppError {
   static fromZodError(error: z.ZodError): ValidationError {
-    const fields = Object.fromEntries(
-      Object.entries(z.flattenError(error).fieldErrors).map(
-        ([field, messages]) => [field, (messages as [string, ...string[]])[0]]
-      )
-    )
+    // Not `z.flattenError`: it groups by the first path segment, which loses the item of a list
+    const fields = new Map<string, string>()
+    for (const { path, message } of error.issues) {
+      const field = path.map(String).join('.')
+      if (field && !fields.has(field)) fields.set(field, message)
+    }
     return new ValidationError({
       cause: error,
       message: error.issues[0]?.message,
-      fields: Object.keys(fields).length > 0 ? fields : undefined
+      fields: fields.size > 0 ? Object.fromEntries(fields) : undefined
     })
   }
 
