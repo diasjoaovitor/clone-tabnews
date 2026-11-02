@@ -88,6 +88,18 @@ export class MethodNotAllowedError extends AppError {
   }
 }
 
+export class UnsupportedMediaTypeError extends AppError {
+  constructor() {
+    super({
+      message: 'O "Content-Type" enviado não é suportado.',
+      action:
+        'Envie os dados no formato JSON com o header "Content-Type: application/json".',
+      statusCode: 415
+    })
+    this.name = 'UnsupportedMediaTypeError'
+  }
+}
+
 export class ValidationError extends AppError {
   static fromZodError(error: z.ZodError): ValidationError {
     // Not `z.flattenError`: it groups by the first path segment, which loses the item of a list

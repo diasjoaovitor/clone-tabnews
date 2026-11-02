@@ -77,6 +77,7 @@ describe('PATCH /api/v1/users/[username]', () => {
         {
           method: 'PATCH',
           headers: {
+            'Content-Type': 'application/json',
             Cookie: `session_id=${sessionObject.token}`
           },
           body: JSON.stringify({
@@ -108,6 +109,7 @@ describe('PATCH /api/v1/users/[username]', () => {
         {
           method: 'PATCH',
           headers: {
+            'Content-Type': 'application/json',
             Cookie: `session_id=${sessionObject.token}`
           },
           body: '{'
@@ -138,6 +140,7 @@ describe('PATCH /api/v1/users/[username]', () => {
       const response = await fetch(`${API_BASE_URL}/users/user1`, {
         method: 'PATCH',
         headers: {
+          'Content-Type': 'application/json',
           Cookie: `session_id=${sessionObject1.token}`
         },
         body: JSON.stringify({
@@ -170,6 +173,7 @@ describe('PATCH /api/v1/users/[username]', () => {
         `${API_BASE_URL}/users/${createdUser1.username}`,
         {
           headers: {
+            'Content-Type': 'application/json',
             Cookie: `session_id=${sessionObject1.token}`
           },
           method: 'PATCH',
@@ -205,6 +209,7 @@ describe('PATCH /api/v1/users/[username]', () => {
         {
           method: 'PATCH',
           headers: {
+            'Content-Type': 'application/json',
             Cookie: `session_id=${sessionObject1.token}`
           },
           body: JSON.stringify({
@@ -233,6 +238,7 @@ describe('PATCH /api/v1/users/[username]', () => {
         {
           method: 'PATCH',
           headers: {
+            'Content-Type': 'application/json',
             Cookie: `session_id=${sessionObject.token}`
           },
           body: JSON.stringify({
@@ -268,6 +274,7 @@ describe('PATCH /api/v1/users/[username]', () => {
         {
           method: 'PATCH',
           headers: {
+            'Content-Type': 'application/json',
             Cookie: `session_id=${sessionObject.token}`
           },
           body: JSON.stringify({
@@ -306,6 +313,7 @@ describe('PATCH /api/v1/users/[username]', () => {
         {
           method: 'PATCH',
           headers: {
+            'Content-Type': 'application/json',
             Cookie: `session_id=${sessionObject.token}`
           },
           body: JSON.stringify({
@@ -345,6 +353,7 @@ describe('PATCH /api/v1/users/[username]', () => {
       const response = await fetch(`${API_BASE_URL}/users/OWNUSERNAME`, {
         method: 'PATCH',
         headers: {
+          'Content-Type': 'application/json',
           Cookie: `session_id=${sessionObject.token}`
         },
         body: JSON.stringify({
@@ -378,6 +387,7 @@ describe('PATCH /api/v1/users/[username]', () => {
         {
           method: 'PATCH',
           headers: {
+            'Content-Type': 'application/json',
             Cookie: `session_id=${sessionObject1.token}`
           },
           body: JSON.stringify({
@@ -409,6 +419,7 @@ describe('PATCH /api/v1/users/[username]', () => {
         {
           method: 'PATCH',
           headers: {
+            'Content-Type': 'application/json',
             Cookie: `session_id=${sessionObject.token}`
           },
           body: JSON.stringify({
@@ -447,6 +458,7 @@ describe('PATCH /api/v1/users/[username]', () => {
         {
           method: 'PATCH',
           headers: {
+            'Content-Type': 'application/json',
             Cookie: `session_id=${sessionObject1.token}`
           },
           body: JSON.stringify({
