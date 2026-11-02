@@ -3,8 +3,8 @@ import { NextResponse } from 'next/server'
 import { getUserDto } from '@/dtos/user-dto'
 import { controller } from '@/entry/controller'
 import { session } from '@/entry/session'
-import { sessionModel } from '@/models/session-model/model'
-import { userModel } from '@/models/user-model/model'
+import { sessionModel } from '@/models/session/model'
+import { userModel } from '@/models/user/model'
 
 const getHandler = async () => {
   const sessionUser = await session.getUser()

@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { createUserSchema } from '@/models/user-model/schema'
+import { createUserSchema } from '@/models/user/schema'
 
 const passwordsMatch = z.refine<{
   password: string

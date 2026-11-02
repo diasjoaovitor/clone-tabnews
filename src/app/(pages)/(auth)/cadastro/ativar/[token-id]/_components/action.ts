@@ -1,12 +1,11 @@
 'use server'
 
+import type { ActivationState } from '@/app/(pages)/(auth)/cadastro/ativar/[token-id]/data'
 import { tokenErrorAsMessage } from '@/app/(pages)/(auth)/cadastro/ativar/[token-id]/token-error'
-import { formAction, type FormState, formSuccess } from '@/entry/form-action'
+import { formAction, formSuccess } from '@/entry/form-action'
 import { gated } from '@/entry/gated'
-import { activationModel } from '@/models/activation-model/model'
-import type { ActivationTokenIdInput } from '@/models/activation-model/schema'
-
-type ActivationState = FormState<ActivationTokenIdInput>
+import { activationModel } from '@/models/activation/model'
+import type { ActivationTokenIdInput } from '@/models/activation/schema'
 
 export const activate = async (
   _state: ActivationState,

@@ -5,8 +5,8 @@ import { redirect } from 'next/navigation'
 import { formAction, type FormState } from '@/entry/form-action'
 import { gated } from '@/entry/gated'
 import { session } from '@/entry/session'
-import { authenticationModel } from '@/models/authentication-model/model'
-import type { CredentialsInput } from '@/models/authentication-model/schema'
+import { authenticationModel } from '@/models/authentication/model'
+import type { CredentialsInput } from '@/models/authentication/schema'
 
 type SignInState = FormState<CredentialsInput>
 

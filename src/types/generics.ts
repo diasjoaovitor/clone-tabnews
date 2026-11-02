@@ -1,4 +1,4 @@
-import { UserSession } from '@/models/authorization-model/types'
+import { UserSession } from '@/models/authorization/types'
 
 type AutomaticFields = 'id' | 'created_at' | 'updated_at'
 

@@ -1,5 +1,5 @@
 import { UserFeature } from '@/constants/features'
-import { UserSession } from '@/models/authorization-model/types'
+import { UserSession } from '@/models/authorization/types'
 
 import { authorize } from './authorization'
 import { session } from './session'

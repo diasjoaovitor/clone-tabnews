@@ -1,8 +1,9 @@
 import type { Metadata } from 'next'
 
-import { ActivationForm } from '@/app/(pages)/(auth)/cadastro/ativar/[token-id]/_components/activation-form'
-import { getActivationState } from '@/app/(pages)/(auth)/cadastro/ativar/[token-id]/_components/data'
 import { FormCard } from '@/app/components/ui/custom/form-card'
+
+import { ActivationForm } from './_components/activation-form'
+import { getActivationState } from './data'
 
 export const metadata: Metadata = { title: 'Ativar conta' }
 

@@ -5,8 +5,8 @@ import { controller } from '@/entry/controller'
 import { readJsonBody } from '@/entry/request'
 import { session } from '@/entry/session'
 import { ForbiddenError } from '@/infra/errors'
-import { authorizationModel } from '@/models/authorization-model/model'
-import { userModel } from '@/models/user-model/model'
+import { authorizationModel } from '@/models/authorization/model'
+import { userModel } from '@/models/user/model'
 
 type Context = RouteContext<'/api/v1/users/[username]'>
 

@@ -1,4 +1,4 @@
-import { User } from '@/repositories/user-repository/types'
+import { User } from '@/repositories/user/types'
 import { DtoGetter } from '@/types/generics'
 
 export type UserDto = Pick<

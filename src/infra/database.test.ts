@@ -1,8 +1,8 @@
 import { DatabaseError } from 'pg'
 import { describe, expect, test } from 'vitest'
 
-import { database } from '@/infra/database'
-import { ServiceError } from '@/infra/errors'
+import { database } from './database'
+import { ServiceError } from './errors'
 
 const databaseError = (code: string) => {
   const error = new DatabaseError('falhou', 0, 'error')

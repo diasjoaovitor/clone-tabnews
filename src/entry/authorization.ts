@@ -1,6 +1,6 @@
 import { UserFeature } from '@/constants/features'
 import { ForbiddenError } from '@/infra/errors'
-import { authorizationModel } from '@/models/authorization-model/model'
+import { authorizationModel } from '@/models/authorization/model'
 
 import type { ResolvedSession } from './session'
 

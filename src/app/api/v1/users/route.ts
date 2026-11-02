@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getUserDto } from '@/dtos/user-dto'
 import { controller } from '@/entry/controller'
 import { readJsonBody } from '@/entry/request'
-import { registrationModel } from '@/models/registration-model/model'
+import { registrationModel } from '@/models/registration/model'
 
 const postHandler = async (request: NextRequest) => {
   const userInputValues = await readJsonBody(request)

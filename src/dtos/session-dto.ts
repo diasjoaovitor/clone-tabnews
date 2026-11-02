@@ -1,4 +1,4 @@
-import { Session } from '@/repositories/session-repository/types'
+import { Session } from '@/repositories/session/types'
 
 export type SessionDto = Omit<Session, 'token'>
 

@@ -7,8 +7,9 @@ import { z } from 'zod'
 import { FieldFrame, FormField } from '@/app/components/ui/custom/form-field'
 import { FormMessage } from '@/app/components/ui/custom/form-message'
 import { SubmitButton } from '@/app/components/ui/custom/submit-button'
-import { useFormAction } from '@/app/hooks/use-form-action'
 import { formError, type FormState, formSuccess } from '@/entry/form-action'
+
+import { useFormAction } from './use-form-action'
 
 const schema = z.object({
   name: z.string().min(1, { message: 'Informe o nome.' }),

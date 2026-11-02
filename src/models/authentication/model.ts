@@ -1,8 +1,8 @@
 import { ForbiddenError, UnauthorizedError } from '@/infra/errors'
-import { authorizationModel } from '@/models/authorization-model/model'
-import { sessionModel } from '@/models/session-model/model'
-import { Session } from '@/repositories/session-repository/types'
-import { User } from '@/repositories/user-repository/types'
+import { authorizationModel } from '@/models/authorization/model'
+import { sessionModel } from '@/models/session/model'
+import { Session } from '@/repositories/session/types'
+import { User } from '@/repositories/user/types'
 
 import { CredentialsInput, credentialsSchema } from './schema'
 import { findUserByEmail, validatePassword } from './utils'

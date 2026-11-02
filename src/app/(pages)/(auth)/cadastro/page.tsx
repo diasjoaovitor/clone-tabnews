@@ -1,8 +1,9 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
-import { SignUpForm } from '@/app/(pages)/(auth)/cadastro/_components/sign-up-form'
 import { FormCard } from '@/app/components/ui/custom/form-card'
+
+import { SignUpForm } from './_components/sign-up-form'
 
 export const metadata: Metadata = { title: 'Cadastro' }
 

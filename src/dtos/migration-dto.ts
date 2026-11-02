@@ -1,4 +1,4 @@
-import { Migration } from '@/models/migrator-model/types'
+import { Migration } from '@/models/migrator/types'
 
 export type MigrationDto = Migration[]
 

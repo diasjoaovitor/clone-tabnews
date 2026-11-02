@@ -4,11 +4,11 @@ import { cookies } from 'next/headers'
 import { cache } from 'react'
 
 import { UnauthorizedError } from '@/infra/errors'
-import { ANONYMOUS_FEATURES } from '@/models/authorization-model/constants'
-import { UserSession } from '@/models/authorization-model/types'
-import { SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS } from '@/models/session-model/constants'
-import { sessionModel } from '@/models/session-model/model'
-import { userModel } from '@/models/user-model/model'
+import { ANONYMOUS_FEATURES } from '@/models/authorization/constants'
+import { UserSession } from '@/models/authorization/types'
+import { SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS } from '@/models/session/constants'
+import { sessionModel } from '@/models/session/model'
+import { userModel } from '@/models/user/model'
 
 // A browser only removes a cookie set with the same `path`, so `clear()` must share these with `save()`
 const SESSION_COOKIE_OPTIONS = {

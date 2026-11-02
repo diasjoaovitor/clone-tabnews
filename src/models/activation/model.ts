@@ -4,16 +4,16 @@ import { APP_BASE_URL } from '@/constants/base-url'
 import { DatabaseClient } from '@/infra/database'
 import { email } from '@/infra/email'
 import { ForbiddenError, NotFoundError } from '@/infra/errors'
+import { authorizationModel } from '@/models/authorization/model'
+import { userModel } from '@/models/user/model'
+import { User } from '@/repositories/user/types'
+import { userActivationTokenRepository } from '@/repositories/user-activation-token/repository'
+import { UserActivationToken } from '@/repositories/user-activation-token/types'
+
 import {
   ACTIVATED_USER_FEATURES,
   ACTIVATION_TOKEN_EXPIRATION_IN_MILLISECONDS
-} from '@/models/activation-model/constants'
-import { authorizationModel } from '@/models/authorization-model/model'
-import { userModel } from '@/models/user-model/model'
-import { userActivationTokenRepository } from '@/repositories/user-activation-token-repository/repository'
-import { UserActivationToken } from '@/repositories/user-activation-token-repository/types'
-import { User } from '@/repositories/user-repository/types'
-
+} from './constants'
 import { activationTokenIdSchema } from './schema'
 
 const findUniqueValidById = async (

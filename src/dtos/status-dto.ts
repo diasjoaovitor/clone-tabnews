@@ -1,5 +1,5 @@
-import { authorizationModel } from '@/models/authorization-model/model'
-import { Status } from '@/models/status-model/types'
+import { authorizationModel } from '@/models/authorization/model'
+import { Status } from '@/models/status/types'
 import { DtoGetter } from '@/types/generics'
 
 export type StatusDto = {

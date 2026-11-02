@@ -1,4 +1,3 @@
-import { getStatus } from '@/app/(pages)/(public)/status/_components/data'
 import {
   Card,
   CardContent,
@@ -7,6 +6,8 @@ import {
   CardTitle
 } from '@/app/components/ui/shadcn/card'
 import { StatusDto } from '@/dtos/status-dto'
+
+import { getStatus } from './data'
 
 type StatusKey = keyof StatusDto['dependencies']['database']
 

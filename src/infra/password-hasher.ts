@@ -1,6 +1,6 @@
 import bcryptjs from 'bcryptjs'
 
-import { BCRYPT_ROUNDS } from './constants'
+export const BCRYPT_ROUNDS = process.env.NODE_ENV === 'production' ? 14 : 4
 
 const hash = async (password: string): Promise<string> => {
   return await bcryptjs.hash(password, BCRYPT_ROUNDS)
@@ -13,7 +13,7 @@ const compare = async (
   return await bcryptjs.compare(providedPassword, storedPassword)
 }
 
-export const passwordModel = {
+export const passwordHasher = {
   hash,
   compare
 }

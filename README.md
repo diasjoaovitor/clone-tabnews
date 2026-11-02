@@ -45,7 +45,7 @@ As convenções completas estão no [`AGENTS.md`](./AGENTS.md), e o fluxo do pla
 ### Arquitetura
 
 - O código do servidor é dividido em camadas, e os imports só descem: `app` → `entry` → `dtos`/`models` → `repositories` → `infra`, com `constants` disponível para todas, sem importar nenhuma delas. O ESLint garante essa direção.
-- `models/` guarda as regras de negócio de cada domínio, `repositories/` as queries SQL, `dtos/` o que cada rota pode expor conforme quem pede, `entry/` a camada de entrada (os wrappers de rota, de Server Components e de Server Actions, a sessão e a autorização) e `infra/` a base técnica (banco, e-mail e erros).
+- `models/` guarda as regras de negócio de cada domínio, `repositories/` as queries SQL, `dtos/` o que cada rota pode expor conforme quem pede, `entry/` a camada de entrada (os wrappers de rota, de Server Components e de Server Actions, a sessão e a autorização) e `infra/` a base técnica (banco, e-mail, hash de senha e erros).
 - As rotas da API passam pelo `controller()`, e as Server Components e Server Actions pelo `gated()`. Os dois checam as features do usuário com o mesmo `authorize()`. Um cookie de sessão inválido (vencido, desconhecido ou malformado) é tratado como o usuário anônimo, e o `controller` e as Server Actions limpam o cookie. A API e os formulários só respondem `401` quando exigem uma feature que o anônimo não tem. Um método não configurado responde `405` e o `OPTIONS` responde `204`, os dois com o header `Allow`. O `HEAD` fica com o Next, que executa o `GET`. As rotas leem o body com o `readJsonBody()`, que responde `400` quando ele não é um JSON válido.
 - O `controller()` e o `formAction()` convertem os erros com o mesmo `normalizeError()`: um erro do Zod vira `400`, um `AppError` mantém o próprio status e qualquer outro erro vira `500`. Os erros `5xx` são logados.
 - O banco é acessado por um `pg.Pool` único por processo. Queries que precisam dar certo ou errado juntas rodam no `database.transaction()`, e só as funções dos repositories usadas numa transação aceitam um `client` opcional para participar dela. O migrator continua com um client exclusivo.
@@ -59,7 +59,7 @@ As convenções completas estão no [`AGENTS.md`](./AGENTS.md), e o fluxo do pla
 - shadcn/ui (sobre Base UI) e Tailwind CSS v4, com o tema do shadcn e a paleta do Tailwind como vêm. Componentes novos entram com `pnpm shadcn:add <componente>`.
 - Componentes compartilhados ficam em `src/app/components`, e hooks compartilhados do cliente em `src/app/hooks`.
 - O dark mode segue a preferência do sistema (`prefers-color-scheme`).
-- Toda página usa o layout padrão (`src/app/components/layouts/default`), com o cabeçalho; uma página só precisa definir o próprio `title`, que o layout raiz completa com ` | Clone TabNews`.
+- Toda página usa o layout raiz (`src/app/(pages)/layout.tsx`), com o cabeçalho; uma página só precisa definir o próprio `title`, que o layout raiz completa com ` | Clone TabNews`.
 
 ### Banco de dados
 

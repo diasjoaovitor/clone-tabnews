@@ -6,7 +6,7 @@ import {
   normalizeError,
   ServiceError,
   ValidationError
-} from '@/infra/errors'
+} from './errors'
 
 describe('normalizeError', () => {
   test('turns a Zod error into a validation error with its fields', () => {

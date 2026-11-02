@@ -2,12 +2,13 @@ import { faker } from '@faker-js/faker'
 
 import { UserFeature } from '@/constants/features'
 import { database } from '@/infra/database'
-import { activationModel } from '@/models/activation-model/model'
-import { migratorModel } from '@/models/migrator-model/model'
-import { sessionModel } from '@/models/session-model/model'
-import { userModel } from '@/models/user-model/model'
-import { CreateUserInput } from '@/models/user-model/schema'
-import { formatUsername } from '@/tests/_utils/formatters'
+import { activationModel } from '@/models/activation/model'
+import { migratorModel } from '@/models/migrator/model'
+import { sessionModel } from '@/models/session/model'
+import { userModel } from '@/models/user/model'
+import { CreateUserInput } from '@/models/user/schema'
+
+import { formatUsername } from './_utils/formatters'
 
 const emailHttpUrl = `http://${process.env.EMAIL_HTTP_HOST}:${process.env.EMAIL_HTTP_PORT}`
 

@@ -58,6 +58,23 @@ const eslintConfig = defineConfig([
     files: ['src/infra/migrations/**'],
     rules: { 'unicorn/filename-case': 'off' }
   },
+  {
+    files: ['src/app/**', 'src/tests/**'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['../*'],
+              message:
+                'Use `./` for the same folder or a direct subfolder and the `@/` alias otherwise.'
+            }
+          ]
+        }
+      ]
+    }
+  },
   ...Object.entries({
     'src/entry/**': ['app'],
     'src/{dtos,models,types}/**': ['app', 'entry'],
@@ -85,7 +102,8 @@ const eslintConfig = defineConfig([
             },
             {
               group: ['../*'],
-              message: 'Import across folders through the `@/` alias.'
+              message:
+                'Use `./` for the same folder or a direct subfolder and the `@/` alias otherwise.'
             }
           ]
         }

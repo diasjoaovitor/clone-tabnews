@@ -1,7 +1,7 @@
 import bcryptjs from 'bcryptjs'
 import { describe, expect, test } from 'vitest'
 
-import { BCRYPT_ROUNDS } from '@/models/password-model/constants'
+import { BCRYPT_ROUNDS } from '@/infra/password-hasher'
 
 import { DUMMY_PASSWORD_HASH } from './constants'
 

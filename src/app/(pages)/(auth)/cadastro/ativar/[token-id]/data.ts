@@ -1,11 +1,12 @@
-import { tokenErrorAsMessage } from '@/app/(pages)/(auth)/cadastro/ativar/[token-id]/token-error'
 import { formError, type FormState } from '@/entry/form-action'
 import { gated } from '@/entry/gated'
 import { AppError } from '@/infra/errors'
-import { activationModel } from '@/models/activation-model/model'
-import type { ActivationTokenIdInput } from '@/models/activation-model/schema'
+import { activationModel } from '@/models/activation/model'
+import type { ActivationTokenIdInput } from '@/models/activation/schema'
 
-type ActivationState = FormState<ActivationTokenIdInput>
+import { tokenErrorAsMessage } from './token-error'
+
+export type ActivationState = FormState<ActivationTokenIdInput>
 
 // Only reads the token: email link checkers open the link, so the account is activated by the
 // button, never on page load
