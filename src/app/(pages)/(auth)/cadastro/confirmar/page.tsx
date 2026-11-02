@@ -1,26 +1,14 @@
 import type { Metadata } from 'next'
 
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/app/components/ui/shadcn/card'
+import { FormCard } from '@/app/components/ui/custom/form-card'
 
 export const metadata: Metadata = { title: 'Confira seu email' }
 
 const ConfirmSignUpPage = () => (
-  <Card>
-    <CardHeader>
-      <CardTitle className="text-lg">
-        <h1>Confira seu email</h1>
-      </CardTitle>
-      <CardDescription>
-        Enviamos um link de ativação para o email que você cadastrou. Clique
-        nele para ativar sua conta.
-      </CardDescription>
-    </CardHeader>
-  </Card>
+  <FormCard
+    title="Confira seu email"
+    description="Enviamos um link de ativação para o email que você cadastrou. Clique nele para ativar sua conta."
+  />
 )
 
 export default ConfirmSignUpPage
