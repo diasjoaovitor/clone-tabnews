@@ -2,7 +2,6 @@
 
 import { useForm, useSelector } from '@tanstack/react-form'
 import {
-  type ChangeEvent,
   type FocusEvent,
   type ReactNode,
   startTransition,
@@ -15,13 +14,15 @@ import {
 import type { z } from 'zod'
 
 import {
+  ActionControl,
+  type ActionControlProps,
   ActionField,
   type ActionFieldProps,
   ActionForm,
   type ActionFormFields,
-  type TextFieldApi
+  type FieldApi
 } from '@/app/components/ui/custom/action-form'
-import type { FormState } from '@/entry/form-action'
+import type { EchoedValues, FormState } from '@/entry/form-action'
 
 type FormActionOptions<TSchema extends z.ZodObject> = {
   schema: TSchema
@@ -47,6 +48,55 @@ const messageOf = (error: unknown): string | undefined => {
   }
 }
 
+const NOT_SENT = new Set<unknown>([false, null, undefined])
+
+const entryOf = (item: unknown): string | Blob | undefined => {
+  if (NOT_SENT.has(item)) return
+  if (item === true) return 'on'
+  return item instanceof Blob ? item : String(item)
+}
+
+// Built the way the browser posts the form without JavaScript, so the Server Action reads the same
+// `FormData` either way: an unchecked box is left out and a list sends one entry per item
+const toFormData = (values: Record<string, unknown>) => {
+  const formData = new FormData()
+  for (const [name, value] of Object.entries(values)) {
+    for (const item of [value].flat()) {
+      const entry = entryOf(item)
+      if (entry !== undefined) formData.append(name, entry)
+    }
+  }
+  return formData
+}
+
+// The echo after a post without JavaScript is text only, and leaves out an unchecked box or an
+// empty list, so each value is read back by the type of its default
+const restoreValues = (
+  defaultValues: Record<string, unknown>,
+  echoed: EchoedValues
+) =>
+  Object.fromEntries(
+    Object.entries(defaultValues).map(([name, fallback]) => {
+      const value = echoed[name]
+      if (typeof fallback === 'boolean') return [name, value !== undefined]
+      if (Array.isArray(fallback)) {
+        return [name, value === undefined ? [] : [value].flat()]
+      }
+      return [name, value ?? fallback]
+    })
+  )
+
+const isFocusableField = (
+  element: Element
+): element is HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement =>
+  ((element instanceof HTMLInputElement && element.type !== 'hidden') ||
+    element instanceof HTMLTextAreaElement ||
+    element instanceof HTMLSelectElement) &&
+  // Base UI's Checkbox, Select and Switch carry the `name` on a visually hidden input that only
+  // feeds the form, so the focus must not land there
+  element.tabIndex >= 0 &&
+  element.getAttribute('aria-hidden') !== 'true'
+
 export const useFormAction = <TSchema extends z.ZodObject>({
   schema,
   defaultValues,
@@ -65,21 +115,17 @@ export const useFormAction = <TSchema extends z.ZodObject>({
     state.status === 'error' ? state.errors : NO_ERRORS
 
   const form = useForm({
-    defaultValues: {
-      ...defaultValues,
-      ...(state.status === 'error' && state.values)
-    },
+    defaultValues:
+      state.status === 'error' && state.values
+        ? (restoreValues(defaultValues, state.values) as z.input<TSchema>)
+        : defaultValues,
     // Every change revalidates the whole form, so errors never go stale; they're only shown once
     // the field was left or the form submitted
     // TanStack can't prove that a generic schema validates synchronously
     validators: { onChange: schema as never },
     onSubmit: ({ value }) => {
       setInvalidSubmit(undefined)
-      const formData = new FormData()
-      for (const [name, fieldValue] of Object.entries(value)) {
-        formData.set(name, String(fieldValue))
-      }
-      startTransition(() => dispatch(formData))
+      startTransition(() => dispatch(toFormData(value)))
     },
     onSubmitInvalid: ({ formApi }) => {
       const fields = formApi.getAllErrors().fields as Record<
@@ -116,12 +162,12 @@ export const useFormAction = <TSchema extends z.ZodObject>({
   useEffect(() => {
     if (!submitId) return
     const element = [...(formElement.current?.elements ?? [])].find(
-      (element) => element instanceof HTMLInputElement && errors[element.name]
+      (element) => isFocusableField(element) && errors[element.name]
     )
     if (element instanceof HTMLElement) element.focus()
   }, [submitId, errors])
 
-  const fieldProps = (field: TextFieldApi) => {
+  const controlProps = (field: FieldApi) => {
     const clientError =
       submitted || field.state.meta.isBlurred
         ? messageOf(field.state.meta.errors)
@@ -133,15 +179,15 @@ export const useFormAction = <TSchema extends z.ZodObject>({
 
     return {
       name: field.name,
-      value: field.state.value as string,
+      value: field.state.value,
       error: clientError ?? serverError,
-      onChange: (event: ChangeEvent<HTMLInputElement>) => {
+      onValueChange: (value: unknown) => {
         if (state.status !== 'idle') {
           setEditedAfter((edited) => ({ ...edited, [field.name]: state.id }))
         }
-        field.handleChange(event.target.value)
+        field.handleChange(value)
       },
-      onBlur: (event: FocusEvent<HTMLInputElement>) => {
+      onBlur: (event: FocusEvent<HTMLElement>) => {
         // Revealing errors on the way to the submit button would move it under the pointer, and
         // the submit reveals them anyway
         const next = event.relatedTarget
@@ -153,7 +199,7 @@ export const useFormAction = <TSchema extends z.ZodObject>({
 
   const fields: ActionFormFields = {
     Field: form.Field as unknown as ActionFormFields['Field'],
-    fieldProps
+    controlProps
   }
 
   return {
@@ -161,6 +207,9 @@ export const useFormAction = <TSchema extends z.ZodObject>({
     // The same component, with `name` narrowed to the schema's fields
     Field: ActionField as (
       props: ActionFieldProps<keyof z.input<TSchema> & string>
+    ) => ReactNode,
+    Control: ActionControl as (
+      props: ActionControlProps<keyof z.input<TSchema> & string>
     ) => ReactNode,
     state,
     pending,
