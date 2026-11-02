@@ -9,22 +9,15 @@ export type UserDto = Pick<
 }
 
 export const getUserDto: DtoGetter<User, UserDto> = (sessionUser, user) => {
-  if (sessionUser.id === user.id) {
-    return {
-      id: user.id,
-      username: user.username,
-      email: user.email,
-      features: user.features,
-      created_at: user.created_at,
-      updated_at: user.updated_at
-    }
-  }
-
-  return {
+  const publicFields = {
     id: user.id,
     username: user.username,
     features: user.features,
     created_at: user.created_at,
     updated_at: user.updated_at
   }
+
+  return sessionUser.id === user.id
+    ? { ...publicFields, email: user.email }
+    : publicFields
 }

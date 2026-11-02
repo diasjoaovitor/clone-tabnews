@@ -11,7 +11,7 @@ import {
 type FormCardProps = {
   title: string
   description: string
-  children: ReactNode
+  children?: ReactNode
   footer?: ReactNode
 }
 
@@ -28,13 +28,15 @@ export const FormCard = ({
       </CardTitle>
       <CardDescription>{description}</CardDescription>
     </CardHeader>
-    <CardContent>
-      {children}
-      {footer && (
-        <div className="mt-6 flex flex-col items-center gap-3 text-center text-sm">
-          {footer}
-        </div>
-      )}
-    </CardContent>
+    {(children || footer) && (
+      <CardContent>
+        {children}
+        {footer && (
+          <div className="mt-6 flex flex-col items-center gap-3 text-center text-sm">
+            {footer}
+          </div>
+        )}
+      </CardContent>
+    )}
   </Card>
 )

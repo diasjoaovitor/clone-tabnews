@@ -112,14 +112,7 @@ const update = async (
   const validData = updateUserSchema.parse(data)
   const { username, email, password } = validData
 
-  const foundUserByUsername =
-    await userRepository.findUniqueByUsername(currentUsername)
-  if (!foundUserByUsername) {
-    throw new NotFoundError({
-      message: 'O username informado não foi encontrado no sistema.',
-      action: 'Verifique se o username está digitado corretamente.'
-    })
-  }
+  const foundUserByUsername = await findUniqueByUsername(currentUsername)
 
   if (username && username !== foundUserByUsername.username) {
     await validateUniqueUsername({
