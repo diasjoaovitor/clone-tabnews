@@ -1,19 +1,10 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import {
-  type FocusEvent,
-  startTransition,
-  type SubmitEvent,
-  useActionState,
-  useEffect,
-  useRef,
-  useState
-} from 'react'
+import { type SubmitEvent, useState, useTransition } from 'react'
 import {
   type DefaultValues,
   type FieldError,
-  type FieldErrors,
   type FieldValues,
   get,
   type Path,
@@ -27,10 +18,7 @@ import type { FormState } from '@/entry/form-action'
 type FormActionOptions<TValues extends FieldValues> = {
   schema: z.ZodType<unknown, TValues>
   defaultValues: DefaultValues<TValues>
-  action: (
-    state: FormState<TValues>,
-    input: TValues
-  ) => Promise<FormState<TValues>>
+  action: (input: TValues) => Promise<FormState<TValues>>
   initialState?: FormState<TValues>
 }
 
@@ -40,15 +28,7 @@ type FieldOptions<TValues extends FieldValues> = {
   revalidates?: Path<TValues>
 }
 
-type Rejection = { id: string; text: string }
-
-const serverRejectionOf = <TValues>(
-  state: FormState<TValues>
-): Rejection | undefined => {
-  if (state.status !== 'error') return
-  const text: unknown = Object.values(state.errors)[0]
-  return typeof text === 'string' ? { id: state.id, text } : undefined
-}
+type Announcement = { id: string; text: string }
 
 const firstMessageOf = (errors: object): string | undefined => {
   // A leaf also carries `ref`, a DOM element the search must not walk into. A string `type` tells a
@@ -71,11 +51,9 @@ export const useFormAction = <TValues extends FieldValues>({
   action,
   initialState = { status: 'idle' }
 }: FormActionOptions<TValues>) => {
-  const [state, dispatch, pending] = useActionState(action, initialState)
-  const [clientRejection, setClientRejection] = useState<Rejection>()
-  const [supersededState, setSupersededState] = useState<FormState<TValues>>()
-  const formElement = useRef<HTMLFormElement>(null)
-  const focusedRejection = useRef<string>(undefined)
+  const [pending, startTransition] = useTransition()
+  const [state, setState] = useState(initialState)
+  const [announcement, setAnnouncement] = useState<Announcement>()
 
   const form = useForm<TValues>({
     // `raw` hands the action the input as typed: the model parses it again
@@ -83,94 +61,66 @@ export const useFormAction = <TValues extends FieldValues>({
       raw: true
     }) as unknown as Resolver<TValues>,
     defaultValues,
-    mode: 'onTouched',
-    // RHF focuses before the commit that adds aria-invalid and the error description, so the effect
-    // below does it
-    shouldFocusError: false
+    mode: 'onTouched'
   })
-  const { setError } = form
   const { errors } = form.formState
 
-  // The latest submit wins, and a client-side rejection stays ahead of the Server Action's previous
-  // answer until the next one arrives: a valid submit must not bring the old answer back meanwhile
-  const visibleState: FormState<TValues> =
-    state === supersededState ? { status: 'idle' } : state
-  const announcement = clientRejection ?? serverRejectionOf(visibleState)
-
-  useEffect(() => {
-    if (state.status !== 'error') return
-    for (const [name, message] of Object.entries(state.errors)) {
-      setError(name as Path<TValues>, {
-        type: 'server',
-        message: message as string
-      })
+  const showServerErrors = (id: string, fieldErrors: object) => {
+    const entries = Object.entries(fieldErrors) as [Path<TValues>, string][]
+    for (const [index, [name, message]] of entries.entries()) {
+      form.setError(
+        name,
+        { type: 'server', message },
+        { shouldFocus: index === 0 }
+      )
     }
-  }, [state, setError])
-
-  // setError only reaches the DOM on the next commit, hence `errors` here and the guard against
-  // focusing again for the same rejection
-  useEffect(() => {
-    if (!announcement || focusedRejection.current === announcement.id) return
-    const invalid = formElement.current?.querySelector<HTMLElement>(
-      '[aria-invalid="true"]'
-    )
-    if (!invalid) return
-    focusedRejection.current = announcement.id
-    invalid.focus()
-  }, [announcement, errors])
+    const first = entries[0]
+    if (first) setAnnouncement({ id, text: first[1] })
+  }
 
   const field = (
     name: Path<TValues>,
     { revalidates }: FieldOptions<TValues> = {}
-  ) => {
-    const registered = form.register(name, {
+  ) => ({
+    ...form.register(name, {
       onChange: () => {
         if (!revalidates) return
         const { isTouched, invalid } = form.getFieldState(revalidates)
         if (isTouched || invalid) void form.trigger(revalidates)
       }
-    })
-
-    return {
-      ...registered,
-      error: (get(errors, name) as FieldError | undefined)?.message,
-      onBlur: async (event: FocusEvent<HTMLElement>) => {
-        // Revealing an error here would move the button under the pointer between mousedown and
-        // mouseup, losing the click, and the submit reveals it anyway
-        const next = event.relatedTarget
-        if (next instanceof HTMLButtonElement && next.type === 'submit') return
-        await registered.onBlur(event)
-      }
-    }
-  }
+    }),
+    error: (get(errors, name) as FieldError | undefined)?.message
+  })
 
   const onSubmit = async (event: SubmitEvent<HTMLFormElement>) => {
-    let message: string | undefined
-    await form.handleSubmit(
-      (values) => {
-        setClientRejection(undefined)
-        startTransition(() => dispatch(values))
-      },
-      (fieldErrors: FieldErrors<TValues>) => {
-        message = firstMessageOf(fieldErrors)
+    // RHF only marks the form as submitted when handleSubmit resolves. Before that, focusing a field the server
+    // rejected would revalidate the one it leaves on blur, erasing that field's server error
+    const values = (await form.handleSubmit(
+      (validValues) => validValues,
+      (fieldErrors) => {
+        setState({ status: 'idle' })
+        const text = firstMessageOf(fieldErrors)
+        if (text) setAnnouncement({ id: crypto.randomUUID(), text })
       }
-    )(event)
-    // RHF only publishes the errors after this callback resolves. A rejection committed before them
-    // sends the focus to a field that was already invalid, not to the first one
-    if (message) {
-      setClientRejection({ id: crypto.randomUUID(), text: message })
-      setSupersededState(state)
-    }
+    )(event)) as TValues | undefined
+    if (!values) return
+
+    setAnnouncement(undefined)
+    // redirect() rejects the action's promise, and only a transition takes it to the RedirectBoundary
+    startTransition(async () => {
+      const result = await action(values)
+      setState(result)
+      if (result.status === 'error') showServerErrors(result.id, result.errors)
+    })
   }
 
   return {
     form,
     field,
-    state: visibleState,
+    state,
     pending,
     announcement,
     formProps: {
-      ref: formElement,
       // A click before hydration posts natively: the default GET would put the password in the URL
       method: 'post',
       noValidate: true,

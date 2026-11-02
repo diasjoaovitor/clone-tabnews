@@ -10,10 +10,7 @@ import type { CredentialsInput } from '@/models/authentication/schema'
 
 type SignInState = FormState<CredentialsInput>
 
-export const signIn = async (
-  _state: SignInState,
-  input: CredentialsInput
-): Promise<SignInState> =>
+export const signIn = async (input: CredentialsInput): Promise<SignInState> =>
   formAction(
     input,
     gated(async (_user, credentials: CredentialsInput) => {

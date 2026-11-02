@@ -9,10 +9,7 @@ import type { RegistrationInput } from '@/models/registration/schema'
 
 type SignUpState = FormState<RegistrationInput>
 
-export const signUp = async (
-  _state: SignUpState,
-  input: RegistrationInput
-): Promise<SignUpState> =>
+export const signUp = async (input: RegistrationInput): Promise<SignUpState> =>
   formAction(
     input,
     gated(async (_user, registration: RegistrationInput) => {
