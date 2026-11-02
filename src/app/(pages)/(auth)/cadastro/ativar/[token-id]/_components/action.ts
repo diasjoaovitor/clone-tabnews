@@ -8,7 +8,6 @@ import { activationModel } from '@/models/activation/model'
 import type { ActivationTokenIdInput } from '@/models/activation/schema'
 
 export const activate = async (
-  _state: ActivationState,
   input: ActivationTokenIdInput
 ): Promise<ActivationState> =>
   formAction(

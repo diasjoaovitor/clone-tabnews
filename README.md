@@ -53,7 +53,7 @@ As convenções completas estão no [`AGENTS.md`](./AGENTS.md), e o fluxo do pla
 - Só a perda de conexão com o banco responde `503`. Os outros erros do banco (sintaxe, coluna inexistente, constraint) são bugs e respondem `500`.
 - Cada model valida a própria entrada com o seu `schema.ts`, inclusive os parâmetros da rota. O `schema.ts` também exporta o tipo da entrada de cada schema (`<Nome>Input`, com `z.input`), que o resto do código importa. A API responde `400` aos erros de validação, com `fields` trazendo a mensagem de cada campo inválido, e um cookie `session_id` mal formado é tratado como uma sessão inexistente (`401`).
 - `action.ts` com `'use server'` é só para mutações chamadas pelo cliente; dados lidos por uma Server Component vêm de um `data.ts`.
-- Os formulários usam React Hook Form com o schema Zod do model para validar no cliente e enviam a entrada tipada para Server Actions envolvidas pelo `formAction()`, que converte os erros em mensagens no formulário. Eles precisam de JavaScript. Os campos são não controlados por padrão: o `useFormAction()` expõe o `field()` para campos de texto e outros controles nativos, e um campo controlado usa o `Controller` da biblioteca dentro do `FieldFrame`.
+- Os formulários usam React Hook Form com o schema Zod do model para validar no cliente e enviam a entrada tipada para Server Actions envolvidas pelo `formAction()`, que converte os erros em mensagens no formulário. Eles precisam de JavaScript. Os campos são não controlados por padrão: o `useFormAction()` expõe o `field()` para campos de texto e outros controles nativos, e um campo controlado usa o `Controller` da biblioteca dentro do `FieldFrame`, repassando o `ref` ao controle para receber o foco.
 
 ### Interface
 

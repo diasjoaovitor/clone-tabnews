@@ -17,10 +17,7 @@ const schema = z.object({
 })
 
 type Values = z.input<typeof schema>
-type Action = (
-  state: FormState<Values>,
-  input: Values
-) => Promise<FormState<Values>>
+type Action = (input: Values) => Promise<FormState<Values>>
 
 const TestForm = ({ action }: { action: Action }) => {
   const { field, state, pending, announcement, formProps } = useFormAction({
@@ -65,7 +62,7 @@ describe('useFormAction', () => {
     await user.click(submit)
 
     await waitFor(() => expect(action).toHaveBeenCalled())
-    expect(action.mock.calls[0]![1]).toEqual({
+    expect(action.mock.calls[0]![0]).toEqual({
       name: 'Ana',
       email: 'ana@curso.dev'
     })
@@ -221,14 +218,14 @@ describe('useFormAction', () => {
     })
   })
 
-  test('does not reveal an error when the focus leaves for the submit button', async () => {
+  test('keeps the focus on the field while the submit button is pressed, so no error moves it', async () => {
     const { user, email, submit } = setup(answerWithFieldErrors({}))
 
     await user.type(email, 'a')
     await user.clear(email)
-    await user.tab()
+    await user.pointer({ keys: '[MouseLeft>]', target: submit })
 
-    expect(document.activeElement).toBe(submit)
+    expect(document.activeElement).toBe(email)
     expect(
       screen.getByRole('textbox', { name: 'Email', description: '' })
     ).toBe(email)
@@ -335,10 +332,7 @@ const linkSchema = z.object({
 const listSchema = z.object({ links: z.array(linkSchema) })
 
 type ListValues = z.input<typeof listSchema>
-type ListAction = (
-  state: FormState<ListValues>,
-  input: ListValues
-) => Promise<FormState<ListValues>>
+type ListAction = (input: ListValues) => Promise<FormState<ListValues>>
 
 const ListForm = ({
   action = async () => formSuccess('Pronto.')
@@ -413,10 +407,7 @@ const controlSchema = z.object({
 })
 
 type ControlValues = z.input<typeof controlSchema>
-type ControlAction = (
-  state: FormState<ControlValues>,
-  input: ControlValues
-) => Promise<FormState<ControlValues>>
+type ControlAction = (input: ControlValues) => Promise<FormState<ControlValues>>
 
 const ControlForm = ({ action }: { action: ControlAction }) => {
   const { form, field, state, pending, announcement, formProps } =
@@ -512,7 +503,7 @@ describe('useFormAction with controls other than text inputs', () => {
     await user.click(submit)
 
     await waitFor(() => expect(action).toHaveBeenCalled())
-    expect(action.mock.calls[0]![1]).toEqual({
+    expect(action.mock.calls[0]![0]).toEqual({
       body: 'Olá',
       notify: false,
       tags: ['next', 'zod'],
