@@ -10,6 +10,8 @@ import { SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS } from '@/models/session/const
 import { sessionModel } from '@/models/session/model'
 import { userModel } from '@/models/user/model'
 
+export const SESSION_COOKIE_NAME = 'session_id'
+
 // A browser only removes a cookie set with the same `path`, so `clear()` must share these with `save()`
 const SESSION_COOKIE_OPTIONS = {
   path: '/',
@@ -20,7 +22,7 @@ const SESSION_COOKIE_OPTIONS = {
 
 const save = async (token: string): Promise<void> => {
   const store = await cookies()
-  store.set('session_id', token, {
+  store.set(SESSION_COOKIE_NAME, token, {
     ...SESSION_COOKIE_OPTIONS,
     maxAge: SESSION_TOKEN_EXPIRATION_IN_MILLISECONDS / 1000
   })
@@ -28,7 +30,10 @@ const save = async (token: string): Promise<void> => {
 
 const clear = async (): Promise<void> => {
   const store = await cookies()
-  store.set('session_id', 'invalid', { ...SESSION_COOKIE_OPTIONS, maxAge: -1 })
+  store.set(SESSION_COOKIE_NAME, 'invalid', {
+    ...SESSION_COOKIE_OPTIONS,
+    maxAge: -1
+  })
 }
 
 export type ResolvedSession = {
@@ -39,7 +44,7 @@ export type ResolvedSession = {
 
 const resolve = cache(async (): Promise<ResolvedSession> => {
   const store = await cookies()
-  const token = store.get('session_id')?.value
+  const token = store.get(SESSION_COOKIE_NAME)?.value
   if (!token) return { user: { features: ANONYMOUS_FEATURES } }
   try {
     const session = await sessionModel.findUniqueValidByToken(token)

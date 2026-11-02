@@ -225,6 +225,7 @@ describe('POST /api/v1/users', () => {
       const user2Response = await fetch(`${API_BASE_URL}/users`, {
         method: 'POST',
         headers: {
+          'Content-Type': 'application/json',
           Cookie: `session_id=${user1SessionObject.token}`
         },
         body: JSON.stringify({

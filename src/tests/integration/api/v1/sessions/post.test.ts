@@ -160,6 +160,7 @@ describe('POST /api/v1/sessions', () => {
       const response = await fetch(`${API_BASE_URL}/sessions`, {
         method: 'POST',
         headers: {
+          'Content-Type': 'application/json',
           Cookie: `session_id=${expiredSession.token}`
         },
         body: JSON.stringify({

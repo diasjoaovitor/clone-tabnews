@@ -9,6 +9,7 @@ import {
 } from '@/infra/errors'
 
 import { authorize } from './authorization'
+import { rejectUnsafeCookieRequest } from './csrf'
 import { session } from './session'
 
 // HEAD is left out so Next.js implements it from the exported GET (RFC 9110 §9.1). OPTIONS is answered by
@@ -91,6 +92,8 @@ export const controller = (
       context?: Parameters<RouteHandler>[1]
     ): Promise<NextResponse> => {
       try {
+        // Before resolving the session, so a forged request can't clear the victim's cookie
+        rejectUnsafeCookieRequest(request)
         const resolvedSession = await session.resolveAndClearInvalid()
         authorize(resolvedSession, feature)
         const response = await routeHandler!(request, context)
