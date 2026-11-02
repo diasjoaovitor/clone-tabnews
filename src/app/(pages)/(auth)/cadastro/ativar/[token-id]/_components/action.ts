@@ -4,7 +4,10 @@ import { tokenErrorAsMessage } from '@/app/(pages)/(auth)/cadastro/ativar/[token
 import { formAction, type FormState, formSuccess } from '@/entry/form-action'
 import { gated } from '@/entry/gated'
 import { activationModel } from '@/models/activation-model/model'
-import type { ActivationTokenIdInput } from '@/models/activation-model/schema'
+import {
+  type ActivationTokenIdInput,
+  activationTokenIdSchema
+} from '@/models/activation-model/schema'
 
 type ActivationState = FormState<ActivationTokenIdInput>
 
@@ -14,9 +17,10 @@ export const activate = async (
 ): Promise<ActivationState> =>
   formAction(
     formData,
+    activationTokenIdSchema,
     gated(async (_user, input) => {
       try {
-        await activationModel.activateUserByTokenId(String(input.token_id))
+        await activationModel.activateUserByTokenId(input.token_id)
       } catch (error) {
         throw tokenErrorAsMessage(error)
       }
